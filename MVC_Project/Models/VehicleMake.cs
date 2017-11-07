@@ -9,7 +9,9 @@ namespace MVC_Project.Models
     public class VehicleMake
     {
         [Key]
+        [Required]
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
         public string Abrv { get; set; }
     }

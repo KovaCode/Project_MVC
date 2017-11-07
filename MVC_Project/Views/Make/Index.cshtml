@@ -1,19 +1,19 @@
 ﻿@model IEnumerable<MVC_Project.Models.VehicleMake>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Maker";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.Id)
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.Name)
         </th>
@@ -25,9 +25,9 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.Id)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.Name)
         </td>
@@ -43,3 +43,7 @@
 }
 
 </table>
+
+<p>
+    @Html.ActionLink("Show Models", "Index", "Model")
+</p>

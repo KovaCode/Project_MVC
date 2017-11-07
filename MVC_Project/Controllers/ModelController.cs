@@ -19,10 +19,8 @@ namespace MVC_Project.Controllers
         public ActionResult Index()
         {
             //AutoMapper.Mapper.Map<>;
-            //var model = db.VehicleModel.Include(e => e.Make);
-            //ViewBag.DepartmentID = new SelectList(db.VehicleMake, "MakeID", "MakeID");
-            //return View(model.ToList());
-            return View(db.VehicleModel);
+            var model = db.VehicleModel.Include(e => e.Make);
+            return View(model);
         }
 
         // GET: Models/Details/5
@@ -43,6 +41,7 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
+            ViewBag.MakeID = new SelectList(db.VehicleMake, "Id", "Name");
             return View();
         }
 
@@ -51,7 +50,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,MakeId,Name,Abrv")] VehicleModel vehicleModel)
+        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] VehicleModel vehicleModel)
         {
             if (ModelState.IsValid)
             {
@@ -75,6 +74,7 @@ namespace MVC_Project.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.MakeID = new SelectList(db.VehicleMake, "Id", "Name");
             return View(vehicleModel);
         }
 

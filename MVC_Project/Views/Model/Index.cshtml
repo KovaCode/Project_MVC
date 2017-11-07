@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<MVC_Project.Models.VehicleModel>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Models";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
     <tr>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.Id)
-        </th>
+        </th>*@
         <th>
-            @Html.DisplayNameFor(model => model.MakeID)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -28,11 +28,11 @@
 
 @foreach (var item in Model) {
     <tr>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.Id)
-        </td>
+        </td>*@
         <td>
-            @Html.DisplayFor(modelItem => item.MakeID)
+            @Html.DisplayFor(modelItem => item.Make.Name)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)

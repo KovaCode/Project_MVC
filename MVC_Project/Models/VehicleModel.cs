@@ -11,9 +11,11 @@ namespace MVC_Project.Models
     public class VehicleModel
     {
         [Key]
+        [Required]
         public int Id { get; set; }
-        [ForeignKey("MakeID")]
+        [Required]
         public int MakeID { get; set; }
+        [Required]
         public string Name { get; set; }
         public string Abrv { get; set; }
 
