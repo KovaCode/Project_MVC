@@ -8,6 +8,7 @@ using MVC_Project.Models;
 using System.Net;
 using System.Data.Entity;
 using AutoMapper;
+using PagedList;
 
 namespace MVC_Project.Controllers
 {
@@ -16,11 +17,48 @@ namespace MVC_Project.Controllers
         private VehicleDBContext db = new VehicleDBContext();
 
         // GET: /Make/
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string currentFilter, string search, int? page)
         {
-            //var model = db.VehicleMake.Include(e => e.Id);
-            //return View(model);
-            return View(db.VehicleMake.ToList());
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+           
+            if (search != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = search;
+            var makeItems = from s in db.VehicleMake select s;
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                makeItems = makeItems.Where(s => s.Name.Contains(search) || s.Abrv.Contains(search));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+                case "name_asc":
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+
+                case "Abrv":
+                    makeItems = makeItems.OrderBy(s => s.Abrv);
+                    break;
+                default:
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            return View(makeItems.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: /Make/Details/5
