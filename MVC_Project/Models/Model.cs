@@ -8,7 +8,7 @@ using System.Web;
 namespace MVC_Project.Models
 {
     
-    public class VehicleModel
+    public class Model
     {
         [Key]
         [Required]
@@ -19,6 +19,6 @@ namespace MVC_Project.Models
         public string Name { get; set; }
         public string Abrv { get; set; }
 
-        public virtual VehicleMake Make { get; set; }
+        public virtual Maker Makers { get; set; }
     }
 }

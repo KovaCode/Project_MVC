@@ -1,26 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using MVC_Project.DAL;
 using MVC_Project.Models;
+using AutoMapper;
 
 namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-        private VehicleDBContext db = new VehicleDBContext();
+        private ModelService service;
+        //private VehicleDBContext db = new VehicleDBContext();
+
+        public ModelController()
+        {
+            service = new ModelService(new VehicleDBContext());
+        }
 
         // GET: Models
         public ActionResult Index()
         {
             //AutoMapper.Mapper.Map<>;
-            var model = db.VehicleModel.Include(e => e.Make);
+            var model = service.getModelsQueryable().Include(e => e.Makers);
+
+            //Mapper.CreateMap<Maker, Models.Maker>();
+            //Mapper.CreateMap<Address, Models.AddressModel>();
+            //List<Models.ContactModel> theList = Mapper.Map<List<Contact>, List<Models.ContactModel>>(contacts);
+
+
             return View(model);
+
         }
 
         // GET: Models/Details/5
@@ -30,7 +41,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            Model vehicleModel = service.Read(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -41,7 +52,7 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            ViewBag.MakeID = new SelectList(db.VehicleMake, "Id", "Name");
+            ViewBag.MakeID = new SelectList(service.getModels(), "Id", "Name");
             return View();
         }
 
@@ -50,16 +61,16 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] VehicleModel vehicleModel)
+        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] Model model)
         {
             if (ModelState.IsValid)
             {
-                db.VehicleModel.Add(vehicleModel);
-                db.SaveChanges();
+                service.Create(model);
+                service.Save(model);
                 return RedirectToAction("Index");
             }
 
-            return View(vehicleModel);
+            return View(model);
         }
 
         // GET: Models/Edit/5
@@ -69,7 +80,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            Model vehicleModel = service.Read(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -83,12 +94,15 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,MakeId,Name,Abrv")] VehicleModel vehicleModel)
+        public ActionResult Edit([Bind(Include = "Id,MakeId,Name,Abrv")] Model model)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(vehicleModel).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(vehicleModel).State = EntityState.Modified;
+                //db.SaveChanges();
+                service.Create(model);
+                service.Save();
+
                 return RedirectToAction("Index");
             }
             return View(vehicleModel);
@@ -101,7 +115,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
+            Model vehicleModel = service.Read(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -114,9 +128,9 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleModel vehicleModel = db.VehicleModel.Find(id);
-            db.VehicleModel.Remove(vehicleModel);
-            db.SaveChanges();
+            Model model = service.Read(id);
+            service.Delete(id);
+            service.Save(model);
             return RedirectToAction("Index");
         }
 

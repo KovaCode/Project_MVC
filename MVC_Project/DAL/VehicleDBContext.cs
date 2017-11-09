@@ -9,7 +9,17 @@ namespace MVC_Project.DAL
 {
     public class VehicleDBContext : DbContext
     {
-        public DbSet<VehicleMake> VehicleMake { get; set; }
-        public DbSet<VehicleModel> VehicleModel { get; set; }
+
+        public VehicleDBContext() : base("name=VehicleDBContext")
+            {
+            }
+
+        public DbSet<Maker> Makers { get; set; }
+        public DbSet<Model> Models { get; set; }
+
+
+
+
+
     }
 }

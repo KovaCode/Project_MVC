@@ -6,7 +6,7 @@ using System.Web;
 
 namespace MVC_Project.Models
 {
-    public class VehicleMake
+    public class Maker
     {
         [Key]
         [Required]
@@ -14,5 +14,10 @@ namespace MVC_Project.Models
         [Required]
         public string Name { get; set; }
         public string Abrv { get; set; }
+
+        public static explicit operator Maker(Maker v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

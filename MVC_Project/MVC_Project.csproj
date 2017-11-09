@@ -160,12 +160,17 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MakeController.cs" />
     <Compile Include="Controllers\ModelController.cs" />
+    <Compile Include="DAL\IVehicle.cs" />
+    <Compile Include="DAL\ModelService.cs" />
+    <Compile Include="DAL\MakerService.cs" />
+    <Compile Include="DAL\IMaker.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="DAL\VehicleDBContext.cs" />
-    <Compile Include="Models\VehicleModel.cs" />
-    <Compile Include="Models\VehicleMake.cs" />
+    <Compile Include="Models\ModelView.cs" />
+    <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Maker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -14,9 +14,15 @@ namespace MVC_Project.Controllers
 {
     public class MakeController : Controller
     {
-        private VehicleDBContext db = new VehicleDBContext();
+        private MakerService service;
 
-        // GET: /Make/
+        public MakeController()
+        {
+            service = new MakerService(new VehicleDBContext());
+        }
+
+
+        // GET: /Maker/
         public ViewResult Index(string sortOrder, string currentFilter, string search, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -32,7 +38,7 @@ namespace MVC_Project.Controllers
             }
 
             ViewBag.CurrentFilter = search;
-            var makeItems = from s in db.VehicleMake select s;
+            var makeItems = service.getMakersQueryable();
 
             if (!String.IsNullOrEmpty(search))
             {
@@ -61,14 +67,18 @@ namespace MVC_Project.Controllers
             return View(makeItems.ToPagedList(pageNumber, pageSize));
         }
 
-        // GET: /Make/Details/5
+        // GET: /Maker/Details/5
         public ActionResult Details(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake make = db.VehicleMake.Find(id);
+
+
+            Maker make = service.Read(id);
+
+
             if (make == null)
             {
                 return HttpNotFound();
@@ -76,37 +86,37 @@ namespace MVC_Project.Controllers
             return View(make);
         }
 
-        // GET: /Make/Create
+        // GET: /Maker/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: /Make/Create
+        // POST: /Maker/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMake make)
+        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] Maker maker)
         {
             if (ModelState.IsValid)
             {
-                db.VehicleMake.Add(make);
-                db.SaveChanges();
+                service.Create(maker);
+                service.Save(maker);
+
                 return RedirectToAction("Index");
             }
-
-            return View(make);
+            return View(maker);
         }
 
-        // GET: /Employee/Edit/5
+        // GET: /Maker/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake make = db.VehicleMake.Find(id);
+            Maker make = service.Read(id);
             if (make == null)
             {
                 return HttpNotFound();
@@ -114,20 +124,21 @@ namespace MVC_Project.Controllers
             return View(make);
         }
 
-        // POST: /Make/Edit/5
+        // POST: /Maker/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMake make)
+        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] Maker maker)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(make).State = EntityState.Modified;
-                db.SaveChanges();
+                service.Update(maker);
+                service.Save();
+
                 return RedirectToAction("Index");
             }
-            return View(make);
+            return View(maker);
         }
 
         // GET: /Make/Delete/5
@@ -137,12 +148,12 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake make = db.VehicleMake.Find(id);
-            if (make == null)
+            Maker maker = service.Read(id);
+            if (maker == null)
             {
                 return HttpNotFound();
             }
-            return View(make);
+            return View(maker);
         }
 
         // POST: /Make/Delete/5
@@ -150,19 +161,11 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VehicleMake make = db.VehicleMake.Find(id);
-            db.VehicleMake.Remove(make);
-            db.SaveChanges();
+            Maker maker = service.Read(id);
+            service.Delete(id);
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+  
     }
 }
