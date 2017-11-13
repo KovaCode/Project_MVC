@@ -1,4 +1,5 @@
 ﻿using MVC_Project.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -21,7 +22,48 @@ namespace MVC_Project.DAL
         {
             return from s in db.Makers select s;
         }
-        
+
+
+        public IEnumerable<Maker> getMakers(string sortOrder, string currentFilter, string search, int? page)
+        {
+            if (search != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                search = currentFilter;
+            }
+           
+            var makeItems = getMakersQueryable();
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                makeItems = makeItems.Where(s => s.Name.Contains(search) || s.Abrv.Contains(search));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+                case "name_asc":
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+
+                case "Abrv":
+                    makeItems = makeItems.OrderBy(s => s.Abrv);
+                    break;
+                default:
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+                       
+            return makeItems.ToPagedList(pageNumber, pageSize);
+        }
 
 
         public IEnumerable<Maker> getMakers()

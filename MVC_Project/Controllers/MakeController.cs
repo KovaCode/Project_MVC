@@ -27,44 +27,37 @@ namespace MVC_Project.Controllers
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-           
-            if (search != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                search = currentFilter;
-            }
 
-            ViewBag.CurrentFilter = search;
-            var makeItems = service.getMakersQueryable();
 
-            if (!String.IsNullOrEmpty(search))
-            {
-                makeItems = makeItems.Where(s => s.Name.Contains(search) || s.Abrv.Contains(search));
-            }
+            var makeItems = service.getMakers(sortOrder, currentFilter, search, page);
 
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
-                case "name_asc":
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
+            //var makeItems = service.getMakers(sortOrder, currentFilter, search, page);
 
-                case "Abrv":
-                    makeItems = makeItems.OrderBy(s => s.Abrv);
-                    break;
-                default:
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
-            }
+            //if (!String.IsNullOrEmpty(search))
+            //{
+            //    makeItems = makeItems.Where(s => s.Name.Contains(search) || s.Abrv.Contains(search));
+            //}
 
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            return View(makeItems.ToPagedList(pageNumber, pageSize));
+            //switch (sortOrder)
+            //{
+            //    case "name_desc":
+            //        makeItems = makeItems.OrderBy(s => s.Name);
+            //        break;
+            //    case "name_asc":
+            //        makeItems = makeItems.OrderBy(s => s.Name);
+            //        break;
+
+            //    case "Abrv":
+            //        makeItems = makeItems.OrderBy(s => s.Abrv);
+            //        break;
+            //    default:
+            //        makeItems = makeItems.OrderBy(s => s.Name);
+            //        break;
+            //}
+
+            //int pageSize = 10;
+            //int pageNumber = (page ?? 1);
+            return View(makeItems/*.ToPagedList(pageNumber, pageSize)*/);
         }
 
         // GET: /Maker/Details/5
@@ -102,7 +95,7 @@ namespace MVC_Project.Controllers
             if (ModelState.IsValid)
             {
                 service.Create(maker);
-                service.Save(maker);
+                service.Save();
 
                 return RedirectToAction("Index");
             }
@@ -163,6 +156,7 @@ namespace MVC_Project.Controllers
         {
             Maker maker = service.Read(id);
             service.Delete(id);
+            service.Save();
             return RedirectToAction("Index");
         }
 

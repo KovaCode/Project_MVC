@@ -160,6 +160,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MakeController.cs" />
     <Compile Include="Controllers\ModelController.cs" />
+    <Compile Include="Controllers\AutoMapperProfile.cs" />
     <Compile Include="DAL\IVehicle.cs" />
     <Compile Include="DAL\ModelService.cs" />
     <Compile Include="DAL\MakerService.cs" />
@@ -208,9 +209,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Make\Create.cshtml" />
     <Content Include="Views\Make\Delete.cshtml" />
     <Content Include="Views\Make\Details.cshtml" />

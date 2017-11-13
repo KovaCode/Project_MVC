@@ -14,10 +14,5 @@ namespace MVC_Project.Models
         [Required]
         public string Name { get; set; }
         public string Abrv { get; set; }
-
-        public static explicit operator Maker(Maker v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

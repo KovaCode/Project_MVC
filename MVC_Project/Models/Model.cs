@@ -15,7 +15,7 @@ namespace MVC_Project.Models
         public int Id { get; set; }
         [Required]
         public int MakeID { get; set; }
-        [Required]
+        [Required]       
         public string Name { get; set; }
         public string Abrv { get; set; }
 

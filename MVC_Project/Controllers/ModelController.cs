@@ -6,31 +6,30 @@ using System.Web.Mvc;
 using MVC_Project.DAL;
 using MVC_Project.Models;
 using AutoMapper;
+using AutoMapper.XpressionMapper;
+using System;
 
 namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
         private ModelService service;
-        //private VehicleDBContext db = new VehicleDBContext();
-
+       
         public ModelController()
         {
+           //var model = service.getModelsQueryable().Include(e => e.Makers);
             service = new ModelService(new VehicleDBContext());
         }
 
         // GET: Models
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string search, int? page)
         {
-            //AutoMapper.Mapper.Map<>;
-            var model = service.getModelsQueryable().Include(e => e.Makers);
-
-            //Mapper.CreateMap<Maker, Models.Maker>();
-            //Mapper.CreateMap<Address, Models.AddressModel>();
-            //List<Models.ContactModel> theList = Mapper.Map<List<Contact>, List<Models.ContactModel>>(contacts);
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
 
-            return View(model);
+            var modelItems = service.getModels(sortOrder, currentFilter, search, page);
+            return View(modelItems);
 
         }
 
@@ -41,18 +40,18 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Model vehicleModel = service.Read(id);
-            if (vehicleModel == null)
+            Model model = service.Read(id);
+            if (model == null)
             {
                 return HttpNotFound();
             }
-            return View(vehicleModel);
+            return View(model);
         }
 
         // GET: Models/Create
         public ActionResult Create()
         {
-            ViewBag.MakeID = new SelectList(service.getModels(), "Id", "Name");
+            ViewBag.MakeId = new SelectList(service.getAllMakers(), "Id", "Name");
             return View();
         }
 
@@ -66,7 +65,7 @@ namespace MVC_Project.Controllers
             if (ModelState.IsValid)
             {
                 service.Create(model);
-                service.Save(model);
+                service.Save();
                 return RedirectToAction("Index");
             }
 
@@ -80,13 +79,13 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Model vehicleModel = service.Read(id);
-            if (vehicleModel == null)
+            Model model = service.Read(id);
+            if (model == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MakeID = new SelectList(db.VehicleMake, "Id", "Name");
-            return View(vehicleModel);
+            ViewBag.MakeID = new SelectList(service.getAllMakers(), "Id", "Name");
+            return View(model);
         }
 
         // POST: Models/Edit/5
@@ -94,18 +93,18 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,MakeId,Name,Abrv")] Model model)
+        public ActionResult Edit([Bind(Include = "Id,MakeID,Name,Abrv")] Model model)
         {
             if (ModelState.IsValid)
             {
                 //db.Entry(vehicleModel).State = EntityState.Modified;
                 //db.SaveChanges();
-                service.Create(model);
+                service.Update(model);
                 service.Save();
 
                 return RedirectToAction("Index");
             }
-            return View(vehicleModel);
+            return View(model);
         }
 
         // GET: Models/Delete/5
@@ -130,17 +129,8 @@ namespace MVC_Project.Controllers
         {
             Model model = service.Read(id);
             service.Delete(id);
-            service.Save(model);
+            service.Save();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
