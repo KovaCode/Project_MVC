@@ -1,5 +1,5 @@
 ﻿
-@model PagedList.IPagedList<MVC_Project.Models.Model>
+@model PagedList.IPagedList<Service.Models.VechicleModel>
 @using PagedList.Mvc;
 
 
@@ -9,6 +9,11 @@
 
 @using (Html.BeginForm())
 {
+
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+
     <p>
         Filter: @Html.TextBox("Search")
         <input type="submit" value="Search" />

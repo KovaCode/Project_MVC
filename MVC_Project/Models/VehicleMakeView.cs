@@ -4,14 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace MVC_Project.Models
+namespace MVC.Models
 {
-    public class Maker
-    {
-        [Key]
-        [Required]
+    public class VehicleMakeView
+    { 
         public int Id { get; set; }
-        [Required]
         public string Name { get; set; }
         public string Abrv { get; set; }
     }

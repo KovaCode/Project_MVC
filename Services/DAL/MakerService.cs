@@ -1,14 +1,13 @@
-﻿using MVC_Project.Models;
+﻿using Service.Models;
 using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web.Mvc;
 
-namespace MVC_Project.DAL
+namespace Service.DAL
 {
-    public class MakerService : IVehicle<Maker>
+    public class MakerService : IVehicle<VechicleMake>
     {
 
         private VehicleDBContext db;
@@ -18,13 +17,13 @@ namespace MVC_Project.DAL
             db = context;
         }
 
-        public IQueryable<Maker> getMakersQueryable()
+        public IQueryable<VechicleMake> getMakersQueryable()
         {
             return from s in db.Makers select s;
         }
 
 
-        public IEnumerable<Maker> getMakers(string sortOrder, string currentFilter, string search, int? page)
+        public IEnumerable<VechicleMake> getMakers(string sortOrder, string currentFilter, string search, int? page)
         {
             if (search != null)
             {
@@ -66,24 +65,24 @@ namespace MVC_Project.DAL
         }
 
 
-        public IEnumerable<Maker> getMakers()
+        public IEnumerable<VechicleMake> getMakers()
         {
-            return db.Makers.ToList<Maker>();
+            return db.Makers.ToList<VechicleMake>();
         }
 
-        public Maker Read(int? id)
+        public VechicleMake Read(int? id)
         {
             return db.Makers.Find(id);
         }
 
-        public void Update(Maker maker)
+        public void Update(VechicleMake maker)
         {
             db.Entry(maker).State = EntityState.Modified;
         }
 
         public void Delete(int? id)
         {
-            Maker maker = db.Makers.Find(id);
+            VechicleMake maker = db.Makers.Find(id);
             db.Makers.Remove(maker);
         }
 
@@ -92,7 +91,7 @@ namespace MVC_Project.DAL
             db.SaveChanges();
         }
 
-        public void Create(Maker maker)
+        public void Create(VechicleMake maker)
         {
             db.Makers.Add(maker);
         }

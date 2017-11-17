@@ -1,8 +1,8 @@
 ﻿
-namespace MVC_Project.Models
+namespace MVC.Models
 {
     
-    public class ModelView
+    public class VehicleModelView
     {
         public int Id { get; set; }
         public int MakeID { get; set; }

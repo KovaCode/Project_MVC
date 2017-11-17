@@ -1,12 +1,7 @@
-﻿using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Web.Mvc;
-using MVC_Project.DAL;
-using MVC_Project.Models;
-using AutoMapper;
-using AutoMapper.XpressionMapper;
+using Service.DAL;
+using Service.Models;
 using System;
 
 namespace MVC_Project.Controllers
@@ -40,7 +35,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Model model = service.Read(id);
+            VechicleModel model = service.Read(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -60,7 +55,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] Model model)
+        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] VechicleModel model)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +74,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Model model = service.Read(id);
+            VechicleModel model = service.Read(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -93,7 +88,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,MakeID,Name,Abrv")] Model model)
+        public ActionResult Edit([Bind(Include = "Id,MakeID,Name,Abrv")] VechicleModel model)
         {
             if (ModelState.IsValid)
             {
@@ -114,7 +109,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Model vehicleModel = service.Read(id);
+            VechicleModel vehicleModel = service.Read(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -127,7 +122,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Model model = service.Read(id);
+            VechicleModel model = service.Read(id);
             service.Delete(id);
             service.Save();
             return RedirectToAction("Index");

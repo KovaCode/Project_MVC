@@ -1,14 +1,14 @@
-﻿using MVC_Project.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using PagedList;
+using Service.Models;
+using Service.DAL;
 
-
-namespace MVC_Project.DAL
+namespace Service.DAL
 {
-    public class ModelService : IVehicle<Model>
+    public class ModelService : IVehicle<VechicleModel>
     {
         private VehicleDBContext db;
 
@@ -19,24 +19,24 @@ namespace MVC_Project.DAL
 
    
 
-        public IQueryable<Model> getModelsQueryable()
+        public IQueryable<VechicleModel> getModelsQueryable()
         {
             return from s in this.db.Models select s;
         }
 
 
-        public Maker getMakerById(int? id)
+        public VechicleMake getMakerById(int? id)
         { 
             return this.db.Makers.Find(id);
         }
 
-        public IEnumerable<Maker> getAllMakers()
+        public IEnumerable<VechicleMake> getAllMakers()
         {
-            return this.db.Makers.ToList<Maker>();
+            return this.db.Makers.ToList<VechicleMake>();
         }
 
 
-        public IEnumerable<Model> getModels(string sortOrder, string currentFilter, string search, int? page)
+        public IEnumerable<VechicleModel> getModels(string sortOrder, string currentFilter, string search, int? page)
         {
             if (search != null)
             {
@@ -77,17 +77,17 @@ namespace MVC_Project.DAL
             return modelItems.ToPagedList(pageNumber, pageSize);
         }
 
-        public IEnumerable<Model> getModels()
+        public IEnumerable<VechicleModel> getModels()
         {
-            return this.db.Models.ToList<Model>();
+            return this.db.Models.ToList<VechicleModel>();
         }
 
-        public Model Read(int? id)
+        public VechicleModel Read(int? id)
         {
             return this.db.Models.Find(id);
         }
 
-        public void Update(Model model)
+        public void Update(VechicleModel model)
         {
             this.db.Entry(model).State = EntityState.Modified;
             this.db.SaveChanges();
@@ -95,7 +95,7 @@ namespace MVC_Project.DAL
 
         public void Delete(int? id)
         {
-            Model model = this.Read(id);
+            VechicleModel model = this.Read(id);
             this.db.Models.Remove(model);
         }
 
@@ -105,7 +105,7 @@ namespace MVC_Project.DAL
             this.db.SaveChanges();
         }
 
-        public void Create(Model model)
+        public void Create(VechicleModel model)
         {
             this.db.Models.Add(model);
         }

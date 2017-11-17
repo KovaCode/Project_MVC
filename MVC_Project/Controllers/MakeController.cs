@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using MVC_Project.DAL;
-using MVC_Project.Models;
+using Service.DAL;
 using System.Net;
-using System.Data.Entity;
-using AutoMapper;
-using PagedList;
+using Service.Models;
 
-namespace MVC_Project.Controllers
+namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
@@ -63,13 +57,13 @@ namespace MVC_Project.Controllers
         // GET: /Maker/Details/5
         public ActionResult Details(int id)
         {
-            if (id == null)
+            if (id <=0)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
 
-            Maker make = service.Read(id);
+            VechicleMake make = service.Read(id);
 
 
             if (make == null)
@@ -90,7 +84,7 @@ namespace MVC_Project.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] Maker maker)
+        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VechicleMake maker)
         {
             if (ModelState.IsValid)
             {
@@ -109,7 +103,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Maker make = service.Read(id);
+            VechicleMake make = service.Read(id);
             if (make == null)
             {
                 return HttpNotFound();
@@ -122,7 +116,7 @@ namespace MVC_Project.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] Maker maker)
+        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VechicleMake maker)
         {
             if (ModelState.IsValid)
             {
@@ -141,7 +135,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Maker maker = service.Read(id);
+            VechicleMake maker = service.Read(id);
             if (maker == null)
             {
                 return HttpNotFound();
@@ -154,7 +148,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Maker maker = service.Read(id);
+            VechicleMake maker = service.Read(id);
             service.Delete(id);
             service.Save();
             return RedirectToAction("Index");
