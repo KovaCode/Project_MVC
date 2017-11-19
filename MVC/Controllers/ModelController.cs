@@ -23,7 +23,7 @@ namespace MVC_Project.Controllers
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
 
-            var modelItems = service.getModels(sortOrder, currentFilter, search, page);
+            var modelItems = service.GetModels(sortOrder, currentFilter, search, page);
             return View(modelItems);
 
         }
@@ -35,7 +35,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VechicleModel model = service.Read(id);
+            VehicleModel model = service.Read(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -46,7 +46,7 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            ViewBag.MakeId = new SelectList(service.getAllMakers(), "Id", "Name");
+            ViewBag.MakeId = new SelectList(service.GetAllMakers(), "Id", "Name");
             return View();
         }
 
@@ -55,7 +55,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] VechicleModel model)
+        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] VehicleModel model)
         {
             if (ModelState.IsValid)
             {
@@ -74,12 +74,12 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VechicleModel model = service.Read(id);
+            VehicleModel model = service.Read(id);
             if (model == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MakeID = new SelectList(service.getAllMakers(), "Id", "Name");
+            ViewBag.MakeID = new SelectList(service.GetAllMakers(), "Id", "Name");
             return View(model);
         }
 
@@ -88,7 +88,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,MakeID,Name,Abrv")] VechicleModel model)
+        public ActionResult Edit([Bind(Include = "Id,MakeID,Name,Abrv")] VehicleModel model)
         {
             if (ModelState.IsValid)
             {
@@ -109,7 +109,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VechicleModel vehicleModel = service.Read(id);
+            VehicleModel vehicleModel = service.Read(id);
             if (vehicleModel == null)
             {
                 return HttpNotFound();
@@ -122,7 +122,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VechicleModel model = service.Read(id);
+            VehicleModel model = service.Read(id);
             service.Delete(id);
             service.Save();
             return RedirectToAction("Index");

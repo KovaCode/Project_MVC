@@ -2,7 +2,7 @@
 
 namespace Service.Models
 {
-    public class VechicleModel
+    public class VehicleModel
     {
         [Key]
         [Required]
@@ -13,6 +13,6 @@ namespace Service.Models
         public string Name { get; set; }
         public string Abrv { get; set; }
 
-        public virtual VechicleMake Makers { get; set; }
+        public virtual VehicleMake Makers { get; set; }
     }
 }

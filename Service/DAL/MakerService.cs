@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Service.DAL
 {
-    public class MakerService : IVehicle<VechicleMake>
+    public class MakerService : IVehicle<VehicleMake>
     {
 
         private VehicleDBContext db;
@@ -17,13 +17,13 @@ namespace Service.DAL
             db = context;
         }
 
-        public IQueryable<VechicleMake> getMakersQueryable()
+        public IQueryable<VehicleMake> GetMakersQueryable()
         {
             return from s in db.Makers select s;
         }
 
 
-        public IEnumerable<VechicleMake> getMakers(string sortOrder, string currentFilter, string search, int? page)
+        public IEnumerable<VehicleMake> GetMakers(string sortOrder, string currentFilter, string search, int? page)
         {
             if (search != null)
             {
@@ -34,7 +34,7 @@ namespace Service.DAL
                 search = currentFilter;
             }
            
-            var makeItems = getMakersQueryable();
+            var makeItems = GetMakersQueryable();
 
             if (!String.IsNullOrEmpty(search))
             {
@@ -65,24 +65,24 @@ namespace Service.DAL
         }
 
 
-        public IEnumerable<VechicleMake> getMakers()
+        public IEnumerable<VehicleMake> GetMakers()
         {
-            return db.Makers.ToList<VechicleMake>();
+            return db.Makers.ToList<VehicleMake>();
         }
 
-        public VechicleMake Read(int? id)
+        public VehicleMake Read(int? id)
         {
             return db.Makers.Find(id);
         }
 
-        public void Update(VechicleMake maker)
+        public void Update(VehicleMake maker)
         {
             db.Entry(maker).State = EntityState.Modified;
         }
 
         public void Delete(int? id)
         {
-            VechicleMake maker = db.Makers.Find(id);
+            VehicleMake maker = db.Makers.Find(id);
             db.Makers.Remove(maker);
         }
 
@@ -91,7 +91,7 @@ namespace Service.DAL
             db.SaveChanges();
         }
 
-        public void Create(VechicleMake maker)
+        public void Create(VehicleMake maker)
         {
             db.Makers.Add(maker);
         }

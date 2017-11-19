@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Service.Models
 {
-    public class VechicleMake
+    public class VehicleMake
     {
         [Key]
         [Required]

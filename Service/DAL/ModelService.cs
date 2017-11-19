@@ -8,7 +8,7 @@ using Service.DAL;
 
 namespace Service.DAL
 {
-    public class ModelService : IVehicle<VechicleModel>
+    public class ModelService : IVehicle<VehicleModel>
     {
         private VehicleDBContext db;
 
@@ -19,24 +19,24 @@ namespace Service.DAL
 
    
 
-        public IQueryable<VechicleModel> getModelsQueryable()
+        public IQueryable<VehicleModel> GetModelsQueryable()
         {
             return from s in this.db.Models select s;
         }
 
 
-        public VechicleMake getMakerById(int? id)
+        public VehicleMake GetMakerById(int? id)
         { 
             return this.db.Makers.Find(id);
         }
 
-        public IEnumerable<VechicleMake> getAllMakers()
+        public IEnumerable<VehicleMake> GetAllMakers()
         {
-            return this.db.Makers.ToList<VechicleMake>();
+            return this.db.Makers.ToList<VehicleMake>();
         }
 
 
-        public IEnumerable<VechicleModel> getModels(string sortOrder, string currentFilter, string search, int? page)
+        public IEnumerable<VehicleModel> GetModels(string sortOrder, string currentFilter, string search, int? page)
         {
             if (search != null)
             {
@@ -47,7 +47,7 @@ namespace Service.DAL
                 search = currentFilter;
             }
 
-            var modelItems = getModelsQueryable();
+            var modelItems = GetModelsQueryable();
 
             if (!String.IsNullOrEmpty(search))
             {
@@ -77,17 +77,17 @@ namespace Service.DAL
             return modelItems.ToPagedList(pageNumber, pageSize);
         }
 
-        public IEnumerable<VechicleModel> getModels()
+        public IEnumerable<VehicleModel> GetModels()
         {
-            return this.db.Models.ToList<VechicleModel>();
+            return this.db.Models.ToList<VehicleModel>();
         }
 
-        public VechicleModel Read(int? id)
+        public VehicleModel Read(int? id)
         {
             return this.db.Models.Find(id);
         }
 
-        public void Update(VechicleModel model)
+        public void Update(VehicleModel model)
         {
             this.db.Entry(model).State = EntityState.Modified;
             this.db.SaveChanges();
@@ -95,7 +95,7 @@ namespace Service.DAL
 
         public void Delete(int? id)
         {
-            VechicleModel model = this.Read(id);
+            VehicleModel model = this.Read(id);
             this.db.Models.Remove(model);
         }
 
@@ -105,7 +105,7 @@ namespace Service.DAL
             this.db.SaveChanges();
         }
 
-        public void Create(VechicleModel model)
+        public void Create(VehicleModel model)
         {
             this.db.Models.Add(model);
         }

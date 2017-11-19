@@ -1,19 +1,19 @@
 ﻿
-@model PagedList.IPagedList<Service.Models.VechicleModel>
+@model PagedList.IPagedList<Service.Models.VehicleMake>
 @using PagedList.Mvc;
 
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
+
 <h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
 
 @using (Html.BeginForm())
 {
-
-    <p>
-        @Html.ActionLink("Create New", "Create")
-    </p>
-
     <p>
         Filter: @Html.TextBox("Search")
         <input type="submit" value="Search" />
@@ -23,13 +23,11 @@
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Name", "Model", new { sortOrder = ViewBag.NameSortParm })
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <th>
-            @Html.ActionLink("Abrv", "Model", new { sortOrder = ViewBag.AbrvSortParam })
+            @Html.ActionLink("Abrv", "Index", new { sortOrder = ViewBag.AbrvSortParam })
         </th>
-
-
     </tr>
 
     @foreach (var item in Model)
@@ -47,7 +45,7 @@
             </td>
             <td>
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-
+           
             </td>
         </tr>
     }
@@ -56,5 +54,9 @@
 
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("",
+@Html.PagedListPager(Model, page => Url.Action("Index",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
+<p>
+    @Html.ActionLink("Show Models", "Index", "Model")
+</p>

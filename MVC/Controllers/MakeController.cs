@@ -22,36 +22,8 @@ namespace MVC.Controllers
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-
-            var makeItems = service.getMakers(sortOrder, currentFilter, search, page);
-
-            //var makeItems = service.getMakers(sortOrder, currentFilter, search, page);
-
-            //if (!String.IsNullOrEmpty(search))
-            //{
-            //    makeItems = makeItems.Where(s => s.Name.Contains(search) || s.Abrv.Contains(search));
-            //}
-
-            //switch (sortOrder)
-            //{
-            //    case "name_desc":
-            //        makeItems = makeItems.OrderBy(s => s.Name);
-            //        break;
-            //    case "name_asc":
-            //        makeItems = makeItems.OrderBy(s => s.Name);
-            //        break;
-
-            //    case "Abrv":
-            //        makeItems = makeItems.OrderBy(s => s.Abrv);
-            //        break;
-            //    default:
-            //        makeItems = makeItems.OrderBy(s => s.Name);
-            //        break;
-            //}
-
-            //int pageSize = 10;
-            //int pageNumber = (page ?? 1);
-            return View(makeItems/*.ToPagedList(pageNumber, pageSize)*/);
+            var makeItems = service.GetMakers(sortOrder, currentFilter, search, page);
+            return View(makeItems);
         }
 
         // GET: /Maker/Details/5
@@ -63,7 +35,7 @@ namespace MVC.Controllers
             }
 
 
-            VechicleMake make = service.Read(id);
+            VehicleMake make = service.Read(id);
 
 
             if (make == null)
@@ -84,7 +56,7 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VechicleMake maker)
+        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMake maker)
         {
             if (ModelState.IsValid)
             {
@@ -103,7 +75,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VechicleMake make = service.Read(id);
+            VehicleMake make = service.Read(id);
             if (make == null)
             {
                 return HttpNotFound();
@@ -116,7 +88,7 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VechicleMake maker)
+        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMake maker)
         {
             if (ModelState.IsValid)
             {
@@ -135,7 +107,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VechicleMake maker = service.Read(id);
+            VehicleMake maker = service.Read(id);
             if (maker == null)
             {
                 return HttpNotFound();
@@ -148,7 +120,7 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            VechicleMake maker = service.Read(id);
+            VehicleMake maker = service.Read(id);
             service.Delete(id);
             service.Save();
             return RedirectToAction("Index");

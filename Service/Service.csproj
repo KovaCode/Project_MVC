@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAL\IMaker.cs" />
+    <Compile Include="DAL\DBInitialaser.cs" />
     <Compile Include="DAL\IVehicle.cs" />
     <Compile Include="DAL\MakerService.cs" />
     <Compile Include="DAL\ModelService.cs" />

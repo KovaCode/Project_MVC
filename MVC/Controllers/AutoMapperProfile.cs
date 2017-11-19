@@ -9,7 +9,7 @@ namespace MVC.Models
         public AutoMapperProfile()
         {
             Mapper.Initialize(cfg =>
-            cfg.CreateMap<VechicleMake, VehicleMakeView>());
+            cfg.CreateMap<VehicleMake, VehicleMakeView>());
 
             //Mapper.Map.CreateMap<ModelView, Model>();
         }
