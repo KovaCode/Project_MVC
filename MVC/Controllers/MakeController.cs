@@ -3,15 +3,21 @@ using System.Web.Mvc;
 using Service.DAL;
 using System.Net;
 using Service.Models;
+using MVC.Models;
+using System.Collections.Generic;
+using PagedList;
 
 namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
+        private const int pageSize = 10;
         private MakerService service;
+        private AutoMapperProfile autoMapperProfile;
 
         public MakeController()
         {
+            autoMapperProfile = new AutoMapperProfile();
             service = new MakerService(new VehicleDBContext());
         }
 
@@ -22,10 +28,15 @@ namespace MVC.Controllers
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-            var makeItems = service.GetMakers(sortOrder, currentFilter, search, page);
-            return View(makeItems);
-        }
+            IEnumerable<VehicleMake> makeItems = service.GetMakers(sortOrder, currentFilter, search, page);
 
+            IEnumerable<VehicleMakeView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);
+
+            
+            int pageNumber = (page ?? 1);
+            return View(makeViewItems.ToPagedList(pageNumber,10));
+        }
+        
         // GET: /Maker/Details/5
         public ActionResult Details(int id)
         {
@@ -34,15 +45,14 @@ namespace MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-
             VehicleMake make = service.Read(id);
+            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
 
-
-            if (make == null)
+            if (makeView == null)
             {
                 return HttpNotFound();
             }
-            return View(make);
+            return View(makeView);
         }
 
         // GET: /Maker/Create
@@ -56,16 +66,17 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMake maker)
+        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMake make)
         {
             if (ModelState.IsValid)
             {
-                service.Create(maker);
+                service.Create(make);
                 service.Save();
 
                 return RedirectToAction("Index");
             }
-            return View(maker);
+            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            return View(makeView);
         }
 
         // GET: /Maker/Edit/5
@@ -88,16 +99,18 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMake maker)
+        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMake make)
         {
             if (ModelState.IsValid)
             {
-                service.Update(maker);
+                service.Update(make);
                 service.Save();
 
                 return RedirectToAction("Index");
             }
-            return View(maker);
+
+            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            return View(makeView);
         }
 
         // GET: /Make/Delete/5
@@ -107,12 +120,14 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake maker = service.Read(id);
-            if (maker == null)
+            VehicleMake make = service.Read(id);
+            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            if (makeView == null)
             {
                 return HttpNotFound();
             }
-            return View(maker);
+           
+            return View(makeView);
         }
 
         // POST: /Make/Delete/5

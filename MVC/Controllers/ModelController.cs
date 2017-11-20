@@ -3,16 +3,22 @@ using System.Web.Mvc;
 using Service.DAL;
 using Service.Models;
 using System;
+using PagedList;
+using MVC.Models;
+using System.Collections.Generic;
 
 namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
+
         private ModelService service;
-       
+        private AutoMapperProfile autoMapperProfile;
+
+
         public ModelController()
         {
-           //var model = service.getModelsQueryable().Include(e => e.Makers);
+            autoMapperProfile = new AutoMapperProfile();
             service = new ModelService(new VehicleDBContext());
         }
 
@@ -22,9 +28,11 @@ namespace MVC_Project.Controllers
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
+            IEnumerable<VehicleModel> modelItems = service.GetModels(sortOrder, currentFilter, search, page);
+            IEnumerable<VehicleModelView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
 
-            var modelItems = service.GetModels(sortOrder, currentFilter, search, page);
-            return View(modelItems);
+            int pageNumber = (page ?? 1);
+            return View(makeViewItems.ToPagedList(pageNumber, 10));
 
         }
 
@@ -35,12 +43,15 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             VehicleModel model = service.Read(id);
-            if (model == null)
+            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);          
+
+            if (modelView == null)
             {
                 return HttpNotFound();
             }
-            return View(model);
+            return View(modelView);
         }
 
         // GET: Models/Create
@@ -63,8 +74,8 @@ namespace MVC_Project.Controllers
                 service.Save();
                 return RedirectToAction("Index");
             }
-
-            return View(model);
+            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            return View(modelView);
         }
 
         // GET: Models/Edit/5
@@ -75,12 +86,13 @@ namespace MVC_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             VehicleModel model = service.Read(id);
-            if (model == null)
+            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            if (modelView == null)
             {
                 return HttpNotFound();
             }
             ViewBag.MakeID = new SelectList(service.GetAllMakers(), "Id", "Name");
-            return View(model);
+            return View(modelView);
         }
 
         // POST: Models/Edit/5
@@ -99,7 +111,8 @@ namespace MVC_Project.Controllers
 
                 return RedirectToAction("Index");
             }
-            return View(model);
+            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            return View(modelView);
         }
 
         // GET: Models/Delete/5
@@ -109,12 +122,14 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel vehicleModel = service.Read(id);
-            if (vehicleModel == null)
+            VehicleModel model = service.Read(id);
+            if (model == null)
             {
                 return HttpNotFound();
             }
-            return View(vehicleModel);
+
+            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            return View(modelView);
         }
 
         // POST: Models/Delete/5
@@ -123,6 +138,8 @@ namespace MVC_Project.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             VehicleModel model = service.Read(id);
+            
+
             service.Delete(id);
             service.Save();
             return RedirectToAction("Index");

@@ -58,10 +58,9 @@ namespace Service.DAL
                     break;
             }
 
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
+      
                        
-            return makeItems.ToPagedList(pageNumber, pageSize);
+            return makeItems;
         }
 
 

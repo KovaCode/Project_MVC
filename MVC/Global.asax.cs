@@ -1,4 +1,5 @@
-﻿using MVC;
+﻿using AutoMapper;
+using MVC;
 using MVC.Models;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -14,8 +15,7 @@ namespace MVC_Project
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            AutoMapper.Mapper.Initialize(cfg => cfg.AddProfile<AutoMapperProfile>());
+            //Mapper.Initialize(c => c.AddProfile<AutoMapperProfile>());
         }
     }
 }
