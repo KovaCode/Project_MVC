@@ -91,7 +91,8 @@ namespace MVC.Controllers
             {
                 return HttpNotFound();
             }
-            return View(make);
+            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            return View(makeView);
         }
 
         // POST: /Maker/Edit/5
