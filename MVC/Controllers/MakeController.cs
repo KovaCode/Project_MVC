@@ -18,7 +18,7 @@ namespace MVC.Controllers
         public MakeController()
         {
             autoMapperProfile = new AutoMapperProfile();
-            service = new MakerService(new VehicleDBContext());
+            service = new MakerService();
         }
 
 
@@ -29,10 +29,8 @@ namespace MVC.Controllers
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
             IEnumerable<VehicleMake> makeItems = service.GetMakers(sortOrder, currentFilter, search, page);
-
             IEnumerable<VehicleMakeView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);
 
-            
             int pageNumber = (page ?? 1);
             return View(makeViewItems.ToPagedList(pageNumber,10));
         }
@@ -71,8 +69,6 @@ namespace MVC.Controllers
             if (ModelState.IsValid)
             {
                 service.Create(make);
-                service.Save();
-
                 return RedirectToAction("Index");
             }
             VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
@@ -105,8 +101,6 @@ namespace MVC.Controllers
             if (ModelState.IsValid)
             {
                 service.Update(make);
-                service.Save();
-
                 return RedirectToAction("Index");
             }
 
@@ -138,7 +132,6 @@ namespace MVC.Controllers
         {
             VehicleMake maker = service.Read(id);
             service.Delete(id);
-            service.Save();
             return RedirectToAction("Index");
         }
 

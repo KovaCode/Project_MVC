@@ -10,20 +10,7 @@ namespace Service.DAL
 {
     public class ModelService : IVehicle<VehicleModel>
     {
-        private VehicleDBContext db;
-
-        public ModelService(VehicleDBContext context)
-        {
-            this.db = context;
-        }
-
-   
-
-        public IQueryable<VehicleModel> GetModelsQueryable()
-        {
-            return from s in this.db.Models select s;
-        }
-
+        private VehicleDBContext db = new VehicleDBContext();
 
         public VehicleMake GetMakerById(int? id)
         { 
@@ -47,7 +34,7 @@ namespace Service.DAL
                 search = currentFilter;
             }
 
-            var modelItems = GetModelsQueryable();
+            var modelItems = from s in this.db.Models select s;
 
             if (!String.IsNullOrEmpty(search))
             {
@@ -87,13 +74,14 @@ namespace Service.DAL
         public void Update(VehicleModel model)
         {
             this.db.Entry(model).State = EntityState.Modified;
-            this.db.SaveChanges();
+            this.Save();
         }
 
         public void Delete(int? id)
         {
             VehicleModel model = this.Read(id);
             this.db.Models.Remove(model);
+            this.Save();
         }
 
 
@@ -105,6 +93,7 @@ namespace Service.DAL
         public void Create(VehicleModel model)
         {
             this.db.Models.Add(model);
+            this.Save();
         }
 
         private bool disposed = false;

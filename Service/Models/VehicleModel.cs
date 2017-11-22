@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Service.Models
 {
@@ -6,7 +7,7 @@ namespace Service.Models
     {
         [Key]
         [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public int MakeID { get; set; }
         [Required]       

@@ -9,18 +9,12 @@ namespace Service.DAL
 {
     public class MakerService : IVehicle<VehicleMake>
     {
+        private VehicleDBContext db = new VehicleDBContext();
 
-        private VehicleDBContext db;
-
-        public MakerService(VehicleDBContext context)
-        {
-            db = context;
-        }
-
-        public IQueryable<VehicleMake> GetMakersQueryable()
-        {
-            return from s in db.Makers select s;
-        }
+        //public IQueryable<VehicleMake> GetMakersQueryable()
+        //{
+        //    return from s in db.Makers select s;
+        //}
 
 
         public IEnumerable<VehicleMake> GetMakers(string sortOrder, string currentFilter, string search, int? page)
@@ -33,8 +27,8 @@ namespace Service.DAL
             {
                 search = currentFilter;
             }
-           
-            var makeItems = GetMakersQueryable();
+
+            var makeItems = from s in db.Makers select s;
 
             if (!String.IsNullOrEmpty(search))
             {

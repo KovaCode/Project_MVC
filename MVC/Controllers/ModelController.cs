@@ -11,7 +11,7 @@ namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-
+        private const int pageSize = 10;
         private ModelService service;
         private AutoMapperProfile autoMapperProfile;
 
@@ -19,7 +19,7 @@ namespace MVC_Project.Controllers
         public ModelController()
         {
             autoMapperProfile = new AutoMapperProfile();
-            service = new ModelService(new VehicleDBContext());
+            service = new ModelService();
         }
 
         // GET: Models
@@ -71,7 +71,6 @@ namespace MVC_Project.Controllers
             if (ModelState.IsValid)
             {
                 service.Create(model);
-                service.Save();
                 return RedirectToAction("Index");
             }
             VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
@@ -104,10 +103,7 @@ namespace MVC_Project.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(vehicleModel).State = EntityState.Modified;
-                //db.SaveChanges();
                 service.Update(model);
-                service.Save();
 
                 return RedirectToAction("Index");
             }
@@ -138,10 +134,7 @@ namespace MVC_Project.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             VehicleModel model = service.Read(id);
-            
-
             service.Delete(id);
-            service.Save();
             return RedirectToAction("Index");
         }
     }
