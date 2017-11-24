@@ -15,6 +15,7 @@ namespace MVC_Project
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            Mapper.Initialize(c => c.AddProfile<AutoMapperProfile>());
         }
     }
 }

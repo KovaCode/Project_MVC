@@ -6,19 +6,18 @@ using System;
 using PagedList;
 using MVC.Models;
 using System.Collections.Generic;
+using System.Collections;
+using AutoMapper;
 
 namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-        private const int pageSize = 10;
+        private VehicleModelMakerView viewMakerModel = new VehicleModelMakerView();
         private ModelService service;
-        private AutoMapperProfile autoMapperProfile;
-
 
         public ModelController()
         {
-            autoMapperProfile = new AutoMapperProfile();
             service = new ModelService();
         }
 
@@ -27,13 +26,17 @@ namespace MVC_Project.Controllers
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+           
+            viewMakerModel.SearchValue = searchValue;
+            viewMakerModel.AllMakes = service.GetAllMakers();
 
             IEnumerable<VehicleModel> modelItems = service.GetModels(sortOrder, currentFilter, searchValue, page);
-            IEnumerable<VehicleModelView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
-
-            int pageNumber = (page ?? 1);
-            return View(makeViewItems.ToPagedList(pageNumber, 10));
-
+            IEnumerable <VehicleMakeView> makeView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(viewMakerModel.AllMakes);
+            IEnumerable<VehicleModelView> modelView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
+        
+            int pageNumber = (viewMakerModel.Page ?? 1);
+            viewMakerModel.Models = modelView.ToPagedList(pageNumber, viewMakerModel.ResultsPerPage);
+            return View(viewMakerModel);
         }
 
         // GET: Models/Details/5
@@ -57,10 +60,10 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            ViewBag.MakeId = new SelectList(service.GetAllMakers(), "Id", "Name");
 
-            ViewData["list"] = new SelectList(service.GetAllMakers(), "Id", "Name");
-
+            //viewMakerModel.AllMakes = service.GetAllMakers();
+            ViewBag.MakeId = service.GetAllMakers();
+           
             return View();
         }
 
