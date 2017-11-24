@@ -23,12 +23,12 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models
-        public ActionResult Index(string sortOrder, string currentFilter, string search, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchValue, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-            IEnumerable<VehicleModel> modelItems = service.GetModels(sortOrder, currentFilter, search, page);
+            IEnumerable<VehicleModel> modelItems = service.GetModels(sortOrder, currentFilter, searchValue, page);
             IEnumerable<VehicleModelView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
 
             int pageNumber = (page ?? 1);
@@ -37,7 +37,7 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
@@ -58,6 +58,9 @@ namespace MVC_Project.Controllers
         public ActionResult Create()
         {
             ViewBag.MakeId = new SelectList(service.GetAllMakers(), "Id", "Name");
+
+            ViewData["list"] = new SelectList(service.GetAllMakers(), "Id", "Name");
+
             return View();
         }
 
@@ -78,7 +81,7 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
@@ -112,7 +115,7 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
@@ -131,7 +134,7 @@ namespace MVC_Project.Controllers
         // POST: Models/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid? id)
         {
             VehicleModel model = service.Read(id);
             service.Delete(id);

@@ -15,8 +15,8 @@
 @using (Html.BeginForm())
 {
     <p>
-        Filter: @Html.TextBox("Search")
-        <input type="submit" value="Search" />
+        Filter: @Html.TextBox("SearchValue")
+        <input type="submit" value="SearchValue"/>
     </p>
 }
 
@@ -29,7 +29,7 @@
             @Html.ActionLink("Abrv", "Index", new { sortOrder = ViewBag.AbrvSortParam })
         </th>
     </tr>
-
+    
     @foreach (var item in Model)
     {
         <tr>
@@ -53,9 +53,8 @@
 </table>
 
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-
-@Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+@Html.PagedListPager(Model, page => Url.Action("Index", 
+    new  { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 
 <p>
     @Html.ActionLink("Show Models", "Index", "Model")

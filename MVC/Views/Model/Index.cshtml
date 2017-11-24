@@ -15,18 +15,18 @@
     </p>
 
     <p>
-        Filter: @Html.TextBox("Search")
-        <input type="submit" value="Search" />
+        Filter: @Html.TextBox("SearchValue")
+        <input type="submit" value="SearchValue" />
     </p>
 }
 
 <table class="table">
     <tr>
         <th>
-            @Html.ActionLink("Name", "Model", new { sortOrder = ViewBag.NameSortParm })
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm })
         </th>
         <th>
-            @Html.ActionLink("Abrv", "Model", new { sortOrder = ViewBag.AbrvSortParam })
+            @Html.ActionLink("Abrv", "Index", new { sortOrder = ViewBag.AbrvSortParam })
         </th>
 
 

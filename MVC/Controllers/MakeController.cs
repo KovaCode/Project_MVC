@@ -6,12 +6,13 @@ using Service.Models;
 using MVC.Models;
 using System.Collections.Generic;
 using PagedList;
+using Service.Content.Filtering;
 
 namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
-        private const int pageSize = 10;
+        private Pagination pagination = new Pagination();
         private MakerService service;
         private AutoMapperProfile autoMapperProfile;
 
@@ -21,24 +22,24 @@ namespace MVC.Controllers
             service = new MakerService();
         }
 
-
         // GET: /Maker/
-        public ViewResult Index(string sortOrder, string currentFilter, string search, int? page)
+        public ViewResult Index(string searchValue, string sortOrder, string currentSort, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
-            IEnumerable<VehicleMake> makeItems = service.GetMakers(sortOrder, currentFilter, search, page);
+            IEnumerable<VehicleMake> makeItems = service.GetMakers(currentSort, sortOrder, searchValue, page);
             IEnumerable<VehicleMakeView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);
 
-            int pageNumber = (page ?? 1);
-            return View(makeViewItems.ToPagedList(pageNumber,10));
+            //int pageNumber = (page ?? 1);
+            pagination.Page = (page ?? 1);
+            return View(makeViewItems.ToPagedList(pagination.Page, pagination.ResultsPerPage));
         }
         
         // GET: /Maker/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(Guid? id)
         {
-            if (id <=0)
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -76,7 +77,7 @@ namespace MVC.Controllers
         }
 
         // GET: /Maker/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
@@ -109,7 +110,7 @@ namespace MVC.Controllers
         }
 
         // GET: /Make/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
@@ -128,7 +129,7 @@ namespace MVC.Controllers
         // POST: /Make/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid? id)
         {
             VehicleMake maker = service.Read(id);
             service.Delete(id);

@@ -11,7 +11,7 @@ namespace Service.DAL
     public class VehicleDBContext : DbContext
     {
 
-        public VehicleDBContext() : base("VehicleDatabase")
+        public VehicleDBContext() : base("VehicleDB")
             {
             }
 
