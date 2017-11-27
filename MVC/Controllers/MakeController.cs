@@ -12,6 +12,7 @@ namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
+        Search search = new Search();
         private Pagination pagination = new Pagination();
         private MakerService service;
         private AutoMapperProfile autoMapperProfile;
@@ -31,7 +32,6 @@ namespace MVC.Controllers
             IEnumerable<VehicleMake> makeItems = service.GetMakers(currentSort, sortOrder, searchValue, page);
             IEnumerable<VehicleMakeView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);
 
-            //int pageNumber = (page ?? 1);
             pagination.Page = (page ?? 1);
             return View(makeViewItems.ToPagedList(pagination.Page, pagination.ResultsPerPage));
         }
