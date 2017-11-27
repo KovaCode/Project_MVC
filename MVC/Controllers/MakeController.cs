@@ -6,14 +6,12 @@ using Service.Models;
 using MVC.Models;
 using System.Collections.Generic;
 using PagedList;
-using Service.Content.Filtering;
 
 namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
-        Search search = new Search();
-        private Pagination pagination = new Pagination();
+        //private Pagination pagination = new Pagination();
         private MakerService service;
         private AutoMapperProfile autoMapperProfile;
 
@@ -32,8 +30,10 @@ namespace MVC.Controllers
             IEnumerable<VehicleMake> makeItems = service.GetMakers(currentSort, sortOrder, searchValue, page);
             IEnumerable<VehicleMakeView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);
 
-            pagination.Page = (page ?? 1);
-            return View(makeViewItems.ToPagedList(pagination.Page, pagination.ResultsPerPage));
+            int pageNumber = (page ?? 1);
+            //pagination.Page = (page ?? 1);
+            //return View(makeViewItems.ToPagedList(pagination.Page, pagination.ResultsPerPage));
+            return View(makeViewItems.ToPagedList(pageNumber, 5));
         }
         
         // GET: /Maker/Details/5

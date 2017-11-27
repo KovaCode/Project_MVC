@@ -1,10 +1,10 @@
 ﻿
-@model PagedList.IPagedList<MVC.Models.VehicleModelView>
+@model MVC.Models.VehicleModelMakerView
 @using PagedList.Mvc;
 
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
-
+s
 <h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm())
@@ -32,18 +32,14 @@
 
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var item in Model.Models)
     {
         <tr>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
             <td>
-                @*@Html.DisplayFor(modelItem => item.Name)*@
                 @Html.ActionLink(item.Name, "Details", new { id = item.Id })
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Abrv)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
@@ -54,7 +50,6 @@
 
 </table>
 
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@*Page @(Model.Models.Count < Model.Models ? 0 : Model.PageNumber) of @Model.PageCount*@
 
-@Html.PagedListPager(Model, page => Url.Action("",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+@Html.PagedListPager(Model.Models, page => Url.Action("", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
