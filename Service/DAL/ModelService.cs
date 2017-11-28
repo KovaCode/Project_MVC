@@ -17,10 +17,51 @@ namespace Service.DAL
             return this.db.Makers.Find(id);
         }
 
+   
+
         public IEnumerable<VehicleMake> GetAllMakers()
         {
             return this.db.Makers.ToList<VehicleMake>();
         }
+
+        public IEnumerable<VehicleModel> GetModels(SystemDataModel systemDataModel)
+        {
+            if (systemDataModel.SearchValue != null)
+            {
+                systemDataModel.Page = 1;
+            }
+            else
+            {
+                systemDataModel.SearchValue = systemDataModel.CurrentFilter;
+            }
+
+            var modelItems = from s in this.db.Models select s;
+
+            if (!String.IsNullOrEmpty(systemDataModel.SearchValue))
+            {
+                modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
+            }
+
+            switch (systemDataModel.SortOrder)
+            {
+                case "name_desc":
+                    modelItems = modelItems.OrderBy(s => s.Name);
+                    break;
+                case "name_asc":
+                    modelItems = modelItems.OrderBy(s => s.Name);
+                    break;
+
+                case "Abrv":
+                    modelItems = modelItems.OrderBy(s => s.Abrv);
+                    break;
+                default:
+                    modelItems = modelItems.OrderBy(s => s.Name);
+                    break;
+            }
+
+            return modelItems;
+        }
+
 
         public IEnumerable<VehicleModel> GetModels(string sortOrder, string currentFilter, string search, int? page)
         {

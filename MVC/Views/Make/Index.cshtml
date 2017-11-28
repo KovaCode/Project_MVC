@@ -1,7 +1,6 @@
 ﻿
-@model PagedList.IPagedList<MVC.Models.VehicleMakeView>
+@model MVC.Models.MainView
 @using PagedList.Mvc;
-
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -15,9 +14,10 @@
 @using (Html.BeginForm())
 {
     <p>
-        Filter: @Html.TextBox("SearchValue")
-        <input type="submit" value="SearchValue"/>
+        Filter: @Html.TextBox("Search")
+        <input type="submit" value="SearchValue" />
     </p>
+
 }
 
 <table class="table">
@@ -29,8 +29,8 @@
             @Html.ActionLink("Abrv", "Index", new { sortOrder = ViewBag.AbrvSortParam })
         </th>
     </tr>
-    
-    @foreach (var item in Model)
+
+    @foreach (var item in Model.MakePaged)
     {
         <tr>
             @*<td>
@@ -45,16 +45,16 @@
             </td>
             <td>
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-           
+
             </td>
         </tr>
     }
 
 </table>
 
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index", 
-    new  { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+Page @(Model.MakePaged.PageCount < Model.MakePaged.PageNumber ? 0 : Model.MakePaged.PageNumber) of @Model.MakePaged.PageCount
+@Html.PagedListPager(Model.MakePaged, page => Url.Action("Index",  new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+
 
 <p>
     @Html.ActionLink("Show Models", "Index", "Model")

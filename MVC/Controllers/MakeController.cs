@@ -6,12 +6,14 @@ using Service.Models;
 using MVC.Models;
 using System.Collections.Generic;
 using PagedList;
+using Service.Models;
 
 namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
-        private Pagination pagination = new Pagination();
+        private SystemDataModel systemData = new SystemDataModel();
+        private MainView mainView = new MainView();
         private MakerService service;
         private AutoMapperProfile autoMapperProfile;
 
@@ -26,13 +28,16 @@ namespace MVC.Controllers
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            systemData.SearchValue = searchValue;
+            systemData.SortOrder = sortOrder;
 
-            IEnumerable<VehicleMake> makeItems = service.GetMakers(currentSort, sortOrder, searchValue, page);
+            IEnumerable<VehicleMake> makeItems = service.GetMakers(systemData);
             IEnumerable<VehicleMakeView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);
+            
+            systemData.Page = (page ?? 1);
+            mainView.MakePaged = makeViewItems.ToPagedList(systemData.Page, systemData.ResultsPerPage);
 
-            //int pageNumber = (page ?? 1);
-            pagination.Page = (page ?? 1);
-            return View(makeViewItems.ToPagedList(pagination.Page, pagination.ResultsPerPage));
+            return View(mainView);
         }
         
         // GET: /Maker/Details/5

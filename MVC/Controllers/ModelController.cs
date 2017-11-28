@@ -13,7 +13,8 @@ namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-        private VehicleModelMakerView viewMakerModel = new VehicleModelMakerView();
+        private MainView mainView = new MainView();
+        private SystemDataModel systemDataModel = new SystemDataModel();
         private ModelService service;
 
         public ModelController()
@@ -26,17 +27,18 @@ namespace MVC_Project.Controllers
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-           
-            viewMakerModel.SearchValue = searchValue;
-            viewMakerModel.AllMakes = service.GetAllMakers();
 
-            IEnumerable<VehicleModel> modelItems = service.GetModels(sortOrder, currentFilter, searchValue, page);
-            IEnumerable <VehicleMakeView> makeView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(viewMakerModel.AllMakes);
+            systemDataModel.SortOrder = sortOrder;
+            systemDataModel.SearchValue = searchValue;
+            mainView.MakerEnumerable = service.GetAllMakers();
+
+            IEnumerable<VehicleModel> modelItems = service.GetModels(systemDataModel);
+            IEnumerable <VehicleMakeView> makeView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(mainView.MakerEnumerable);
             IEnumerable<VehicleModelView> modelView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
-        
-            int pageNumber = (viewMakerModel.Page ?? 1);
-            viewMakerModel.Models = modelView.ToPagedList(pageNumber, viewMakerModel.ResultsPerPage);
-            return View(viewMakerModel);
+            
+            int pageNumber = (page ?? 1);
+            mainView.ModelPaged = modelView.ToPagedList(pageNumber, systemDataModel.ResultsPerPage);
+            return View(mainView);
         }
 
         // GET: Models/Details/5
@@ -60,10 +62,9 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
+            mainView.MakerEnumerable = service.GetAllMakers();
+            ViewBag.MakerList = mainView.ListMakers;
 
-            //viewMakerModel.AllMakes = service.GetAllMakers();
-            ViewBag.MakeId = service.GetAllMakers();
-           
             return View();
         }
 
@@ -72,7 +73,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,MakeID,Name,Abrv")] VehicleModel model)
+        public ActionResult Create([Bind(Include = "Id,VehicleMakeId, MakeID,Name,Abrv")] VehicleModel model)
         {
             if (ModelState.IsValid)
             {
@@ -80,7 +81,13 @@ namespace MVC_Project.Controllers
                 return RedirectToAction("Index");
             }
             VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+
+            ViewBag.MakerList = mainView.ListMakers;
+
             return View(modelView);
+
+            
+
         }
 
         // GET: Models/Edit/5
@@ -90,13 +97,13 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel model = service.Read(id);
-            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            
+            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(service.Read(id));
             if (modelView == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MakeID = new SelectList(service.GetAllMakers(), "Id", "Name");
+            ViewBag.MakerList = new SelectList(service.GetAllMakers(), "Id", "Name", modelView.VehicleMakeId);
             return View(modelView);
         }
 
@@ -105,7 +112,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,MakeID,Name,Abrv")] VehicleModel model)
+        public ActionResult Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModel model)
         {
             if (ModelState.IsValid)
             {
