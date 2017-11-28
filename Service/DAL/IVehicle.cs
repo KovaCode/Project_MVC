@@ -1,12 +1,14 @@
 ﻿
+using System;
+
 namespace Service.DAL
 {
     public interface IVehicle<T>
     {
         void Create(T obj);
-        T Read(int? id);
+        T Read(Guid? id);
         void Update(T obj);
-        void Delete(int? id);
+        void Delete(Guid? id);
      
     }
 }

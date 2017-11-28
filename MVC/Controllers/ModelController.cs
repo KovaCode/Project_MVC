@@ -6,38 +6,41 @@ using System;
 using PagedList;
 using MVC.Models;
 using System.Collections.Generic;
+using System.Collections;
+using AutoMapper;
 
 namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-
+        private VehicleModelMakerView viewMakerModel = new VehicleModelMakerView();
         private ModelService service;
-        private AutoMapperProfile autoMapperProfile;
-
 
         public ModelController()
         {
-            autoMapperProfile = new AutoMapperProfile();
-            service = new ModelService(new VehicleDBContext());
+            service = new ModelService();
         }
 
         // GET: Models
-        public ActionResult Index(string sortOrder, string currentFilter, string search, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchValue, int? page)
         {
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+           
+            viewMakerModel.SearchValue = searchValue;
+            viewMakerModel.AllMakes = service.GetAllMakers();
 
-            IEnumerable<VehicleModel> modelItems = service.GetModels(sortOrder, currentFilter, search, page);
-            IEnumerable<VehicleModelView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
-
-            int pageNumber = (page ?? 1);
-            return View(makeViewItems.ToPagedList(pageNumber, 10));
-
+            IEnumerable<VehicleModel> modelItems = service.GetModels(sortOrder, currentFilter, searchValue, page);
+            IEnumerable <VehicleMakeView> makeView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(viewMakerModel.AllMakes);
+            IEnumerable<VehicleModelView> modelView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
+        
+            int pageNumber = (viewMakerModel.Page ?? 1);
+            viewMakerModel.Models = modelView.ToPagedList(pageNumber, viewMakerModel.ResultsPerPage);
+            return View(viewMakerModel);
         }
 
         // GET: Models/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(Guid? id)
         {
             if (id == null)
             {
@@ -57,7 +60,10 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            ViewBag.MakeId = new SelectList(service.GetAllMakers(), "Id", "Name");
+
+            //viewMakerModel.AllMakes = service.GetAllMakers();
+            ViewBag.MakeId = service.GetAllMakers();
+           
             return View();
         }
 
@@ -71,7 +77,6 @@ namespace MVC_Project.Controllers
             if (ModelState.IsValid)
             {
                 service.Create(model);
-                service.Save();
                 return RedirectToAction("Index");
             }
             VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
@@ -79,7 +84,7 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(Guid? id)
         {
             if (id == null)
             {
@@ -104,10 +109,7 @@ namespace MVC_Project.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(vehicleModel).State = EntityState.Modified;
-                //db.SaveChanges();
                 service.Update(model);
-                service.Save();
 
                 return RedirectToAction("Index");
             }
@@ -116,7 +118,7 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
@@ -135,13 +137,10 @@ namespace MVC_Project.Controllers
         // POST: Models/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(Guid? id)
         {
             VehicleModel model = service.Read(id);
-            
-
             service.Delete(id);
-            service.Save();
             return RedirectToAction("Index");
         }
     }

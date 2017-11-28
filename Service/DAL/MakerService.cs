@@ -1,5 +1,4 @@
 ﻿using Service.Models;
-using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,36 +8,24 @@ namespace Service.DAL
 {
     public class MakerService : IVehicle<VehicleMake>
     {
+        private VehicleDBContext db = new VehicleDBContext();
 
-        private VehicleDBContext db;
-
-        public MakerService(VehicleDBContext context)
+        public IEnumerable<VehicleMake> GetMakers(string sortOrder, string currentFilter, string value, int? page)
         {
-            db = context;
-        }
-
-        public IQueryable<VehicleMake> GetMakersQueryable()
-        {
-            return from s in db.Makers select s;
-        }
-
-
-        public IEnumerable<VehicleMake> GetMakers(string sortOrder, string currentFilter, string search, int? page)
-        {
-            if (search != null)
+            if (value != null)
             {
                 page = 1;
             }
             else
             {
-                search = currentFilter;
+                value = currentFilter;
             }
-           
-            var makeItems = GetMakersQueryable();
 
-            if (!String.IsNullOrEmpty(search))
+            var makeItems = from s in db.Makers select s;
+
+            if (!String.IsNullOrEmpty(value))
             {
-                makeItems = makeItems.Where(s => s.Name.Contains(search) || s.Abrv.Contains(search));
+                makeItems = makeItems.Where(s => s.Name.Contains(value) || s.Abrv.Contains(value));
             }
 
             switch (sortOrder)
@@ -57,19 +44,52 @@ namespace Service.DAL
                     makeItems = makeItems.OrderBy(s => s.Name);
                     break;
             }
-
-      
-                       
             return makeItems;
         }
 
+        //public IEnumerable<VehicleMake> GetMakers(Search search, Pagination pagination)
+        //{
+        //    if (search != null)
+        //    {
+        //        pagination.Page = 1;
+        //    }
+        //    else
+        //    {
+        //        search.SearchValue = search.CurrentFilter;
+        //    }
+
+        //    var makeItems = from s in db.Makers select s;
+
+        //    if (!String.IsNullOrEmpty(search.SearchValue))
+        //    {
+        //        makeItems = makeItems.Where(s => s.Name.Contains(search.SearchValue) || s.Abrv.Contains(search.SearchValue));
+        //    }
+
+        //    switch (search.SortOrder)
+        //    {
+        //        case "name_desc":
+        //            makeItems = makeItems.OrderBy(s => s.Name);
+        //            break;
+        //        case "name_asc":
+        //            makeItems = makeItems.OrderBy(s => s.Name);
+        //            break;
+
+        //        case "Abrv":
+        //            makeItems = makeItems.OrderBy(s => s.Abrv);
+        //            break;
+        //        default:
+        //            makeItems = makeItems.OrderBy(s => s.Name);
+        //            break;
+        //    }        
+        //    return makeItems;
+        //}
 
         public IEnumerable<VehicleMake> GetMakers()
         {
             return db.Makers.ToList<VehicleMake>();
         }
 
-        public VehicleMake Read(int? id)
+        public VehicleMake Read(Guid? id)
         {
             return db.Makers.Find(id);
         }
@@ -77,12 +97,15 @@ namespace Service.DAL
         public void Update(VehicleMake maker)
         {
             db.Entry(maker).State = EntityState.Modified;
+            Save();
         }
 
-        public void Delete(int? id)
+        public void Delete(Guid? id)
         {
             VehicleMake maker = db.Makers.Find(id);
             db.Makers.Remove(maker);
+            Save();
+
         }
 
         public void Save()
@@ -93,6 +116,7 @@ namespace Service.DAL
         public void Create(VehicleMake maker)
         {
             db.Makers.Add(maker);
+            Save();
         }
 
 

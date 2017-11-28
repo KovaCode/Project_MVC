@@ -10,22 +10,9 @@ namespace Service.DAL
 {
     public class ModelService : IVehicle<VehicleModel>
     {
-        private VehicleDBContext db;
+        private VehicleDBContext db = new VehicleDBContext();
 
-        public ModelService(VehicleDBContext context)
-        {
-            this.db = context;
-        }
-
-   
-
-        public IQueryable<VehicleModel> GetModelsQueryable()
-        {
-            return from s in this.db.Models select s;
-        }
-
-
-        public VehicleMake GetMakerById(int? id)
+        public VehicleMake GetMakerById(Guid? id)
         { 
             return this.db.Makers.Find(id);
         }
@@ -34,7 +21,6 @@ namespace Service.DAL
         {
             return this.db.Makers.ToList<VehicleMake>();
         }
-
 
         public IEnumerable<VehicleModel> GetModels(string sortOrder, string currentFilter, string search, int? page)
         {
@@ -47,7 +33,7 @@ namespace Service.DAL
                 search = currentFilter;
             }
 
-            var modelItems = GetModelsQueryable();
+            var modelItems = from s in this.db.Models select s;
 
             if (!String.IsNullOrEmpty(search))
             {
@@ -79,7 +65,7 @@ namespace Service.DAL
             return this.db.Models.ToList<VehicleModel>();
         }
 
-        public VehicleModel Read(int? id)
+        public VehicleModel Read(Guid? id)
         {
             return this.db.Models.Find(id);
         }
@@ -87,15 +73,15 @@ namespace Service.DAL
         public void Update(VehicleModel model)
         {
             this.db.Entry(model).State = EntityState.Modified;
-            this.db.SaveChanges();
+            this.Save();
         }
 
-        public void Delete(int? id)
+        public void Delete(Guid? id)
         {
             VehicleModel model = this.Read(id);
             this.db.Models.Remove(model);
+            this.Save();
         }
-
 
         public void Save()
         {
@@ -105,6 +91,7 @@ namespace Service.DAL
         public void Create(VehicleModel model)
         {
             this.db.Models.Add(model);
+            this.Save();
         }
 
         private bool disposed = false;

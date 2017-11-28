@@ -35,8 +35,8 @@
         <div class="form-group">
             @Html.LabelFor(model => model.MakeID, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*Html.DropDownList("MakeID", (IEnumerable<SelectListItem>)ViewData["basetype"], "- Please Select - ")*@
-                @Html.DropDownListFor(model => model.MakeID, (IEnumerable<SelectListItem>)ViewData["basetype"], "- Please Select - ")
+                @Html.DropDownList("MakeID", (IEnumerable<SelectListItem>)ViewData["basetype"], "- Please Select - ")
+              @*  @Html.DropDownListFor(model => model.MakeID, (IEnumerable<SelectListItem>)ViewData["basetype"], "- Please Select - ")*@
                 @Html.ValidationMessageFor(model => model.MakeID)
             </div>
         </div>
