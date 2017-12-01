@@ -10,47 +10,10 @@ namespace Service.DAL
     {
         private VehicleDBContext db = new VehicleDBContext();
 
-        public IEnumerable<VehicleMake> GetMakers(string sortOrder, string currentFilter, string value, int? page)
-        {
-            if (value != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                value = currentFilter;
-            }
-
-            var makeItems = from s in db.Makers select s;
-
-            if (!String.IsNullOrEmpty(value))
-            {
-                makeItems = makeItems.Where(s => s.Name.Contains(value) || s.Abrv.Contains(value));
-            }
-
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
-                case "name_asc":
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
-
-                case "Abrv":
-                    makeItems = makeItems.OrderBy(s => s.Abrv);
-                    break;
-                default:
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
-            }
-            return makeItems;
-        }
-
         public IEnumerable<VehicleMake> GetMakers(SystemDataModel systemDataModel)
         {
-            if (systemDataModel.SearchValue != null)
-            {
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+                {
                 systemDataModel.Page = 1;
             }
             else
@@ -60,7 +23,7 @@ namespace Service.DAL
 
             var makeItems = from s in db.Makers select s;
 
-            if (!String.IsNullOrEmpty(systemDataModel.SearchValue))
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
                 makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
             }

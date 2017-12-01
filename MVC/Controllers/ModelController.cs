@@ -33,8 +33,8 @@ namespace MVC_Project.Controllers
             mainView.MakerEnumerable = service.GetAllMakers();
 
             IEnumerable<VehicleModel> modelItems = service.GetModels(systemDataModel);
-            IEnumerable <VehicleMakeView> makeView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(mainView.MakerEnumerable);
-            IEnumerable<VehicleModelView> modelView = AutoMapperProfile._mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
+            IEnumerable <VehicleMakeView> makeView = Mapper.Map<IEnumerable<VehicleMakeView>>(mainView.MakerEnumerable);
+            IEnumerable<VehicleModelView> modelView = Mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
             
             int pageNumber = (page ?? 1);
             mainView.ModelPaged = modelView.ToPagedList(pageNumber, systemDataModel.ResultsPerPage);
@@ -50,7 +50,7 @@ namespace MVC_Project.Controllers
             }
 
             VehicleModel model = service.Read(id);
-            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);          
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);          
 
             if (modelView == null)
             {
@@ -80,7 +80,7 @@ namespace MVC_Project.Controllers
                 service.Create(model);
                 return RedirectToAction("Index");
             }
-            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
 
             ViewBag.MakerList = mainView.ListMakers;
 
@@ -98,7 +98,7 @@ namespace MVC_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(service.Read(id));
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(service.Read(id));
             if (modelView == null)
             {
                 return HttpNotFound();
@@ -120,7 +120,7 @@ namespace MVC_Project.Controllers
 
                 return RedirectToAction("Index");
             }
-            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
             return View(modelView);
         }
 
@@ -137,7 +137,7 @@ namespace MVC_Project.Controllers
                 return HttpNotFound();
             }
 
-            VehicleModelView modelView = AutoMapperProfile._mapper.Map<VehicleModelView>(model);
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
             return View(modelView);
         }
 

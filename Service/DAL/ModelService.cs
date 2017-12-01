@@ -26,7 +26,7 @@ namespace Service.DAL
 
         public IEnumerable<VehicleModel> GetModels(SystemDataModel systemDataModel)
         {
-            if (systemDataModel.SearchValue != null)
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
                 systemDataModel.Page = 1;
             }
@@ -37,51 +37,12 @@ namespace Service.DAL
 
             var modelItems = from s in this.db.Models select s;
 
-            if (!String.IsNullOrEmpty(systemDataModel.SearchValue))
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
                 modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
             }
 
             switch (systemDataModel.SortOrder)
-            {
-                case "name_desc":
-                    modelItems = modelItems.OrderBy(s => s.Name);
-                    break;
-                case "name_asc":
-                    modelItems = modelItems.OrderBy(s => s.Name);
-                    break;
-
-                case "Abrv":
-                    modelItems = modelItems.OrderBy(s => s.Abrv);
-                    break;
-                default:
-                    modelItems = modelItems.OrderBy(s => s.Name);
-                    break;
-            }
-
-            return modelItems;
-        }
-
-
-        public IEnumerable<VehicleModel> GetModels(string sortOrder, string currentFilter, string search, int? page)
-        {
-            if (search != null)
-            {
-                page = 1;
-            }
-            else
-            {
-                search = currentFilter;
-            }
-
-            var modelItems = from s in this.db.Models select s;
-
-            if (!String.IsNullOrEmpty(search))
-            {
-                modelItems = modelItems.Where(s => s.Name.Contains(search) || s.Abrv.Contains(search));
-            }
-
-            switch (sortOrder)
             {
                 case "name_desc":
                     modelItems = modelItems.OrderBy(s => s.Name);

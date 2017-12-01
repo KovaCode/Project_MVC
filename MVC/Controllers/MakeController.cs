@@ -6,7 +6,7 @@ using Service.Models;
 using MVC.Models;
 using System.Collections.Generic;
 using PagedList;
-using Service.Models;
+using AutoMapper;
 
 namespace MVC.Controllers
 {
@@ -15,11 +15,9 @@ namespace MVC.Controllers
         private SystemDataModel systemData = new SystemDataModel();
         private MainView mainView = new MainView();
         private MakerService service;
-        private AutoMapperProfile autoMapperProfile;
 
         public MakeController()
         {
-            autoMapperProfile = new AutoMapperProfile();
             service = new MakerService();
         }
 
@@ -32,8 +30,7 @@ namespace MVC.Controllers
             systemData.SortOrder = sortOrder;
 
             IEnumerable<VehicleMake> makeItems = service.GetMakers(systemData);
-            IEnumerable<VehicleMakeView> makeViewItems = AutoMapperProfile._mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);
-            
+            IEnumerable<VehicleMakeView> makeViewItems = Mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);            
             systemData.Page = (page ?? 1);
             mainView.MakePaged = makeViewItems.ToPagedList(systemData.Page, systemData.ResultsPerPage);
 
@@ -47,9 +44,8 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
             VehicleMake make = service.Read(id);
-            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
 
             if (makeView == null)
             {
@@ -76,7 +72,7 @@ namespace MVC.Controllers
                 service.Create(make);
                 return RedirectToAction("Index");
             }
-            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             return View(makeView);
         }
 
@@ -92,7 +88,7 @@ namespace MVC.Controllers
             {
                 return HttpNotFound();
             }
-            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             return View(makeView);
         }
 
@@ -109,7 +105,7 @@ namespace MVC.Controllers
                 return RedirectToAction("Index");
             }
 
-            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             return View(makeView);
         }
 
@@ -121,7 +117,7 @@ namespace MVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             VehicleMake make = service.Read(id);
-            VehicleMakeView makeView = AutoMapperProfile._mapper.Map<VehicleMakeView>(make);
+            VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             if (makeView == null)
             {
                 return HttpNotFound();

@@ -7,9 +7,8 @@ namespace MVC.Models
 {
     public class AutoMapperProfile : Profile
     {
-        public static IMapper _mapper;
-        
-
+        private IMapper mapper;
+      
         public AutoMapperProfile()
         {
             var config = new MapperConfiguration(x =>
@@ -22,31 +21,7 @@ namespace MVC.Models
 
 
             });
-            _mapper = config.CreateMapper();
-
+            mapper = config.CreateMapper();
         }
-
     }
 }
-
-//var config = new MapperConfiguration(cfg =>
-//{
-//    cfg.CreateMap<VehicleMake, VehicleMakeView>()
-//    .ForMember(m => m.Id, map => map.MapFrom(vm => vm.Id))
-//    .ForMember(m => m.Name, map => map.MapFrom(vm => vm.Name))
-//    .ForMember(m => m.Abrv, map => map.MapFrom(vm => vm.Abrv));
-
-//    cfg.CreateMap<VehicleModel, VehicleModelView>()
-//    .ForMember(m => m.Id, map => map.MapFrom(vm => vm.Id))
-//    .ForMember(m => m.Name, map => map.MapFrom(vm => vm.Name))
-//    .ForMember(m => m.Abrv, map => map.MapFrom(vm => vm.Abrv));
-
-//    cfg.CreateMissingTypeMaps = true;
-
-//    cfg.CreateMap<VehicleModelView, VehicleMake>();
-
-//});
-
-////  config.AssertConfigurationIsValid();
-
-//var mapper = config.CreateMapper();

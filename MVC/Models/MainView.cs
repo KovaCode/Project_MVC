@@ -19,8 +19,6 @@ namespace MVC.Models
         {
             get { return new SelectList(MakerEnumerable, "Id", "Name"); }
         }
-
-
         public IPagedList<VehicleMakeView> MakePaged { get; set; }
         public IPagedList<VehicleModelView> ModelPaged { get; set; }
     }
