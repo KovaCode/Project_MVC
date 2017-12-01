@@ -8,12 +8,11 @@ namespace Service.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        [Required]
-        public int MakeID { get; set; }
+        public string VehicleMakeId { get; set; }
         [Required]       
         public string Name { get; set; }
         public string Abrv { get; set; }
 
-        public virtual VehicleMake Makers { get; set; }
+        public VehicleMake VehicleMake { get; set; }
     }
 }

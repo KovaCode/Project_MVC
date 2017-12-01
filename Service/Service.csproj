@@ -61,8 +61,7 @@
     <Compile Include="DAL\MakerService.cs" />
     <Compile Include="DAL\ModelService.cs" />
     <Compile Include="DAL\VehicleDBContext.cs" />
-    <Compile Include="Content\Filtering\Pagination.cs" />
-    <Compile Include="Content\Filtering\Search.cs" />
+    <Compile Include="Models\SystemDataModel.cs" />
     <Compile Include="Models\VehicleMake.cs" />
     <Compile Include="Models\VehicleModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,9 +69,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Content\PagedList.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

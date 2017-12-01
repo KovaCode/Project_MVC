@@ -33,11 +33,11 @@
         </div>*@
 
         <div class="form-group">
-            @Html.LabelFor(model => model.MakeID, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Id, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("MakeID", (IEnumerable<SelectListItem>)ViewData["basetype"], "- Please Select - ")
+                @Html.DropDownList("VehicleMakeId", ViewBag.MakerList as SelectList)
               @*  @Html.DropDownListFor(model => model.MakeID, (IEnumerable<SelectListItem>)ViewData["basetype"], "- Please Select - ")*@
-                @Html.ValidationMessageFor(model => model.MakeID)
+                @Html.ValidationMessageFor(model => model.VehicleMakeId)
             </div>
         </div>
 

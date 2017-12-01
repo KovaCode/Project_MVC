@@ -16,10 +16,11 @@ namespace MVC.Models
             {
                 x.CreateMap<VehicleMake, VehicleMakeView>();
                 x.CreateMap<VehicleModel, VehicleModelView>();
-                x.CreateMap<VehicleMake, VehicleModelView>()
-                .ForMember(dest => dest.MakeName, opt => opt.MapFrom(src => src.Name));
-                x.CreateMissingTypeMaps = true;
-                
+                x.CreateMap<VehicleMakeView, VehicleModelView>()               
+                .ForMember(dest => dest.VehicleMakeName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.VehicleMakeId, opt => opt.MapFrom(src => src.Id));
+
+
             });
             _mapper = config.CreateMapper();
 

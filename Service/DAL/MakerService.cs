@@ -47,42 +47,42 @@ namespace Service.DAL
             return makeItems;
         }
 
-        //public IEnumerable<VehicleMake> GetMakers(Search search, Pagination pagination)
-        //{
-        //    if (search != null)
-        //    {
-        //        pagination.Page = 1;
-        //    }
-        //    else
-        //    {
-        //        search.SearchValue = search.CurrentFilter;
-        //    }
+        public IEnumerable<VehicleMake> GetMakers(SystemDataModel systemDataModel)
+        {
+            if (systemDataModel.SearchValue != null)
+            {
+                systemDataModel.Page = 1;
+            }
+            else
+            {
+                systemDataModel.SearchValue = systemDataModel.CurrentFilter;
+            }
 
-        //    var makeItems = from s in db.Makers select s;
+            var makeItems = from s in db.Makers select s;
 
-        //    if (!String.IsNullOrEmpty(search.SearchValue))
-        //    {
-        //        makeItems = makeItems.Where(s => s.Name.Contains(search.SearchValue) || s.Abrv.Contains(search.SearchValue));
-        //    }
+            if (!String.IsNullOrEmpty(systemDataModel.SearchValue))
+            {
+                makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
+            }
 
-        //    switch (search.SortOrder)
-        //    {
-        //        case "name_desc":
-        //            makeItems = makeItems.OrderBy(s => s.Name);
-        //            break;
-        //        case "name_asc":
-        //            makeItems = makeItems.OrderBy(s => s.Name);
-        //            break;
+            switch (systemDataModel.SortOrder)
+            {
+                case "name_desc":
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+                case "name_asc":
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
 
-        //        case "Abrv":
-        //            makeItems = makeItems.OrderBy(s => s.Abrv);
-        //            break;
-        //        default:
-        //            makeItems = makeItems.OrderBy(s => s.Name);
-        //            break;
-        //    }        
-        //    return makeItems;
-        //}
+                case "Abrv":
+                    makeItems = makeItems.OrderBy(s => s.Abrv);
+                    break;
+                default:
+                    makeItems = makeItems.OrderBy(s => s.Name);
+                    break;
+            }
+            return makeItems;
+        }
 
         public IEnumerable<VehicleMake> GetMakers()
         {
