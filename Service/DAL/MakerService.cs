@@ -12,7 +12,7 @@ namespace Service.DAL
 
         public IEnumerable<VehicleMake> GetMakers(SystemDataModel systemDataModel)
         {
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+            if (String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
                 {
                 systemDataModel.Page = 1;
             }

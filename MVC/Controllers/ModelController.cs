@@ -13,8 +13,6 @@ namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-        private MainView mainView = new MainView();
-        private SystemDataModel systemDataModel = new SystemDataModel();
         private ModelService service;
 
         public ModelController()
@@ -25,20 +23,23 @@ namespace MVC_Project.Controllers
         // GET: Models
         public ActionResult Index(string sortOrder, string currentFilter, string searchValue, int? page)
         {
+            VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged();
+            SystemDataModel systemDataModel = new SystemDataModel();
+
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.SearchValue = searchValue;
-            mainView.MakerEnumerable = service.GetAllMakers();
+            vehicleModelViewPaged.MakerEnumerable = service.GetAllMakers();
 
             IEnumerable<VehicleModel> modelItems = service.GetModels(systemDataModel);
-            IEnumerable <VehicleMakeView> makeView = Mapper.Map<IEnumerable<VehicleMakeView>>(mainView.MakerEnumerable);
+            IEnumerable <VehicleMakeView> makeView = Mapper.Map<IEnumerable<VehicleMakeView>>(vehicleModelViewPaged.MakerEnumerable);
             IEnumerable<VehicleModelView> modelView = Mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
             
             int pageNumber = (page ?? 1);
-            mainView.ModelPaged = modelView.ToPagedList(pageNumber, systemDataModel.ResultsPerPage);
-            return View(mainView);
+            vehicleModelViewPaged.ModelPaged = modelView.ToPagedList(pageNumber, systemDataModel.ResultsPerPage);
+            return View(vehicleModelViewPaged);
         }
 
         // GET: Models/Details/5
@@ -62,6 +63,7 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
+            VehicleModelViewPaged mainView = new VehicleModelViewPaged();
             mainView.MakerEnumerable = service.GetAllMakers();
             ViewBag.MakerList = mainView.ListMakers;
 
@@ -75,6 +77,9 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,VehicleMakeId, MakeID,Name,Abrv")] VehicleModel model)
         {
+            VehicleModelViewPaged mainView = new VehicleModelViewPaged();
+            mainView.MakerEnumerable = service.GetAllMakers();
+
             if (ModelState.IsValid)
             {
                 service.Create(model);

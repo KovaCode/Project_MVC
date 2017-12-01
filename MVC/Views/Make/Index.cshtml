@@ -1,5 +1,5 @@
 ﻿
-@model MVC.Models.MainView
+@model MVC.Models.VehicleMakeViewPaged
 @using PagedList.Mvc;
 
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
@@ -33,11 +33,7 @@
     @foreach (var item in Model.MakePaged)
     {
         <tr>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
             <td>
-                @*@Html.DisplayFor(modelItem => item.Name)*@
                 @Html.ActionLink(item.Name, "Details", new { id = item.Id })
             </td>
             <td>

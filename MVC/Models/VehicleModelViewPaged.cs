@@ -9,7 +9,7 @@ using System.Xml.Linq;
 namespace MVC.Models
 {
     
-    public class MainView
+    public class VehicleModelViewPaged
     {
         public IEnumerable<VehicleMake> MakerEnumerable;
         
@@ -19,7 +19,6 @@ namespace MVC.Models
         {
             get { return new SelectList(MakerEnumerable, "Id", "Name"); }
         }
-        public IPagedList<VehicleMakeView> MakePaged { get; set; }
         public IPagedList<VehicleModelView> ModelPaged { get; set; }
     }
 }

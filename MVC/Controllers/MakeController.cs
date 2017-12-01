@@ -12,10 +12,8 @@ namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
-        private SystemDataModel systemData = new SystemDataModel();
-        private MainView mainView = new MainView();
         private MakerService service;
-
+        private AutoMapperProfile autoMapperProfile = new AutoMapperProfile();
         public MakeController()
         {
             service = new MakerService();
@@ -24,17 +22,20 @@ namespace MVC.Controllers
         // GET: /Maker/
         public ViewResult Index(string searchValue, string sortOrder, string currentSort, int? page)
         {
+            VehicleMakeViewPaged vehicleMakeViewPaged = new VehicleMakeViewPaged();
+            SystemDataModel systemData = new SystemDataModel();
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
             systemData.SearchValue = searchValue;
             systemData.SortOrder = sortOrder;
 
             IEnumerable<VehicleMake> makeItems = service.GetMakers(systemData);
             IEnumerable<VehicleMakeView> makeViewItems = Mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);            
             systemData.Page = (page ?? 1);
-            mainView.MakePaged = makeViewItems.ToPagedList(systemData.Page, systemData.ResultsPerPage);
 
-            return View(mainView);
+            vehicleMakeViewPaged.MakePaged = makeViewItems.ToPagedList(systemData.Page, systemData.ResultsPerPage);
+            return View(vehicleMakeViewPaged);
         }
         
         // GET: /Maker/Details/5

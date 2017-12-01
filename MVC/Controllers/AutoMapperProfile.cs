@@ -7,21 +7,19 @@ namespace MVC.Models
 {
     public class AutoMapperProfile : Profile
     {
-        private IMapper mapper;
-      
+
         public AutoMapperProfile()
         {
-            var config = new MapperConfiguration(x =>
+            var config = new MapperConfiguration(cfg =>
             {
-                x.CreateMap<VehicleMake, VehicleMakeView>();
-                x.CreateMap<VehicleModel, VehicleModelView>();
-                x.CreateMap<VehicleMakeView, VehicleModelView>()               
+                cfg.CreateMap<List<VehicleMake>, IEnumerable<VehicleMakeView>>();
+                cfg.CreateMap<List<VehicleModel>, IEnumerable<VehicleModelView>>();
+                cfg.CreateMap<VehicleMakeView, VehicleModelView>()
                 .ForMember(dest => dest.VehicleMakeName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.VehicleMakeId, opt => opt.MapFrom(src => src.Id));
-
-
+                .ForMember(dest =>dest.VehicleMakeId, opt => opt.MapFrom(src => src.Id));
             });
-            mapper = config.CreateMapper();
+
+            IMapper mapper = config.CreateMapper();
         }
     }
 }
