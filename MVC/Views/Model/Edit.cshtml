@@ -18,7 +18,7 @@
             @Html.LabelFor(model => model.Id, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("VehicleMakeId", ViewBag.MakerList as SelectList)
-                @Html.ValidationMessageFor(model => model.VehicleMakeId)
+                @Html.ValidationMessageFor(model => model.Make.Id)
             </div>
         </div>
 

@@ -1,8 +1,6 @@
 ﻿
 using Service.Models;
 using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
 
 namespace MVC.Models
 {
@@ -10,11 +8,9 @@ namespace MVC.Models
     public class VehicleModelView
     {
         public Guid Id { get; set; }
-        //public string VehicleMakeId { get; set; }
-        //public string VehicleMakeName { get; set; }
         public string Name { get; set; }
         public string Abrv { get; set; }
-        public VehicleMake Make { get; set; }
 
+        public virtual VehicleMake Make { get; set; }
     }
 }

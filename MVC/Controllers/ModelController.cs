@@ -34,8 +34,8 @@ namespace MVC_Project.Controllers
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
 
-            IEnumerable<VehicleMakeView> makeView = Mapper.Map<IEnumerable<VehicleMakeView>>(vehicleModelViewPaged.MakerEnumerable);
-            IEnumerable<VehicleModelView> modelView = Mapper.Map<IEnumerable<VehicleModelView>>(service.GetModels(systemDataModel));
+            IEnumerable<VehicleModel> modelItems = service.GetModels(systemDataModel);
+            IEnumerable<VehicleModelView> modelView = Mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
             vehicleModelViewPaged.ModelPaged = modelView.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
@@ -51,7 +51,7 @@ namespace MVC_Project.Controllers
             }
 
             VehicleModel model = service.Read(id);
-            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);          
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
 
             if (modelView == null)
             {
@@ -94,7 +94,7 @@ namespace MVC_Project.Controllers
 
             return View(modelView);
 
-            
+
 
         }
 
@@ -105,7 +105,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(service.Read(id));
             if (modelView == null)
             {

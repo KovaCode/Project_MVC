@@ -39,7 +39,7 @@ namespace Service.DAL
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
-                modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
+                modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue) || s.Make.Name.Contains(systemDataModel.SearchValue) );
             }
 
 

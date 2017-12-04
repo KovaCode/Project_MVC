@@ -20,6 +20,7 @@ namespace Service.DAL
             {
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
+
             var makeItems = from s in db.Makers select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
