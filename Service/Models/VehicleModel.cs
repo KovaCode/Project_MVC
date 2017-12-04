@@ -12,7 +12,5 @@ namespace Service.Models
         [Required]       
         public string Name { get; set; }
         public string Abrv { get; set; }
-
-        public VehicleMake VehicleMake { get; set; }
     }
 }

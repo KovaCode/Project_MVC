@@ -12,15 +12,14 @@ namespace Service.DAL
 
         public IEnumerable<VehicleMake> GetMakers(SystemDataModel systemDataModel)
         {
-            if (String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
-                {
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+            {
                 systemDataModel.Page = 1;
             }
             else
             {
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
-
             var makeItems = from s in db.Makers select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
@@ -28,28 +27,21 @@ namespace Service.DAL
                 makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
             }
 
-            switch (systemDataModel.SortOrder)
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
             {
-                case "name_desc":
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
-                case "name_asc":
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
-
-                case "Abrv":
-                    makeItems = makeItems.OrderBy(s => s.Abrv);
-                    break;
-                default:
-                    makeItems = makeItems.OrderBy(s => s.Name);
-                    break;
+                makeItems = makeItems.OrderBy(s => s.Name);
             }
+            else
+            {
+                makeItems = makeItems.OrderByDescending(s => s.Name);
+            }
+
             return makeItems;
         }
 
         public IEnumerable<VehicleMake> GetMakers()
         {
-            return db.Makers.ToList<VehicleMake>();
+            return db.Makers.ToList<VehicleMake>().OrderBy(s=>s.Name);
         }
 
         public VehicleMake Read(Guid? id)

@@ -14,9 +14,9 @@ namespace MVC.Models
             {
                 cfg.CreateMap<List<VehicleMake>, IEnumerable<VehicleMakeView>>();
                 cfg.CreateMap<List<VehicleModel>, IEnumerable<VehicleModelView>>();
-                cfg.CreateMap<VehicleMakeView, VehicleModelView>()
-                .ForMember(dest => dest.VehicleMakeName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest =>dest.VehicleMakeId, opt => opt.MapFrom(src => src.Id));
+                //cfg.CreateMap<VehicleMakeView, VehicleModelView>()
+                //.ForMember(dest => dest.VehicleMakeName, opt => opt.MapFrom(src => src.Name))
+                //.ForMember(dest =>dest.VehicleMakeId, opt => opt.MapFrom(src => src.Id));
             });
 
             IMapper mapper = config.CreateMapper();

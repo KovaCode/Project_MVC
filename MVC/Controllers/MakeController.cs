@@ -13,32 +13,34 @@ namespace MVC.Controllers
     public class MakeController : Controller
     {
         private MakerService service;
-        private AutoMapperProfile autoMapperProfile = new AutoMapperProfile();
+
         public MakeController()
         {
             service = new MakerService();
         }
 
-        // GET: /Maker/
-        public ViewResult Index(string searchValue, string sortOrder, string currentSort, int? page)
+        // GET: /Make/
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             VehicleMakeViewPaged vehicleMakeViewPaged = new VehicleMakeViewPaged();
-            SystemDataModel systemData = new SystemDataModel();
+            SystemDataModel systemDataModel = new SystemDataModel();
+
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.NameSortParm = String.IsNullOrWhiteSpace(sortOrder) ? "name_desc" : "";
 
-            systemData.SearchValue = searchValue;
-            systemData.SortOrder = sortOrder;
+            systemDataModel.SearchValue = searchString;
+            systemDataModel.CurrentFilter = currentFilter;
+            systemDataModel.SortOrder = sortOrder;
+            systemDataModel.Page = (page ?? 1);
+ 
+            IEnumerable<VehicleMakeView> makeViewItems = Mapper.Map<IEnumerable<VehicleMakeView>>(service.GetMakers(systemDataModel));
+            ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
-            IEnumerable<VehicleMake> makeItems = service.GetMakers(systemData);
-            IEnumerable<VehicleMakeView> makeViewItems = Mapper.Map<IEnumerable<VehicleMakeView>>(makeItems);            
-            systemData.Page = (page ?? 1);
-
-            vehicleMakeViewPaged.MakePaged = makeViewItems.ToPagedList(systemData.Page, systemData.ResultsPerPage);
+            vehicleMakeViewPaged.MakePaged = makeViewItems.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
             return View(vehicleMakeViewPaged);
         }
         
-        // GET: /Maker/Details/5
+        // GET: /Make/Details/5
         public ActionResult Details(Guid? id)
         {
             if (id == null)
@@ -55,13 +57,13 @@ namespace MVC.Controllers
             return View(makeView);
         }
 
-        // GET: /Maker/Create
+        // GET: /Make/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: /Maker/Create
+        // POST: /Make/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -77,7 +79,7 @@ namespace MVC.Controllers
             return View(makeView);
         }
 
-        // GET: /Maker/Edit/5
+        // GET: /Make/Edit/5
         public ActionResult Edit(Guid? id)
         {
             if (id == null)
@@ -93,7 +95,7 @@ namespace MVC.Controllers
             return View(makeView);
         }
 
-        // POST: /Maker/Edit/5
+        // POST: /Make/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]

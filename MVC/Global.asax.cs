@@ -20,11 +20,15 @@ namespace MVC_Project
 
             Mapper.Initialize(cfg =>
             {
+
+                cfg.CreateMap<VehicleMake, VehicleModel>()
+                .ForMember(x => x.VehicleMakeId, opt => opt.MapFrom(model => model.Id));
+       
+
                 cfg.CreateMap<VehicleMake, VehicleMakeView>();
                 cfg.CreateMap<VehicleModel, VehicleModelView>();
-                cfg.CreateMap<VehicleMakeView, VehicleModelView>()
-                .ForMember(dest => dest.VehicleMakeName, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.VehicleMakeId, opt => opt.MapFrom(src => src.Id));
+
+    
             }
             );
         }

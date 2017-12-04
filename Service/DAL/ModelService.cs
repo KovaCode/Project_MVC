@@ -21,7 +21,7 @@ namespace Service.DAL
 
         public IEnumerable<VehicleMake> GetAllMakers()
         {
-            return this.db.Makers.ToList<VehicleMake>();
+            return this.db.Makers.ToList<VehicleMake>().OrderBy(s=>s.Name);
         }
 
         public IEnumerable<VehicleModel> GetModels(SystemDataModel systemDataModel)
@@ -42,23 +42,15 @@ namespace Service.DAL
                 modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
             }
 
-            switch (systemDataModel.SortOrder)
+
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
             {
-                case "name_desc":
-                    modelItems = modelItems.OrderBy(s => s.Name);
-                    break;
-                case "name_asc":
-                    modelItems = modelItems.OrderBy(s => s.Name);
-                    break;
-
-                case "Abrv":
-                    modelItems = modelItems.OrderBy(s => s.Abrv);
-                    break;
-                default:
-                    modelItems = modelItems.OrderBy(s => s.Name);
-                    break;
+                modelItems = modelItems.OrderBy(s => s.Name);
             }
-
+            else
+            {
+                modelItems = modelItems.OrderByDescending(s => s.Name);
+            }
             return modelItems;
         }
 

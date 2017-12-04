@@ -21,24 +21,24 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models
-        public ActionResult Index(string sortOrder, string currentFilter, string searchValue, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
             VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged();
             SystemDataModel systemDataModel = new SystemDataModel();
 
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.NameSortParm = String.IsNullOrWhiteSpace(sortOrder) ? "name_desc" : "";
 
+            systemDataModel.SearchValue = searchString;
+            systemDataModel.CurrentFilter = currentFilter;
             systemDataModel.SortOrder = sortOrder;
-            systemDataModel.SearchValue = searchValue;
-            vehicleModelViewPaged.MakerEnumerable = service.GetAllMakers();
+            systemDataModel.Page = (page ?? 1);
 
-            IEnumerable<VehicleModel> modelItems = service.GetModels(systemDataModel);
-            IEnumerable <VehicleMakeView> makeView = Mapper.Map<IEnumerable<VehicleMakeView>>(vehicleModelViewPaged.MakerEnumerable);
-            IEnumerable<VehicleModelView> modelView = Mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
-            
-            int pageNumber = (page ?? 1);
-            vehicleModelViewPaged.ModelPaged = modelView.ToPagedList(pageNumber, systemDataModel.ResultsPerPage);
+            IEnumerable<VehicleMakeView> makeView = Mapper.Map<IEnumerable<VehicleMakeView>>(vehicleModelViewPaged.MakerEnumerable);
+            IEnumerable<VehicleModelView> modelView = Mapper.Map<IEnumerable<VehicleModelView>>(service.GetModels(systemDataModel));
+            ViewBag.CurrentFilter = systemDataModel.SearchValue;
+
+            vehicleModelViewPaged.ModelPaged = modelView.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
             return View(vehicleModelViewPaged);
         }
 
@@ -63,9 +63,11 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            VehicleModelViewPaged mainView = new VehicleModelViewPaged();
-            mainView.MakerEnumerable = service.GetAllMakers();
-            ViewBag.MakerList = mainView.ListMakers;
+            VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged
+            {
+                MakerEnumerable = service.GetAllMakers()
+            };
+            ViewBag.MakerList = vehicleModelViewPaged.ListMakers;
 
             return View();
         }
@@ -77,8 +79,10 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,VehicleMakeId, MakeID,Name,Abrv")] VehicleModel model)
         {
-            VehicleModelViewPaged mainView = new VehicleModelViewPaged();
-            mainView.MakerEnumerable = service.GetAllMakers();
+            VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged
+            {
+                MakerEnumerable = service.GetAllMakers()
+            };
 
             if (ModelState.IsValid)
             {
@@ -86,8 +90,7 @@ namespace MVC_Project.Controllers
                 return RedirectToAction("Index");
             }
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
-
-            ViewBag.MakerList = mainView.ListMakers;
+            ViewBag.MakerList = vehicleModelViewPaged.ListMakers;
 
             return View(modelView);
 
@@ -108,7 +111,7 @@ namespace MVC_Project.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MakerList = new SelectList(service.GetAllMakers(), "Id", "Name", modelView.VehicleMakeId);
+            ViewBag.MakerList = new SelectList(service.GetAllMakers(), "Id", "Name", modelView.Make.Id);
             return View(modelView);
         }
 
