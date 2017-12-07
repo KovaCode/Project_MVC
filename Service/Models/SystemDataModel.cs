@@ -1,12 +1,8 @@
-﻿using PagedList;
-using Service.Models;
-using System.Collections.Generic;
-
-
+﻿using Service.Interfaces;
 
 namespace Service.Models
 {
-    public class SystemDataModel
+    public class SystemDataModel : ISystemDataModel
     {
         public string SortOrder { get; set; }
         public string CurrentFilter { get; set; }

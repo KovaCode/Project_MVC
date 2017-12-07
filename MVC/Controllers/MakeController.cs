@@ -22,7 +22,6 @@ namespace MVC.Controllers
         // GET: /Make/
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            VehicleMakeViewPaged vehicleMakeViewPaged = new VehicleMakeViewPaged();
             SystemDataModel systemDataModel = new SystemDataModel();
 
             ViewBag.CurrentSort = sortOrder;
@@ -32,12 +31,16 @@ namespace MVC.Controllers
             systemDataModel.CurrentFilter = currentFilter;
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
- 
-            IEnumerable<VehicleMakeView> makeViewItems = Mapper.Map<IEnumerable<VehicleMakeView>>(service.GetMakers(systemDataModel));
+
+            //IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<VehicleMakeView>>(service.GetVehicleDataPaged(systemDataModel));
+            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<PagedList<VehicleMakeView>>(service.GetVehicleDataPaged(systemDataModel));
+            //VehicleMakeView makeViewItems = Mapper.Map<VehicleMakeView>(service.GetVehicleDataPaged(systemDataModel));
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
-            vehicleMakeViewPaged.MakePaged = makeViewItems.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
-            return View(vehicleMakeViewPaged);
+            //vehicleMakeViewPaged.MakePaged = makeViewItems.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
+            //return View(service.GetVehicleDataPaged());
+
+            return View(makeViewItems);
         }
         
         // GET: /Make/Details/5

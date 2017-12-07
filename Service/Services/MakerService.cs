@@ -1,8 +1,10 @@
-﻿using Service.Models;
+﻿using Service.Interfaces;
+using Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using PagedList;
 
 namespace Service.DAL
 {
@@ -10,7 +12,18 @@ namespace Service.DAL
     {
         private VehicleDBContext db = new VehicleDBContext();
 
-        public IEnumerable<VehicleMake> GetMakers(SystemDataModel systemDataModel)
+
+        public IEnumerable<VehicleMake> FindMake()
+        {
+            return db.Makers.ToList().OrderBy(s => s.Name);
+        }
+
+        public IEnumerable<VehicleMake> GetVehicleData()
+        {
+            return db.Makers.ToList().OrderBy(s => s.Name);
+        }
+
+        public IEnumerable<VehicleMake> GetVehicleData(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -21,11 +34,11 @@ namespace Service.DAL
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            var makeItems = from s in db.Makers select s;
+            IEnumerable<VehicleMake> makeItems = from s in db.Makers select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
-                makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue));
+                makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue));
             }
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
@@ -40,9 +53,16 @@ namespace Service.DAL
             return makeItems;
         }
 
-        public IEnumerable<VehicleMake> GetMakers()
+        public IPagedList<VehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel) 
         {
-            return db.Makers.ToList<VehicleMake>().OrderBy(s=>s.Name);
+            IEnumerable<VehicleMake> data = GetVehicleData(systemDataModel);
+            return data.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
+        }
+
+        public void Create(VehicleMake maker)
+        {
+            db.Makers.Add(maker);
+            Save();
         }
 
         public VehicleMake Read(Guid? id)
@@ -69,13 +89,6 @@ namespace Service.DAL
             db.SaveChanges();
         }
 
-        public void Create(VehicleMake maker)
-        {
-            db.Makers.Add(maker);
-            Save();
-        }
-
-
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)
@@ -95,6 +108,8 @@ namespace Service.DAL
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+   
     }
 }
 

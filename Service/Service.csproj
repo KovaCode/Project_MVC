@@ -56,11 +56,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DAL\DBInitialaser.cs" />
-    <Compile Include="DAL\IVehicle.cs" />
-    <Compile Include="DAL\MakerService.cs" />
-    <Compile Include="DAL\ModelService.cs" />
-    <Compile Include="DAL\VehicleDBContext.cs" />
+    <Compile Include="Interfaces\IVehicle.cs" />
+    <Compile Include="Services\MakerService.cs" />
+    <Compile Include="Services\ModelService.cs" />
+    <Compile Include="Services\VehicleDBContext.cs" />
+    <Compile Include="Interfaces\ISystemDataModel.cs" />
     <Compile Include="Models\SystemDataModel.cs" />
     <Compile Include="Models\VehicleMake.cs" />
     <Compile Include="Models\VehicleModel.cs" />

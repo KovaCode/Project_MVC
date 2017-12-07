@@ -23,7 +23,6 @@ namespace MVC_Project.Controllers
         // GET: Models
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged();
             SystemDataModel systemDataModel = new SystemDataModel();
 
             ViewBag.CurrentSort = sortOrder;
@@ -34,12 +33,12 @@ namespace MVC_Project.Controllers
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
 
-            IEnumerable<VehicleModel> modelItems = service.GetModels(systemDataModel);
-            IEnumerable<VehicleModelView> modelView = Mapper.Map<IEnumerable<VehicleModelView>>(modelItems);
+            IEnumerable<VehicleModel> modelItems = service.GetVehicleData(systemDataModel);
+            VehicleModelViewPaged modelViewPaged = Mapper.Map<VehicleModelViewPaged>(service.GetVehicleDataPaged(systemDataModel));
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
-            vehicleModelViewPaged.ModelPaged = modelView.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
-            return View(vehicleModelViewPaged);
+            //vehicleModelViewPaged.ModelPaged = modelView.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
+            return View(modelViewPaged);
         }
 
         // GET: Models/Details/5
@@ -65,7 +64,7 @@ namespace MVC_Project.Controllers
         {
             VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged
             {
-                MakerEnumerable = service.GetAllMakers()
+                MakerEnumerable = service.FindMake()
             };
             ViewBag.MakerList = vehicleModelViewPaged.ListMakers;
 
@@ -81,7 +80,7 @@ namespace MVC_Project.Controllers
         {
             VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged
             {
-                MakerEnumerable = service.GetAllMakers()
+                MakerEnumerable = service.FindMake()
             };
 
             if (ModelState.IsValid)
@@ -111,7 +110,7 @@ namespace MVC_Project.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MakerList = new SelectList(service.GetAllMakers(), "Id", "Name", modelView.Make.Id);
+            ViewBag.MakerList = new SelectList(service.FindMake(), "Id", "Name", modelView.Make.Id);
             return View(modelView);
         }
 

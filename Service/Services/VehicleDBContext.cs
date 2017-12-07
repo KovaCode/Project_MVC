@@ -12,8 +12,8 @@ namespace Service.DAL
     {
 
         public VehicleDBContext() : base("VehicleDB")
-            {
-            }
+        {
+        }
 
         public DbSet<VehicleMake> Makers { get; set; }
         public DbSet<VehicleModel> Models { get; set; }
@@ -22,7 +22,5 @@ namespace Service.DAL
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
-
-
     }
 }

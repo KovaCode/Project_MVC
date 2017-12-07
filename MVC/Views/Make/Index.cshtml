@@ -1,4 +1,4 @@
-﻿@model MVC.Models.VehicleMakeViewPaged
+﻿@model PagedList.IPagedList<MVC.Models.VehicleMakeView>
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
@@ -27,7 +27,7 @@
         </th>
     </tr>
 
-    @foreach (var item in Model.MakePaged)
+    @foreach (var item in Model)
     {
         <tr>
             <td>
@@ -45,8 +45,8 @@
 
 </table>
 
-Page @(Model.MakePaged.PageCount < Model.MakePaged.PageNumber ? 0 : Model.MakePaged.PageNumber) of @Model.MakePaged.PageCount
-@Html.PagedListPager(Model.MakePaged, page => Url.Action("Index",
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index",
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 
 

@@ -5,6 +5,7 @@ using System.Linq;
 using PagedList;
 using Service.Models;
 using Service.DAL;
+using Service.Interfaces;
 
 namespace Service.DAL
 {
@@ -12,19 +13,17 @@ namespace Service.DAL
     {
         private VehicleDBContext db = new VehicleDBContext();
 
-        public VehicleMake GetMakerById(Guid? id)
-        { 
-            return this.db.Makers.Find(id);
-        }
-
-   
-
-        public IEnumerable<VehicleMake> GetAllMakers()
+        public IEnumerable<VehicleMake> FindMake()
         {
-            return this.db.Makers.ToList<VehicleMake>().OrderBy(s=>s.Name);
+            return this.db.Makers.ToList<VehicleMake>().OrderBy(s => s.Name);
         }
 
-        public IEnumerable<VehicleModel> GetModels(SystemDataModel systemDataModel)
+        public IEnumerable<VehicleModel> GetVehicleData()
+        {
+            return this.db.Models.ToList<VehicleModel>();
+        }
+
+        public IEnumerable<VehicleModel> GetVehicleData(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -35,11 +34,11 @@ namespace Service.DAL
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            var modelItems = from s in this.db.Models select s;
+            IEnumerable<VehicleModel> modelItems = from s in this.db.Models select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
-                modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue) || s.Make.Name.Contains(systemDataModel.SearchValue) );
+                modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue) || s.Make.Name.Contains(systemDataModel.SearchValue));
             }
 
 
@@ -54,9 +53,16 @@ namespace Service.DAL
             return modelItems;
         }
 
-        public IEnumerable<VehicleModel> GetModels()
+        public IPagedList<VehicleModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
-            return this.db.Models.ToList<VehicleModel>();
+            IEnumerable<VehicleModel> data = GetVehicleData(systemDataModel);
+            return data.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
+        }
+
+        public void Create(VehicleModel model)
+        {
+            this.db.Models.Add(model);
+            this.Save();
         }
 
         public VehicleModel Read(Guid? id)
@@ -80,12 +86,6 @@ namespace Service.DAL
         public void Save()
         {
             this.db.SaveChanges();
-        }
-
-        public void Create(VehicleModel model)
-        {
-            this.db.Models.Add(model);
-            this.Save();
         }
 
         private bool disposed = false;
