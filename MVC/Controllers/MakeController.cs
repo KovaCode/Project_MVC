@@ -34,10 +34,10 @@ namespace MVC.Controllers
             systemDataModel.Page = (page ?? 1);
 
             IPagedList<VehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
-            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<PagedList<VehicleMakeView>>(makeItems);
+            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<VehicleMake>, IPagedList<VehicleMakeView>>(makeItems);
 
            ViewBag.CurrentFilter = systemDataModel.SearchValue;
-            return View(makeViewItems);
+            return View(makeItems);
         }
         
         // GET: /Make/Details/5
