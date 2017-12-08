@@ -1,5 +1,5 @@
 ﻿
-using Service.Models;
+using Service.Interfaces;
 using System;
 
 namespace MVC.Models
@@ -11,6 +11,6 @@ namespace MVC.Models
         public string Name { get; set; }
         public string Abrv { get; set; }
 
-        public virtual VehicleMake Make { get; set; }
+        public virtual IVehicleMake Make { get; set; }
     }
 }

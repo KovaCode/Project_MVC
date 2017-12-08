@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Web.Mvc;
-using Service.DAL;
+using Service.Services;
 using System.Net;
 using Service.Models;
 using MVC.Models;
 using System.Collections.Generic;
 using PagedList;
 using AutoMapper;
+using Service.Interfaces;
 
 namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
-        private MakerService service;
+        private VehicleMakeService service;
 
         public MakeController()
         {
-            service = new MakerService();
+            service = new VehicleMakeService();
         }
 
         // GET: /Make/
@@ -32,14 +33,10 @@ namespace MVC.Controllers
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
 
-            //IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<VehicleMakeView>>(service.GetVehicleDataPaged(systemDataModel));
-            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<PagedList<VehicleMakeView>>(service.GetVehicleDataPaged(systemDataModel));
-            //VehicleMakeView makeViewItems = Mapper.Map<VehicleMakeView>(service.GetVehicleDataPaged(systemDataModel));
-            ViewBag.CurrentFilter = systemDataModel.SearchValue;
+            IPagedList<VehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
+            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<PagedList<VehicleMakeView>>(makeItems);
 
-            //vehicleMakeViewPaged.MakePaged = makeViewItems.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
-            //return View(service.GetVehicleDataPaged());
-
+           ViewBag.CurrentFilter = systemDataModel.SearchValue;
             return View(makeViewItems);
         }
         
@@ -50,7 +47,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake make = service.Read(id);
+            IVehicleMake make = service.Read(id);
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
 
             if (makeView == null)
@@ -71,17 +68,19 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMake make)
+        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
+            VehicleMake make = Mapper.Map<VehicleMake>(makeView);
+
             if (ModelState.IsValid)
             {
                 service.Create(make);
                 return RedirectToAction("Index");
             }
-            VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
+            //VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             return View(makeView);
         }
-
+        
         // GET: /Make/Edit/5
         public ActionResult Edit(Guid? id)
         {
@@ -89,7 +88,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake make = service.Read(id);
+            IVehicleMake make = service.Read(id);
             if (make == null)
             {
                 return HttpNotFound();
@@ -103,15 +102,17 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMake make)
+        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
+            VehicleMake make = Mapper.Map<VehicleMake>(makeView);
+
             if (ModelState.IsValid)
             {
                 service.Update(make);
                 return RedirectToAction("Index");
             }
 
-            VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
+            
             return View(makeView);
         }
 
@@ -122,7 +123,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleMake make = service.Read(id);
+            IVehicleMake make = service.Read(id);
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             if (makeView == null)
             {
@@ -137,7 +138,7 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid? id)
         {
-            VehicleMake maker = service.Read(id);
+            IVehicleMake maker = service.Read(id);
             service.Delete(id);
             return RedirectToAction("Index");
         }

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Service.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Service.Models
 {
-    public class VehicleModel
+    public class VehicleModel : IVehicleModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

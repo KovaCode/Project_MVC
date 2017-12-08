@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using PagedList;
-using Service.Models;
-using Service.DAL;
 using Service.Interfaces;
+using Service.Models;
 
-namespace Service.DAL
+namespace Service.Services
 {
-    public class ModelService : IVehicle<VehicleModel>
+    public class VehicleModelService : IVehicle<VehicleModel>
     {
         private VehicleDBContext db = new VehicleDBContext();
 
         public IEnumerable<VehicleMake> FindMake()
         {
-            return this.db.Makers.ToList<VehicleMake>().OrderBy(s => s.Name);
+            return db.Makers.OrderBy(s => s.Name);
         }
 
         public IEnumerable<VehicleModel> GetVehicleData()

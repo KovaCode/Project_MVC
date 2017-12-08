@@ -1,5 +1,5 @@
 ﻿
-@model MVC.Models.VehicleModelViewPaged
+@model PagedList.IPagedList<MVC.Models.VehicleModelView>
 @using PagedList.Mvc;
 
 
@@ -34,7 +34,7 @@
 
     </tr>
 
-    @foreach (var item in Model.ModelPaged)
+    @foreach (var item in Model)
     {
         <tr>
             <td>
@@ -55,6 +55,6 @@
 
 </table>
 
-Page @(Model.ModelPaged.PageCount < Model.ModelPaged.PageNumber ? 0 : Model.ModelPaged.PageNumber) of @Model.ModelPaged.PageCount
-@Html.PagedListPager(Model.ModelPaged, page => Url.Action("Index", 
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", 
     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

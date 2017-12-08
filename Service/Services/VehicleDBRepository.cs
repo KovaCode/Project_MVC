@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.Entity;
-using Service.Models;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using Service.Interfaces;
+using Service.Models;
 
-namespace Service.DAL
+namespace Service.Services
 {
     public class VehicleDBContext : DbContext
     {

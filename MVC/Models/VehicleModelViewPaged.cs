@@ -1,19 +1,17 @@
 ﻿
 using PagedList;
-using Service.Models;
-using System;
+using Service.Interfaces;
 using System.Collections.Generic;
 using System.Web.Mvc;
-using System.Xml.Linq;
 
 namespace MVC.Models
 {
     
     public class VehicleModelViewPaged
     {
-        public IEnumerable<VehicleMake> MakerEnumerable;
+        public IEnumerable<IVehicleMake> MakerEnumerable;
         
-        public int selectedMaker { get; set; }
+        public int SelectedMaker { get; set; }
 
         public IEnumerable<SelectListItem> ListMakers
         {

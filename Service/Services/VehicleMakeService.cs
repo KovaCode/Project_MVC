@@ -5,13 +5,13 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using PagedList;
+using System.Collections;
 
-namespace Service.DAL
+namespace Service.Services
 {
-    public class MakerService : IVehicle<VehicleMake>
+    public class VehicleMakeService : IVehicle<VehicleMake>
     {
         private VehicleDBContext db = new VehicleDBContext();
-
 
         public IEnumerable<VehicleMake> FindMake()
         {
@@ -34,7 +34,7 @@ namespace Service.DAL
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            IEnumerable<VehicleMake> makeItems = from s in db.Makers select s;
+            var makeItems = from s in db.Makers select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -50,18 +50,18 @@ namespace Service.DAL
                 makeItems = makeItems.OrderByDescending(s => s.Name);
             }
 
-            return makeItems;
+            return makeItems.AsEnumerable<VehicleMake>();
         }
-
+        
         public IPagedList<VehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel) 
         {
             IEnumerable<VehicleMake> data = GetVehicleData(systemDataModel);
             return data.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
         }
 
-        public void Create(VehicleMake maker)
+        public void Create(VehicleMake make)
         {
-            db.Makers.Add(maker);
+            db.Makers.Add(make);
             Save();
         }
 
@@ -75,13 +75,13 @@ namespace Service.DAL
             db.Entry(maker).State = EntityState.Modified;
             Save();
         }
-
+        
         public void Delete(Guid? id)
         {
-            VehicleMake maker = db.Makers.Find(id);
-            db.Makers.Remove(maker);
+            VehicleMake make = db.Makers.Find(id);
+            db.Makers.Remove(make);
             Save();
-
+            
         }
 
         public void Save()
@@ -108,8 +108,6 @@ namespace Service.DAL
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-   
     }
 }
 

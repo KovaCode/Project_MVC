@@ -163,6 +163,8 @@
     <Compile Include="Controllers\MakeController.cs" />
     <Compile Include="Controllers\ModelController.cs" />
     <Compile Include="Controllers\PagedListConverter.cs" />
+    <Compile Include="Controllers\PagedViewModel.cs" />
+    <Compile Include="Controllers\Converter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

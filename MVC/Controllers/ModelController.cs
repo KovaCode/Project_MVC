@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using Service.DAL;
 using Service.Models;
 using System;
 using PagedList;
@@ -8,16 +7,18 @@ using MVC.Models;
 using System.Collections.Generic;
 using System.Collections;
 using AutoMapper;
+using Service.Services;
+using Service.Interfaces;
 
 namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-        private ModelService service;
+        private VehicleModelService service;
 
         public ModelController()
         {
-            service = new ModelService();
+            service = new VehicleModelService();
         }
 
         // GET: Models
@@ -33,11 +34,10 @@ namespace MVC_Project.Controllers
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
 
-            IEnumerable<VehicleModel> modelItems = service.GetVehicleData(systemDataModel);
-            VehicleModelViewPaged modelViewPaged = Mapper.Map<VehicleModelViewPaged>(service.GetVehicleDataPaged(systemDataModel));
+
+            IPagedList<VehicleModelView> modelViewPaged = Mapper.Map<PagedList<VehicleModelView>>(service.GetVehicleDataPaged(systemDataModel));
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
-            //vehicleModelViewPaged.ModelPaged = modelView.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
             return View(modelViewPaged);
         }
 
@@ -49,7 +49,7 @@ namespace MVC_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            VehicleModel model = service.Read(id);
+            IVehicleModel model = service.Read(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
 
             if (modelView == null)
@@ -62,11 +62,8 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged
-            {
-                MakerEnumerable = service.FindMake()
-            };
-            ViewBag.MakerList = vehicleModelViewPaged.ListMakers;
+            VehicleModelView vehicleModelView = new VehicleModelView();
+            ViewBag.MakerList = vehicleModelView.Make;
 
             return View();
         }
@@ -76,20 +73,19 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,VehicleMakeId, MakeID,Name,Abrv")] VehicleModel model)
+        public ActionResult Create([Bind(Include = "Id,VehicleMakeId, MakeID,Name,Abrv")] VehicleModelView modelView)
         {
-            VehicleModelViewPaged vehicleModelViewPaged = new VehicleModelViewPaged
-            {
-                MakerEnumerable = service.FindMake()
-            };
+
+            VehicleModel model = Mapper.Map<VehicleModel>(modelView);
+            ViewBag.MakerList = model.Make;
 
             if (ModelState.IsValid)
             {
                 service.Create(model);
                 return RedirectToAction("Index");
             }
-            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
-            ViewBag.MakerList = vehicleModelViewPaged.ListMakers;
+            //VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
+            ViewBag.MakerList = modelView.Make;
 
             return View(modelView);
 
@@ -119,15 +115,17 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModel model)
+        public ActionResult Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
         {
+            VehicleModel model = Mapper.Map<VehicleModel>(modelView);
+
             if (ModelState.IsValid)
             {
                 service.Update(model);
 
                 return RedirectToAction("Index");
             }
-            VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
+            //VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
             return View(modelView);
         }
 
@@ -138,7 +136,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            VehicleModel model = service.Read(id);
+            IVehicleModel model = service.Read(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -153,7 +151,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid? id)
         {
-            VehicleModel model = service.Read(id);
+            IVehicleModel model = service.Read(id);
             service.Delete(id);
             return RedirectToAction("Index");
         }

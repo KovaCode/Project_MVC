@@ -12,7 +12,6 @@ namespace MVC.Controllers
         public PagedList<TDestination> Convert(PagedList<TSource> source, PagedList<TDestination> destination, ResolutionContext context)
         {
             var collection = Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source);
-
             return new PagedList<TDestination>(collection, source.PageNumber, source.PageSize);
         }
     }
