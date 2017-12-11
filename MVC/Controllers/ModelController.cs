@@ -106,7 +106,7 @@ namespace MVC_Project.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MakerList = new SelectList(service.FindMake(), "Id", "Name", modelView.Make.Id);
+            ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name", modelView.Make.Id);
             return View(modelView);
         }
 

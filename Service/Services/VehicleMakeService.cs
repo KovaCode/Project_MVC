@@ -6,24 +6,35 @@ using System.Data.Entity;
 using System.Linq;
 using PagedList;
 using System.Collections;
+using AutoMapper;
+using Service.Services;
+using Service.Models.Entity;
 
-namespace Service.Services
+namespace Service.Servicess
 {
-    public class VehicleMakeService : IVehicle<VehicleMake>
+    public class VehicleMakeService : IVehicle<IVehicleMake>
     {
         private VehicleDBContext db = new VehicleDBContext();
 
-        public IEnumerable<VehicleMake> FindMake()
+        public IEnumerable<IVehicleMake> GetMakes()
         {
-            return db.Makers.ToList().OrderBy(s => s.Name);
+            IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
+            IEnumerable<VehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<VehicleMake>>(makeItemsEntity);
+            IEnumerable<IVehicleMake> iMake = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(make);
+
+            return make;
         }
 
-        public IEnumerable<VehicleMake> GetVehicleData()
+        public IEnumerable<IVehicleMake> GetVehicleData()
         {
-            return db.Makers.ToList().OrderBy(s => s.Name);
+            IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
+            IEnumerable<VehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<VehicleMake>>(makeItemsEntity);
+            IEnumerable<IVehicleMake> iMake = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(make);
+
+            return make;
         }
 
-        public IEnumerable<VehicleMake> GetVehicleData(ISystemDataModel systemDataModel)
+        public IEnumerable<IVehicleMake> GetVehicleData(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -34,7 +45,8 @@ namespace Service.Services
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            var makeItems = from s in db.Makers select s;
+            IEnumerable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
+                     
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -50,36 +62,47 @@ namespace Service.Services
                 makeItems = makeItems.OrderByDescending(s => s.Name);
             }
 
-            return makeItems.AsEnumerable<VehicleMake>();
+            systemDataModel.TotalCount = makeItems.Count();
+
+            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItems);
+
+            return make;
         }
         
-        public IPagedList<VehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel) 
+        public StaticPagedList<IVehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel) 
         {
-            IEnumerable<VehicleMake> data = GetVehicleData(systemDataModel);
-            return data.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
+            IEnumerable<IVehicleMake> data = GetVehicleData(systemDataModel);
+
+            data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
+     
+            StaticPagedList<IVehicleMake> staticPagedList = new StaticPagedList<IVehicleMake>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+
+            //StaticPagedList<IVehicleMake> make = Mapper.Map<StaticPagedList<VehicleMakeEntity>, StaticPagedList<IVehicleMake>>(staticPagedList);
+
+            return staticPagedList;
         }
 
-        public void Create(VehicleMake make)
+        public void Create(IVehicleMake make)
         {
-            db.Makers.Add(make);
+            VehicleMakeEntity makeEntity = Mapper.Map<IVehicleMake, VehicleMakeEntity>(make);
+            db.Makers.Add(makeEntity);
             Save();
         }
 
-        public VehicleMake Read(Guid? id)
+        public IVehicleMake Read(Guid? id)
         {
-            return db.Makers.Find(id);
+            return Mapper.Map<VehicleMakeEntity, IVehicleMake>(db.Makers.Find(id));
         }
 
-        public void Update(VehicleMake maker)
+        public void Update(IVehicleMake make)
         {
-            db.Entry(maker).State = EntityState.Modified;
+            db.Entry(make).State = EntityState.Modified;
             Save();
         }
         
         public void Delete(Guid? id)
         {
-            VehicleMake make = db.Makers.Find(id);
-            db.Makers.Remove(make);
+            db.Makers.Remove(db.Makers.Find(id));
             Save();
             
         }
@@ -108,6 +131,7 @@ namespace Service.Services
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+
     }
 }
-

@@ -2,6 +2,8 @@
 using MVC.Models;
 using PagedList;
 using Service.Models;
+using Service.Models.Entity;
+using Service.Interfaces;
 using System.Collections.Generic;
 
 namespace MVC.Controllers
@@ -14,29 +16,43 @@ namespace MVC.Controllers
                 ConfigureItemMapping();
             }
 
-
-
             private static void ConfigureItemMapping()
             {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<VehicleMake, VehicleMakeView>();
+                // MAKE - mappings //               
+                cfg.CreateMap<VehicleMake, IVehicleMake>();
+                cfg.CreateMap<VehicleMakeEntity, IVehicleMake>();
+                cfg.CreateMap<VehicleMakeView, IVehicleMake>();
+                cfg.CreateMap<IVehicleMake, VehicleMakeView>();
+
+                cfg.CreateMap<VehicleMakeEntity, VehicleMake>();
                 cfg.CreateMap<VehicleMakeView, VehicleMake>();
+                cfg.CreateMap<VehicleMake, VehicleMakeView>();
+
+                // MODEL - mappings //
+                cfg.CreateMap<VehicleModelEntity, VehicleModel>();
+                cfg.CreateMap<IVehicleModel, VehicleModel>();
                 cfg.CreateMap<VehicleModel, VehicleModelView>();
                 cfg.CreateMap<VehicleModelView, VehicleModel>();
-                cfg.CreateMap(typeof(IPagedList<VehicleMake>), typeof(IPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<VehicleMake, VehicleMakeView>));
-                cfg.CreateMap(typeof(IPagedList<VehicleModel>), typeof(IPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<VehicleModel, VehicleModelView>));
+
+
+              
+                cfg.CreateMap(typeof(StaticPagedList<IVehicleMake>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMake, VehicleMakeView>));
+
+                cfg.CreateMap(typeof(StaticPagedList<VehicleMake>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<VehicleMake, VehicleMakeView>));
+                cfg.CreateMap(typeof(StaticPagedList<VehicleModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<VehicleModel, VehicleModelView>));
             }
             );
         }
 
 
-        class PagedListConverter<TSource, TDestination> : ITypeConverter<IPagedList<TSource>, IPagedList<TDestination>> where TSource : class where TDestination : class
+        class PagedListConverter<TSource, TDestination> : ITypeConverter<StaticPagedList<TSource>, StaticPagedList<TDestination>> where TSource : class where TDestination : class
         {
-            public IPagedList<TDestination> Convert(IPagedList<TSource> source, IPagedList<TDestination> destination, ResolutionContext context)
+            public StaticPagedList<TDestination> Convert(StaticPagedList<TSource> source, StaticPagedList<TDestination> destination, ResolutionContext context)
             {
                 var collection = Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source);
-                return new PagedList<TDestination>(collection, source.PageNumber, source.PageSize);
+                return new StaticPagedList<TDestination>(collection, source.PageNumber, source.PageSize, source.TotalItemCount);
             }
         }
 

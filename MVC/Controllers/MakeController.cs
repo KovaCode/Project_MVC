@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using PagedList;
 using AutoMapper;
 using Service.Interfaces;
+using Service.Servicess;
 
 namespace MVC.Controllers
 {
@@ -33,11 +34,11 @@ namespace MVC.Controllers
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
 
-            IPagedList<VehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
-            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<VehicleMake>, IPagedList<VehicleMakeView>>(makeItems);
+            StaticPagedList<IVehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
+            StaticPagedList<VehicleMakeView> makeViewItems = Mapper.Map<StaticPagedList<IVehicleMake>, StaticPagedList<VehicleMakeView>>(makeItems);
 
            ViewBag.CurrentFilter = systemDataModel.SearchValue;
-            return View(makeItems);
+            return View(makeViewItems);
         }
         
         // GET: /Make/Details/5

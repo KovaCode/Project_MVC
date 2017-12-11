@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using Service.Interfaces;
-using Service.Models;
+using Service.Models.Entity;
 
 namespace Service.Services
 {
@@ -12,8 +12,8 @@ namespace Service.Services
         {
         }
 
-        public DbSet<VehicleMake> Makers { get; set; }
-        public DbSet<VehicleModel> Models { get; set; }
+        public DbSet<VehicleMakeEntity> Makers { get; set; }
+        public DbSet<VehicleModelEntity> Models { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
