@@ -36,9 +36,14 @@ namespace MVC.Controllers
                 cfg.CreateMap<VehicleModel, VehicleModelView>();
                 cfg.CreateMap<VehicleModelView, VehicleModel>();
 
+                cfg.CreateMap<VehicleModelView, IVehicleModel>();
+                cfg.CreateMap<IVehicleModel, VehicleModelView>();
 
-              
+
+
+
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleMake>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMake, VehicleMakeView>));
+                cfg.CreateMap(typeof(StaticPagedList<IVehicleModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<IVehicleModel, VehicleModelView>));
 
                 cfg.CreateMap(typeof(StaticPagedList<VehicleMake>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<VehicleMake, VehicleMakeView>));
                 cfg.CreateMap(typeof(StaticPagedList<VehicleModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<VehicleModel, VehicleModelView>));

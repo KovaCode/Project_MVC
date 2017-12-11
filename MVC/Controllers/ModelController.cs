@@ -34,8 +34,8 @@ namespace MVC_Project.Controllers
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
 
-
-            IPagedList<VehicleModelView> modelViewPaged = Mapper.Map<PagedList<VehicleModelView>>(service.GetVehicleDataPaged(systemDataModel));
+            StaticPagedList<IVehicleModel> modelItems = service.GetVehicleDataPaged(systemDataModel);
+            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModel>, StaticPagedList<VehicleModelView>>(modelItems);
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
             return View(modelViewPaged);
@@ -62,8 +62,9 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            VehicleModelView vehicleModelView = new VehicleModelView();
-            ViewBag.MakerList = vehicleModelView.Make;
+            IEnumerable<IVehicleMake> listMakes = service.GetMakes();
+
+            ViewBag.MakerList = listMakes;
 
             return View();
         }
@@ -84,12 +85,11 @@ namespace MVC_Project.Controllers
                 service.Create(model);
                 return RedirectToAction("Index");
             }
-            //VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
+
+            modelView = Mapper.Map<VehicleModelView>(model);
             ViewBag.MakerList = modelView.Make;
 
             return View(modelView);
-
-
 
         }
 
