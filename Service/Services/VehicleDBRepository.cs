@@ -12,12 +12,7 @@ namespace Service.Services
         {
         }
 
-        public DbSet<VehicleMake> Makers { get; set; }
-        public DbSet<VehicleModel> Models { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-        }
+        public IDbSet<IVehicleModel> Models { get; set; }
+        public IDbSet<IVehicleMake> Makes { get; set; }
     }
 }

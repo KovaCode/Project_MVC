@@ -9,21 +9,34 @@ using System.Collections;
 
 namespace Service.Services
 {
-    public class VehicleMakeService : IVehicle<VehicleMake>
+    public class VehicleMakeService : IVehicle<IVehicleMake>
     {
         private VehicleDBContext db = new VehicleDBContext();
 
-        public IEnumerable<VehicleMake> FindMake()
+        public void Create(IVehicleMake make)
         {
-            return db.Makers.ToList().OrderBy(s => s.Name);
+            db.Makes.Add(make);
+            Save();
         }
 
-        public IEnumerable<VehicleMake> GetVehicleData()
+        public void Delete(Guid? id)
         {
-            return db.Makers.ToList().OrderBy(s => s.Name);
+            IVehicleMake make = db.Makes.Find(id);
+            db.Makes.Remove(make);
+            Save();
         }
 
-        public IEnumerable<VehicleMake> GetVehicleData(ISystemDataModel systemDataModel)
+        public IEnumerable<IVehicleMake> FindMake()
+        {
+            return db.Makes.ToList().OrderBy(s => s.Name);
+        }
+
+        public IEnumerable<IVehicleMake> GetVehicleData()
+        {
+            return db.Makes.ToList().OrderBy(s => s.Name);
+        }
+
+        public IEnumerable<IVehicleMake> GetVehicleData(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -34,7 +47,7 @@ namespace Service.Services
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            var makeItems = from s in db.Makers select s;
+            var makeItems = from s in db.Makes select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -50,44 +63,113 @@ namespace Service.Services
                 makeItems = makeItems.OrderByDescending(s => s.Name);
             }
 
-            return makeItems.AsEnumerable<VehicleMake>();
+            return makeItems.AsEnumerable<IVehicleMake>();
         }
-        
-        public IPagedList<VehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel) 
+
+        public IPagedList<IVehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
-            IEnumerable<VehicleMake> data = GetVehicleData(systemDataModel);
+            IEnumerable<IVehicleMake> data = GetVehicleData(systemDataModel);
             return data.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
         }
 
-        public void Create(VehicleMake make)
+        public IVehicleMake Read(Guid? id)
         {
-            db.Makers.Add(make);
+            throw new NotImplementedException();
+        }
+
+        public void Update(IVehicleMake make)
+        {
+            db.Entry(make).State = EntityState.Modified;
             Save();
         }
 
-        public VehicleMake Read(Guid? id)
-        {
-            return db.Makers.Find(id);
-        }
-
-        public void Update(VehicleMake maker)
-        {
-            db.Entry(maker).State = EntityState.Modified;
-            Save();
-        }
-        
-        public void Delete(Guid? id)
-        {
-            VehicleMake make = db.Makers.Find(id);
-            db.Makers.Remove(make);
-            Save();
-            
-        }
 
         public void Save()
         {
             db.SaveChanges();
         }
+
+
+
+
+
+
+
+        //    public IEnumerable<VehicleMake> FindMake()
+        //    {
+        //        return db.Makes.ToList().OrderBy(s => s.Name);
+        //    }
+
+        //    public IEnumerable<IVehicleMake> GetVehicleData()
+        //    {
+        //        return db.Makes.ToList().OrderBy(s => s.Name);
+        //    }
+
+        //    public IEnumerable<IVehicleMake> GetVehicleData(ISystemDataModel systemDataModel)
+        //    {
+        //        if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+        //        {
+        //            systemDataModel.Page = 1;
+        //        }
+        //        else
+        //        {
+        //            systemDataModel.SearchValue = systemDataModel.CurrentFilter;
+        //        }
+
+        //        var makeItems = from s in db.Makes select s;
+
+        //        if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+        //        {
+        //            makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue));
+        //        }
+
+        //        if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+        //        {
+        //            makeItems = makeItems.OrderBy(s => s.Name);
+        //        }
+        //        else
+        //        {
+        //            makeItems = makeItems.OrderByDescending(s => s.Name);
+        //        }
+
+        //        return makeItems.AsEnumerable<IVehicleMake>();
+        //    }
+
+        //    public IPagedList<IVehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel) 
+        //    {
+        //        IEnumerable<IVehicleMake> data = GetVehicleData(systemDataModel);
+        //        return data.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
+        //    }
+
+        //    public void Create(IVehicleMake make)
+        //    {
+        //        db.Makes.Add(make);
+        //        Save();
+        //    }
+
+        //    public IVehicleMake Read(Guid? id)
+        //    {
+        //        return db.Makes.Find(id);
+        //    }
+
+        //    public void Update(IVehicleMake Makes)
+        //    {
+        //        db.Entry(Makes).State = EntityState.Modified;
+        //        Save();
+        //    }
+
+        //    public void Delete(Guid? id)
+        //    {
+        //        VehicleMake make = db.Makes.Find(id);
+        //        db.Makes.Remove(make);
+        //        Save();
+
+        //    }
+
+        //    public void Save()
+        //    {
+        //        db.SaveChanges();
+        //    }
 
         private bool disposed = false;
 

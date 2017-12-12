@@ -1,5 +1,4 @@
-﻿using Service.Models;
-using System;
+﻿using System;
 
 namespace Service.Interfaces
 {
@@ -7,7 +6,7 @@ namespace Service.Interfaces
     {
         string Abrv { get; set; }
         Guid Id { get; set; }
-        VehicleMake Make { get; set; }
+        IVehicleMake Make { get; set; }
         string Name { get; set; }
         Guid VehicleMakeId { get; set; }
     }

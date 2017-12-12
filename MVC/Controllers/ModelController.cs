@@ -81,7 +81,7 @@ namespace MVC_Project.Controllers
 
             if (ModelState.IsValid)
             {
-                service.Create(model);
+                service.Create(modelView);
                 return RedirectToAction("Index");
             }
             //VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);

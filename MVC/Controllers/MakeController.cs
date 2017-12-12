@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Web.Mvc;
-using Service.Services;
 using System.Net;
 using Service.Models;
+using Service.Services;
 using MVC.Models;
-using System.Collections.Generic;
 using PagedList;
 using AutoMapper;
 using Service.Interfaces;
@@ -33,8 +32,8 @@ namespace MVC.Controllers
             systemDataModel.SortOrder = sortOrder;
             systemDataModel.Page = (page ?? 1);
 
-            IPagedList<VehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
-            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<VehicleMake>, IPagedList<VehicleMakeView>>(makeItems);
+            IPagedList<IVehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
+            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<IVehicleMake>, IPagedList<VehicleMakeView>>(makeItems);
 
            ViewBag.CurrentFilter = systemDataModel.SearchValue;
             return View(makeItems);

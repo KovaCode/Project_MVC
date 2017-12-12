@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace MVC.Controllers
 {
-
         public class AutoMapperConfiguration
         {
             public static void Configure()
@@ -31,15 +30,11 @@ namespace MVC.Controllers
         }
 
 
-        class PagedListConverter<TSource, TDestination> : ITypeConverter<IPagedList<TSource>, IPagedList<TDestination>> where TSource : class where TDestination : class
-        {
-            public IPagedList<TDestination> Convert(IPagedList<TSource> source, IPagedList<TDestination> destination, ResolutionContext context)
-            {
-                var collection = Mapper.Map<IEnumerable<TSource>, IEnumerable<TDestination>>(source);
-                return new PagedList<TDestination>(collection, source.PageNumber, source.PageSize);
-            }
-        }
+
 
 
     }
+
+   
+
 }

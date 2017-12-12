@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IVehicle.cs" />
+    <Compile Include="Interfaces\IVehicleDBContext.cs" />
     <Compile Include="Interfaces\IVehicleMake.cs" />
     <Compile Include="Interfaces\IVehicleModel.cs" />
     <Compile Include="Services\VehicleMakeService.cs" />

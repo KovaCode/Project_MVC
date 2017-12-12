@@ -9,5 +9,6 @@ namespace Service.Models
         public string SearchValue { get; set; }
         public int Page { get; set; } = 1;
         public int ResultsPerPage { get; set; } = 5;
+        public int TotalCount { get; set; } = 0;
     }
 }
