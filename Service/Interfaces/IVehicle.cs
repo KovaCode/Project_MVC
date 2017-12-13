@@ -14,10 +14,17 @@ namespace Service.Interfaces
         T Read(Guid? id);
         void Update(T obj);
         void Delete(Guid? id);
+<<<<<<< HEAD
         IEnumerable<IVehicleMake> FindMake();
+=======
+        
+>>>>>>> StaticPagging
         IEnumerable<T> GetVehicleData();
         IEnumerable<T> GetVehicleData(ISystemDataModel model);
-        IPagedList<T> GetVehicleDataPaged(ISystemDataModel systemDataModel);
+        StaticPagedList<T> GetVehicleDataPaged(ISystemDataModel systemDataModel);
+
+        IEnumerable<IVehicleMake> GetMakes();
+
     }
 }
 

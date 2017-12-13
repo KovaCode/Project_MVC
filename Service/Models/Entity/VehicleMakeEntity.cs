@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace Service.Models
+namespace Service.Models.Entity
 {
-    public class VehicleMake : IVehicleMake
+    public class VehicleMakeEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

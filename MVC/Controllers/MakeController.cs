@@ -7,6 +7,8 @@ using MVC.Models;
 using PagedList;
 using AutoMapper;
 using Service.Interfaces;
+using Service.Servicess;
+using Service.Models.Entity;
 
 namespace MVC.Controllers
 {
@@ -20,23 +22,30 @@ namespace MVC.Controllers
         }
 
         // GET: /Make/
-        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             SystemDataModel systemDataModel = new SystemDataModel();
 
+            ViewBag.ResultsPerPage = resultsPerPage;
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrWhiteSpace(sortOrder) ? "name_desc" : "";
 
             systemDataModel.SearchValue = searchString;
             systemDataModel.CurrentFilter = currentFilter;
             systemDataModel.SortOrder = sortOrder;
+            systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
+<<<<<<< HEAD
             IPagedList<IVehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
             IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<IVehicleMake>, IPagedList<VehicleMakeView>>(makeItems);
+=======
+            StaticPagedList<IVehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
+            StaticPagedList<VehicleMakeView> makeViewItems = Mapper.Map<StaticPagedList<IVehicleMake>, StaticPagedList<VehicleMakeView>>(makeItems);
+>>>>>>> StaticPagging
 
            ViewBag.CurrentFilter = systemDataModel.SearchValue;
-            return View(makeItems);
+            return View(makeViewItems);
         }
         
         // GET: /Make/Details/5
@@ -69,7 +78,7 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
-            VehicleMake make = Mapper.Map<VehicleMake>(makeView);
+            IVehicleMake make = Mapper.Map<IVehicleMake>(makeView);
 
             if (ModelState.IsValid)
             {
@@ -103,7 +112,7 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
-            VehicleMake make = Mapper.Map<VehicleMake>(makeView);
+            IVehicleMake make = Mapper.Map<IVehicleMake>(makeView);
 
             if (ModelState.IsValid)
             {

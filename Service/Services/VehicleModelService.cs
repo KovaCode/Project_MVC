@@ -5,6 +5,8 @@ using System.Linq;
 using PagedList;
 using Service.Interfaces;
 using Service.Models;
+using Service.Models.Entity;
+using AutoMapper;
 
 namespace Service.Services
 {
@@ -12,6 +14,7 @@ namespace Service.Services
     {
         private VehicleDBContext db = new VehicleDBContext();
 
+<<<<<<< HEAD
   
 
         public void Create(IVehicleModel model)
@@ -39,6 +42,22 @@ namespace Service.Services
             return db.Models.ToList().OrderBy(s => s.Name);
         }
 
+=======
+        public IEnumerable<IVehicleMake> GetMakes()
+        {
+            IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
+            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
+            return make;
+        }
+
+        public IEnumerable<IVehicleModel> GetVehicleData()
+        {
+            IEnumerable<VehicleModelEntity> modelItemsEntity = db.Models.ToList().OrderBy(s => s.Name);
+            IEnumerable<IVehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItemsEntity);
+            return model;
+        }
+
+>>>>>>> StaticPagging
         public IEnumerable<IVehicleModel> GetVehicleData(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
@@ -50,7 +69,11 @@ namespace Service.Services
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
+<<<<<<< HEAD
             var makeItems = from s in db.Makes select s;
+=======
+            IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
+>>>>>>> StaticPagging
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -66,6 +89,7 @@ namespace Service.Services
                 makeItems = makeItems.OrderByDescending(s => s.Name);
             }
 
+<<<<<<< HEAD
             return makeItems.AsEnumerable<IVehicleModel>();
         }
 
@@ -87,6 +111,49 @@ namespace Service.Services
             Save();
         }
 
+=======
+            systemDataModel.TotalCount = modelItems.Count();
+
+            IEnumerable<IVehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItems);
+            return model;
+        }
+
+        public StaticPagedList<IVehicleModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
+        {
+            IEnumerable<IVehicleModel> data = GetVehicleData(systemDataModel);
+
+            data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
+
+            StaticPagedList<IVehicleModel> staticPagedList = new StaticPagedList<IVehicleModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+
+            return staticPagedList;
+        }
+
+        public void Create(IVehicleModel model)
+        {
+            VehicleModelEntity modelEntity = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
+            this.db.Models.Add(modelEntity);
+            this.Save();
+        }
+
+        public IVehicleModel Read(Guid? id)
+        {
+            return Mapper.Map<VehicleModelEntity, IVehicleModel>(db.Models.Find(id));
+        }
+
+        public void Update(IVehicleModel model)
+        {
+            VehicleModelEntity modelEntity = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
+            this.db.Entry(modelEntity).State = EntityState.Modified;
+            this.Save();
+        }
+
+        public void Delete(Guid? id)
+        {
+            this.db.Models.Remove(db.Models.Find(id));
+            this.Save();
+        }
+>>>>>>> StaticPagging
 
         public void Save()
         {

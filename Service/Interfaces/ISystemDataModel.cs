@@ -7,5 +7,6 @@
         string SearchValue { get; set; }
         int Page { get; set; }
         int ResultsPerPage { get; set; }
+        int TotalCount { get; set; }
     }
 }

@@ -2,52 +2,70 @@
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
-
 <h2>@ViewBag.Title</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 
 @using (Html.BeginForm("Index", "Make", FormMethod.Get))
 {
+    <div class="col-lg-6">
+        <div class="input-group">
+            
+            <span class="input-group-btn">
+                Search: @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "search for..." })
+                <button class="btn btn-default" type="submit">Go!</button>
+            </span>
+        </div>
+    </div>
+    <br>
     <p>
-        Search: @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
-        <input type="submit" value="Find" />
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
     </p>
-}
+    <br>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink("Name", "Index", new {  sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
-        </th>
-        <th>
-            Abrv
-        </th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Abrv)
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Panel heading</div>
 
-            </td>
-        </tr>
+           
+
+
+    <table class="table">
+            <tr>
+                <th>
+                    @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage })
+                </th>
+                <th>
+                    Abrv
+                </th>
+            </tr>
+       
+            @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Abrv)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                </td>
+            </tr>
     }
 
-</table>
-
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    </table>
+    </div>
 
 
 
+    <p>
+        Results Per Page: @Html.DropDownList("resultsPerPage", Enumerable.Range(1, 10).Select(i => new SelectListItem { Text = (i * 5).ToString(), Value = (i * 5).ToString() }), new { onchange = "this.form.submit();" })
+    </p>
+
+}
+
+
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage }))

@@ -22,20 +22,22 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             SystemDataModel systemDataModel = new SystemDataModel();
 
+            ViewBag.ResultsPerPage = resultsPerPage;
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrWhiteSpace(sortOrder) ? "name_desc" : "";
 
             systemDataModel.SearchValue = searchString;
             systemDataModel.CurrentFilter = currentFilter;
             systemDataModel.SortOrder = sortOrder;
+            systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
-
-            IPagedList<VehicleModelView> modelViewPaged = Mapper.Map<PagedList<VehicleModelView>>(service.GetVehicleDataPaged(systemDataModel));
+            StaticPagedList<IVehicleModel> modelItems = service.GetVehicleDataPaged(systemDataModel);
+            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModel>, StaticPagedList<VehicleModelView>>(modelItems);
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
             return View(modelViewPaged);
@@ -51,6 +53,7 @@ namespace MVC_Project.Controllers
 
             IVehicleModel model = service.Read(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
+            
 
             if (modelView == null)
             {
@@ -62,10 +65,13 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            VehicleModelView vehicleModelView = new VehicleModelView();
-            ViewBag.MakerList = vehicleModelView.Make;
+            VehicleModelView vehicleModelView = new VehicleModelView
+            {
+                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeView>>(service.GetMakes())
+            };
 
-            return View();
+            //ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name");
+            return View(vehicleModelView);
         }
 
         // POST: Models/Create
@@ -73,23 +79,20 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,VehicleMakeId, MakeID,Name,Abrv")] VehicleModelView modelView)
+        public ActionResult Create([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
         {
 
-            VehicleModel model = Mapper.Map<VehicleModel>(modelView);
-            ViewBag.MakerList = model.Make;
-
+            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
             if (ModelState.IsValid)
             {
                 service.Create(modelView);
                 return RedirectToAction("Index");
             }
-            //VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
-            ViewBag.MakerList = modelView.Make;
+
+            modelView = Mapper.Map<VehicleModelView>(model);
+            //ViewBag.MakerList = modelView.Make;
 
             return View(modelView);
-
-
 
         }
 
@@ -106,7 +109,7 @@ namespace MVC_Project.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MakerList = new SelectList(service.FindMake(), "Id", "Name", modelView.Make.Id);
+            ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name");
             return View(modelView);
         }
 
@@ -117,7 +120,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
         {
-            VehicleModel model = Mapper.Map<VehicleModel>(modelView);
+            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
 
             if (ModelState.IsValid)
             {
