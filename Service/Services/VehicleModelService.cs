@@ -46,7 +46,6 @@ namespace Service.Services
                 modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Abrv.Contains(systemDataModel.SearchValue) || s.Make.Name.Contains(systemDataModel.SearchValue));
             }
 
-
             if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
             {
                 modelItems = modelItems.OrderBy(s => s.Name);

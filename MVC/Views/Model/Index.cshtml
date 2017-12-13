@@ -14,44 +14,45 @@
         Search: @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Find" />
     </p>
+
+
+    <table class="table">
+        <tr>
+            <th>
+                Make Name
+            </th>
+            <th>
+                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage })
+            </th>
+            <th>
+                Abrv
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Make.Name)
+                </td>
+                <td>
+                    @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Abrv)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+
+                </td>
+            </tr>
+        }
+    </table>
+
+    <p>
+        Results Per Page: @Html.DropDownList("resultsPerPage", Enumerable.Range(1, 10).Select(i => new SelectListItem { Text = (i * 5).ToString(), Value = (i * 5).ToString() }), new { onchange = "this.form.submit();" })
+    </p>
 }
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
-        </th>
-        <th>
-            Make Name
-        </th>
-        <th>
-            Abrv
-        </th>
-
-
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Make.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Abrv)
-            </td>
-            <td>
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-
-            </td>
-        </tr>
-    }
-
-</table>
-
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index", 
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+@Html.PagedListPager(Model, page => Url.Action("Index", "Model", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage }))

@@ -22,16 +22,18 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             SystemDataModel systemDataModel = new SystemDataModel();
 
+            ViewBag.ResultsPerPage = resultsPerPage;
             ViewBag.CurrentSort = sortOrder;
             ViewBag.NameSortParm = String.IsNullOrWhiteSpace(sortOrder) ? "name_desc" : "";
 
             systemDataModel.SearchValue = searchString;
             systemDataModel.CurrentFilter = currentFilter;
             systemDataModel.SortOrder = sortOrder;
+            systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
             StaticPagedList<IVehicleModel> modelItems = service.GetVehicleDataPaged(systemDataModel);
