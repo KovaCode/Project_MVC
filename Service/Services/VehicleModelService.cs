@@ -54,6 +54,9 @@ namespace Service.Services
             {
                 modelItems = modelItems.OrderByDescending(s => s.Name);
             }
+
+            systemDataModel.TotalCount = modelItems.Count();
+
             IEnumerable<IVehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItems);
             return model;
         }
