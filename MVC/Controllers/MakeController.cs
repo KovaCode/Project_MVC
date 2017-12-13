@@ -9,6 +9,7 @@ using PagedList;
 using AutoMapper;
 using Service.Interfaces;
 using Service.Servicess;
+using Service.Models.Entity;
 
 namespace MVC.Controllers
 {
@@ -71,7 +72,7 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
-            VehicleMake make = Mapper.Map<VehicleMake>(makeView);
+            IVehicleMake make = Mapper.Map<IVehicleMake>(makeView);
 
             if (ModelState.IsValid)
             {
@@ -105,7 +106,7 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
-            VehicleMake make = Mapper.Map<VehicleMake>(makeView);
+            IVehicleMake make = Mapper.Map<IVehicleMake>(makeView);
 
             if (ModelState.IsValid)
             {

@@ -17,20 +17,15 @@ namespace Service.Services
         public IEnumerable<IVehicleMake> GetMakes()
         {
             IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
-            IEnumerable<VehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<VehicleMake>>(makeItemsEntity);
-            IEnumerable<IVehicleMake> iMake = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(make);
-
+            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
             return make;
         }
-
-
 
         public IEnumerable<IVehicleModel> GetVehicleData()
         {
             IEnumerable<VehicleModelEntity> modelItemsEntity = db.Models.ToList().OrderBy(s => s.Name);
-            IEnumerable<VehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<VehicleModel>>(modelItemsEntity);
-            IEnumerable<IVehicleModel> iModel = Mapper.Map<IEnumerable<VehicleModel>, IEnumerable<IVehicleModel>>(model);
-            return iModel;
+            IEnumerable<IVehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItemsEntity);
+            return model;
         }
 
         public IEnumerable<IVehicleModel> GetVehicleData(ISystemDataModel systemDataModel)
@@ -44,7 +39,7 @@ namespace Service.Services
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            IEnumerable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
+            IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -60,10 +55,8 @@ namespace Service.Services
             {
                 modelItems = modelItems.OrderByDescending(s => s.Name);
             }
-            IEnumerable<VehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<VehicleModel>>(modelItems);
-            IEnumerable<IVehicleModel> iModel = Mapper.Map<IEnumerable<VehicleModel>, IEnumerable<IVehicleModel>>(model);
-
-            return iModel;
+            IEnumerable<IVehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItems);
+            return model;
         }
 
         public StaticPagedList<IVehicleModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
@@ -73,10 +66,8 @@ namespace Service.Services
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
             StaticPagedList<IVehicleModel> staticPagedList = new StaticPagedList<IVehicleModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
-            //StaticPagedList<IVehicleModel> models = Mapper.Map<StaticPagedList<VehicleModelEntity>, StaticPagedList<IVehicleModel>>(staticPagedList);
 
             return staticPagedList;
-            //return data.ToPagedList(systemDataModel.Page, systemDataModel.ResultsPerPage);
         }
 
         public void Create(IVehicleModel model)
@@ -93,7 +84,8 @@ namespace Service.Services
 
         public void Update(IVehicleModel model)
         {
-            this.db.Entry(model).State = EntityState.Modified;
+            VehicleModelEntity modelEntity = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
+            this.db.Entry(modelEntity).State = EntityState.Modified;
             this.Save();
         }
 

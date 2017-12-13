@@ -21,36 +21,19 @@ namespace MVC.Controllers
             Mapper.Initialize(cfg =>
             {
                 // MAKE - mappings //               
-                cfg.CreateMap<VehicleMake, IVehicleMake>();
-                cfg.CreateMap<VehicleMakeEntity, IVehicleMake>();
-                cfg.CreateMap<VehicleMakeView, IVehicleMake>();
-                cfg.CreateMap<IVehicleMake, VehicleMakeView>();
+                cfg.CreateMap<VehicleMakeEntity, IVehicleMake>().ReverseMap();
+                cfg.CreateMap<VehicleMakeView, IVehicleMake>().ReverseMap();
 
-                cfg.CreateMap<VehicleMakeEntity, VehicleMake>();
-                cfg.CreateMap<VehicleMakeView, VehicleMake>();
-                cfg.CreateMap<VehicleMake, VehicleMakeView>();
-
-                // MODEL - mappings //
-                cfg.CreateMap<VehicleModelEntity, VehicleModel>();
-                cfg.CreateMap<IVehicleModel, VehicleModel>();
-                cfg.CreateMap<VehicleModel, VehicleModelView>();
-                cfg.CreateMap<VehicleModelView, VehicleModel>();
-
-                cfg.CreateMap<VehicleModelView, IVehicleModel>();
-                cfg.CreateMap<IVehicleModel, VehicleModelView>();
-
-
-
-
+                // MODEL - mappings /
+                cfg.CreateMap<VehicleModelEntity, IVehicleModel>().ReverseMap();
+                cfg.CreateMap<VehicleModelView, IVehicleModel>().ReverseMap();
+                
+       
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleMake>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMake, VehicleMakeView>));
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<IVehicleModel, VehicleModelView>));
-
-                cfg.CreateMap(typeof(StaticPagedList<VehicleMake>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<VehicleMake, VehicleMakeView>));
-                cfg.CreateMap(typeof(StaticPagedList<VehicleModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<VehicleModel, VehicleModelView>));
             }
             );
         }
-
 
         class PagedListConverter<TSource, TDestination> : ITypeConverter<StaticPagedList<TSource>, StaticPagedList<TDestination>> where TSource : class where TDestination : class
         {

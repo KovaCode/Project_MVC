@@ -14,6 +14,6 @@ namespace Service.Models.Entity
         [Required]
         public string Name { get; set; }
         public string Abrv { get; set; }
-        public virtual VehicleMake Make { get; set; }
+        public virtual VehicleMakeEntity Make { get; set; }
     }
 }

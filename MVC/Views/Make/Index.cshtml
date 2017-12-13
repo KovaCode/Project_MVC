@@ -1,5 +1,6 @@
 ﻿@model PagedList.IPagedList<MVC.Models.VehicleMakeView>
 @using PagedList.Mvc;
+@using MVC.Enum;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 
@@ -15,6 +16,13 @@
         Search: @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
         <input type="submit" value="Find" />
     </p>
+
+    <p>
+        Results Per Page:  @Html.DropDownList("ResultsPerPage", EnumHelper.GetSelectList(typeof(ResultsPerPage)), "Select My Type", new { @class = "form-control" })
+
+        @*@Html.EnumDropDownListFor(model => model.ResultsPerPage)*@
+    </p>
+
 }
 
 <table class="table">
@@ -38,7 +46,7 @@
             </td>
             <td>
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-
+                @Html.ActionLink("| Edit", "Edit", new { id = item.Id })
             </td>
         </tr>
     }
@@ -47,7 +55,7 @@
 
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 @Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage }))
 
 
 

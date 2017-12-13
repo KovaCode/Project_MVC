@@ -19,18 +19,14 @@ namespace Service.Servicess
         public IEnumerable<IVehicleMake> GetMakes()
         {
             IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
-            IEnumerable<VehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<VehicleMake>>(makeItemsEntity);
-            IEnumerable<IVehicleMake> iMake = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(make);
-
+            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
             return make;
         }
 
         public IEnumerable<IVehicleMake> GetVehicleData()
         {
             IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
-            IEnumerable<VehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<VehicleMake>>(makeItemsEntity);
-            IEnumerable<IVehicleMake> iMake = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(make);
-
+            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
             return make;
         }
 
@@ -45,8 +41,7 @@ namespace Service.Servicess
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            IEnumerable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
-                     
+            IQueryable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -77,8 +72,6 @@ namespace Service.Servicess
      
             StaticPagedList<IVehicleMake> staticPagedList = new StaticPagedList<IVehicleMake>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
-            //StaticPagedList<IVehicleMake> make = Mapper.Map<StaticPagedList<VehicleMakeEntity>, StaticPagedList<IVehicleMake>>(staticPagedList);
-
             return staticPagedList;
         }
 
@@ -96,7 +89,8 @@ namespace Service.Servicess
 
         public void Update(IVehicleMake make)
         {
-            db.Entry(make).State = EntityState.Modified;
+            VehicleMakeEntity makeEntity = Mapper.Map<IVehicleMake, VehicleMakeEntity>(make);
+            db.Entry(makeEntity).State = EntityState.Modified;
             Save();
         }
         

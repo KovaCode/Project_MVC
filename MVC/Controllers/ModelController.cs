@@ -51,6 +51,7 @@ namespace MVC_Project.Controllers
 
             IVehicleModel model = service.Read(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
+            
 
             if (modelView == null)
             {
@@ -62,11 +63,13 @@ namespace MVC_Project.Controllers
         // GET: Models/Create
         public ActionResult Create()
         {
-            IEnumerable<IVehicleMake> listMakes = service.GetMakes();
+            VehicleModelView vehicleModelView = new VehicleModelView
+            {
+                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeView>>(service.GetMakes())
+            };
 
-            ViewBag.MakerList = listMakes;
-
-            return View();
+            //ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name");
+            return View(vehicleModelView);
         }
 
         // POST: Models/Create
@@ -74,12 +77,10 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,VehicleMakeId, MakeID,Name,Abrv")] VehicleModelView modelView)
+        public ActionResult Create([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
         {
 
-            VehicleModel model = Mapper.Map<VehicleModel>(modelView);
-            ViewBag.MakerList = model.Make;
-
+            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
             if (ModelState.IsValid)
             {
                 service.Create(model);
@@ -87,7 +88,7 @@ namespace MVC_Project.Controllers
             }
 
             modelView = Mapper.Map<VehicleModelView>(model);
-            ViewBag.MakerList = modelView.Make;
+            //ViewBag.MakerList = modelView.Make;
 
             return View(modelView);
 
@@ -106,7 +107,7 @@ namespace MVC_Project.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name", modelView.Make.Id);
+            ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name");
             return View(modelView);
         }
 
@@ -117,7 +118,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
         {
-            VehicleModel model = Mapper.Map<VehicleModel>(modelView);
+            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
 
             if (ModelState.IsValid)
             {
