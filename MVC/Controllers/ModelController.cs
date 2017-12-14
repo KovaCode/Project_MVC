@@ -69,8 +69,6 @@ namespace MVC_Project.Controllers
             {
                 MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeView>>(service.GetMakes())
             };
-
-            //ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name");
             return View(vehicleModelView);
         }
 
