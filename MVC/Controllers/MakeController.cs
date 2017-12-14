@@ -9,6 +9,7 @@ using AutoMapper;
 using Service.Interfaces;
 using Service.Servicess;
 using Service.Models.Entity;
+using System.Linq;
 
 namespace MVC.Controllers
 {
@@ -36,14 +37,10 @@ namespace MVC.Controllers
             systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
-<<<<<<< HEAD
-            IPagedList<IVehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
-            IPagedList<VehicleMakeView> makeViewItems = Mapper.Map<IPagedList<IVehicleMake>, IPagedList<VehicleMakeView>>(makeItems);
-=======
+
             StaticPagedList<IVehicleMake> makeItems = service.GetVehicleDataPaged(systemDataModel);
             StaticPagedList<VehicleMakeView> makeViewItems = Mapper.Map<StaticPagedList<IVehicleMake>, StaticPagedList<VehicleMakeView>>(makeItems);
->>>>>>> StaticPagging
-
+                
            ViewBag.CurrentFilter = systemDataModel.SearchValue;
             return View(makeViewItems);
         }
@@ -85,8 +82,13 @@ namespace MVC.Controllers
                 service.Create(make);
                 return RedirectToAction("Index");
             }
-            //VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
-            return View(makeView);
+            else
+            {
+                ViewBag.error = "Something went wrong";
+                var errors = ModelState.Values.SelectMany(x => x.Errors);
+                return View(makeView);
+
+            }
         }
         
         // GET: /Make/Edit/5

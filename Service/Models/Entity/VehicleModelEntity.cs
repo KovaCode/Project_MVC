@@ -5,11 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Service.Models.Entity
 {
-<<<<<<< HEAD:Service/Models/VehicleModel.cs
-    public class VehicleModel
-=======
     public class VehicleModelEntity
->>>>>>> StaticPagging:Service/Models/Entity/VehicleModelEntity.cs
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

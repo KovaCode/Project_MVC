@@ -3,45 +3,49 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<br>
+<div class="panel panel-danger">
+    @* PANEL-HEADING *@
+    <div class="panel-heading">
 
-<h3>Are you sure you want to delete this "Maker" item "@Model.Name"?</h3>
-<div>
-   
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
+        <h2>Delete this item?</h2>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        @*<dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>*@
-
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Abrv)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Abrv)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+        <div class="panel-body">
+            <dl class="dl-horizontal" align="center">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Id)
+                </dt>
+
+                <dd align="left">
+                    @Html.DisplayFor(model => model.Id)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd align="left">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Abrv)
+                </dt>
+
+                <dd align="left">
+                    @Html.DisplayFor(model => model.Abrv)
+                </dd>
+
+            </dl>
+
+
+            <div align="center">
+                <input type="submit" value="Delete" class="btn btn-danger" />
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+            </div>
+
         </div>
-    }
-</div>
+}

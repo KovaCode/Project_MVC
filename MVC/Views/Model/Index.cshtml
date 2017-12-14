@@ -1,59 +1,78 @@
 ﻿@model PagedList.IPagedList<MVC.Models.VehicleModelView>
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+@using MVC;
 
 <h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-
 @using (Html.BeginForm("Index", "Model", FormMethod.Get))
 {
-    <p>
-        Search: @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
-        <input type="submit" value="Find" />
-    </p>
+
+    @Html.ActionLink("Create Model", "Create", null, new { @class = "btn btn-success" })
+    <br>
+    <br>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <div style="width: 60%; float:left" align="left">
+                            Search: @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @placeholder = "search model or make..." })
+                            <button class="btn btn-default" type="submit">Go!</button>
+                        </div>
+
+                        <div style="width: 40%; float:right" align="right">
+                            Show @Html.DropDownList("resultsPerPage", Enumerable.Range(1, 10).Select(i => new SelectListItem { Text = (i * 5).ToString(), Value = (i * 5).ToString() }), new { onchange = "this.form.submit();", @class = "btn btn-default dropdown-toggle" }) Per Page
+                        </div>
+                    </span>
+                </div>
+        </div>
 
 
-    <table class="table">
-        <tr>
-            <th>
-                Make Name
-            </th>
-            <th>
-                @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage })
-            </th>
-            <th>
-                Abrv
-            </th>
-        </tr>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>
+                        Make Name
+                    </th>
+                    <th>
+                        @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage })
+                    </th>
+                    <th>
+                        Abrv
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Make.Name)
-                </td>
-                <td>
-                    @Html.ActionLink(item.Name, "Details", new { id = item.Id })
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Abrv)
-                </td>
-                <td>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Make.Name)
+                        </td>
+                        <td>
+                            @Html.ActionLink(item.Name, "Details", new { id = item.Id })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Abrv)
+                        </td>
+                        <td>
+                            <div align="right">
+                                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                            </div>
 
-                </td>
-            </tr>
-        }
-    </table>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
 
-    <p>
-        Results Per Page: @Html.DropDownList("resultsPerPage", Enumerable.Range(1, 10).Select(i => new SelectListItem { Text = (i * 5).ToString(), Value = (i * 5).ToString() }), new { onchange = "this.form.submit();" })
-    </p>
+        <div class="panel-footer">
+                @Html.PagedListPager(Model, page => Url.Action("Index", "Model", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage }))
+
+        </div>
+    </div>
 }
-
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-@Html.PagedListPager(Model, page => Url.Action("Index", "Model", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, resultsPerPage = ViewBag.ResultsPerPage }))

@@ -33,11 +33,6 @@ namespace MVC.Controllers
             }
             );
         }
-
-<<<<<<< HEAD
-
-
-=======
         class PagedListConverter<TSource, TDestination> : ITypeConverter<StaticPagedList<TSource>, StaticPagedList<TDestination>> where TSource : class where TDestination : class
         {
             public StaticPagedList<TDestination> Convert(StaticPagedList<TSource> source, StaticPagedList<TDestination> destination, ResolutionContext context)
@@ -46,9 +41,6 @@ namespace MVC.Controllers
                 return new StaticPagedList<TDestination>(collection, source.PageNumber, source.PageSize, source.TotalItemCount);
             }
         }
->>>>>>> StaticPagging
-
-
     }
 
    

@@ -161,15 +161,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="BootsrapHtml.cs" />
     <Compile Include="Controllers\AutomapperConfiguration.cs" />
     <Compile Include="Controllers\MakeController.cs" />
     <Compile Include="Controllers\ModelController.cs" />
-<<<<<<< HEAD
-    <Compile Include="Controllers\PagedListConverter.cs" />
-    <Compile Include="Controllers\PagedViewModel.cs" />
-    <Compile Include="Controllers\Converter.cs" />
-=======
->>>>>>> StaticPagging
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -241,7 +236,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Service\Service.csproj">
-      <Project>{D888BF90-52DA-4119-9576-7DD80A9E3520}</Project>
+      <Project>{d888bf90-52da-4119-9576-7dd80a9e3520}</Project>
       <Name>Service</Name>
     </ProjectReference>
   </ItemGroup>

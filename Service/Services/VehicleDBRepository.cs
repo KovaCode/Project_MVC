@@ -12,10 +12,6 @@ namespace Service.Services
         {
         }
 
-<<<<<<< HEAD
-        public IDbSet<IVehicleModel> Models { get; set; }
-        public IDbSet<IVehicleMake> Makes { get; set; }
-=======
         public DbSet<VehicleMakeEntity> Makers { get; set; }
         public DbSet<VehicleModelEntity> Models { get; set; }
 
@@ -23,6 +19,5 @@ namespace Service.Services
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
->>>>>>> StaticPagging
     }
 }

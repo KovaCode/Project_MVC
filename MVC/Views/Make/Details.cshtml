@@ -4,38 +4,46 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details for '@Model.Name'</h2>
+<br />
 
-<div>
-    <dl class="dl-horizontal">
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h2>Details for '@Model.Name'</h2>
+    </div>
+    <div class="panel-body" >
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
+        <div align ="center">
+            <dl class="dl-horizontal">
 
-        <dd>
-            @Html.DisplayFor(model => model.Id)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Id)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                <dd align="left">
+                    @Html.DisplayFor(model => model.Id)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Abrv)
-        </dt>
+                <dd align="left">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Abrv)
-        </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Abrv)
+                </dt>
 
-    </dl>
+                <dd align="left">
+                    @Html.DisplayFor(model => model.Abrv)
+                </dd>
+
+            </dl>
+        </div>
+        <div align="center">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
