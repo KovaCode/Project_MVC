@@ -61,8 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IVehicle.cs" />
-    <Compile Include="Interfaces\IVehicleMake.cs" />
-    <Compile Include="Interfaces\IVehicleModel.cs" />
+    <Compile Include="Interfaces\Models\IVehicleMake.cs" />
+    <Compile Include="Interfaces\Service\IVehicleModelService.cs" />
+    <Compile Include="Interfaces\Service\IVehicleMakeService.cs" />
+    <Compile Include="Interfaces\Models\IVehicleModel.cs" />
     <Compile Include="Services\VehicleMakeService.cs" />
     <Compile Include="Services\VehicleModelService.cs" />
     <Compile Include="Services\VehicleDBRepository.cs" />

@@ -1,18 +1,18 @@
 ﻿using Service.Interfaces;
-using Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using PagedList;
-using System.Collections;
 using AutoMapper;
 using Service.Services;
 using Service.Models.Entity;
+using Service.Interfaces.Services;
+using Service.Interfaces.Models;
 
 namespace Service.Servicess
 {
-    public class VehicleMakeService : IVehicle<IVehicleMake>
+    public class VehicleMakeService : IVehicleMakeService
     {
         private VehicleDBContext db = new VehicleDBContext();
 
@@ -23,14 +23,7 @@ namespace Service.Servicess
             return make;
         }
 
-        public IEnumerable<IVehicleMake> GetVehicleData()
-        {
-            IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderByDescending(s=>s.Name);
-            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
-            return make;
-        }
-
-        public IEnumerable<IVehicleMake> GetVehicleData(ISystemDataModel systemDataModel)
+        public StaticPagedList<IVehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -59,14 +52,7 @@ namespace Service.Servicess
 
             systemDataModel.TotalCount = makeItems.Count();
 
-            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItems);
-
-            return make;
-        }
-
-        public StaticPagedList<IVehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel)
-        {
-            IEnumerable<IVehicleMake> data = GetVehicleData(systemDataModel);
+            IEnumerable<IVehicleMake> data = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItems);
 
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
@@ -119,13 +105,11 @@ namespace Service.Servicess
             }
             this.disposed = true;
         }
-
+ 
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-
     }
 }

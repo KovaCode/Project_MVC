@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Service.Interfaces
+namespace Service.Interfaces.Models
 {
     public interface IVehicleMake
     {

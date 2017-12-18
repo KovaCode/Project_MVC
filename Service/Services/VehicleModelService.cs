@@ -4,17 +4,17 @@ using System.Data.Entity;
 using System.Linq;
 using PagedList;
 using Service.Interfaces;
-using Service.Models;
 using Service.Models.Entity;
 using AutoMapper;
+using Service.Interfaces.Services;
+using Service.Interfaces.Models;
 
 namespace Service.Services
 {
-    public class VehicleModelService : IVehicle<IVehicleModel>
+    public class VehicleModelService : IVehicleModelService
     {
         private VehicleDBContext db = new VehicleDBContext();
 
-  
         public IEnumerable<IVehicleMake> GetMakes()
         {
             IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderByDescending(s => s.Name);
@@ -22,14 +22,8 @@ namespace Service.Services
             return make;
         }
 
-        public IEnumerable<IVehicleModel> GetVehicleData()
-        {
-            IEnumerable<VehicleModelEntity> modelItemsEntity = db.Models.ToList().OrderBy(s => s.Name);
-            IEnumerable<IVehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItemsEntity);
-            return model;
-        }
 
-        public IEnumerable<IVehicleModel> GetVehicleData(ISystemDataModel systemDataModel)
+        public StaticPagedList<IVehicleModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -58,14 +52,7 @@ namespace Service.Services
 
             systemDataModel.TotalCount = modelItems.Count();
 
-            IEnumerable<IVehicleModel> model = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItems);
-            return model;
-        }
-
-        public StaticPagedList<IVehicleModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
-        {
-            IEnumerable<IVehicleModel> data = GetVehicleData(systemDataModel);
-
+            IEnumerable<IVehicleModel> data = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItems);
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
             StaticPagedList<IVehicleModel> staticPagedList = new StaticPagedList<IVehicleModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
@@ -107,6 +94,7 @@ namespace Service.Services
 
 
         private bool disposed = false;
+
 
         protected virtual void Dispose(bool disposing)
         {

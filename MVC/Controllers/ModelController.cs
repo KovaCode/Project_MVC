@@ -5,20 +5,25 @@ using System;
 using PagedList;
 using MVC.Models;
 using System.Collections.Generic;
-using System.Collections;
 using AutoMapper;
 using Service.Services;
-using Service.Interfaces;
+using Service.Interfaces.Services;
+using Service.Interfaces.Models;
 
 namespace MVC_Project.Controllers
 {
     public class ModelController : Controller
     {
-        private VehicleModelService service;
+        private IVehicleModelService service;
 
         public ModelController()
         {
             service = new VehicleModelService();
+        }
+
+        public ModelController(VehicleModelService vehicleModelService)
+        {
+            service = vehicleModelService;
         }
 
         // GET: Models

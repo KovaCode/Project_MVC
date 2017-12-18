@@ -2,25 +2,30 @@
 using System.Web.Mvc;
 using System.Net;
 using Service.Models;
-using Service.Services;
 using MVC.Models;
 using PagedList;
 using AutoMapper;
-using Service.Interfaces;
 using Service.Servicess;
-using Service.Models.Entity;
 using System.Linq;
+using Service.Interfaces.Services;
+using Service.Interfaces.Models;
 
 namespace MVC.Controllers
 {
     public class MakeController : Controller
     {
-        private VehicleMakeService service;
+        private IVehicleMakeService service;
 
         public MakeController()
         {
             service = new VehicleMakeService();
         }
+
+        public MakeController(VehicleMakeService vehicleMakeService)
+        {
+            service = vehicleMakeService;
+        }
+
 
         // GET: /Make/
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)

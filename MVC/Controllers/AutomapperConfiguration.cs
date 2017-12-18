@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
 using MVC.Models;
 using PagedList;
-using Service.Models;
 using Service.Models.Entity;
-using Service.Interfaces;
 using System.Collections.Generic;
+using Service.Interfaces.Models;
 
 namespace MVC.Controllers
 {
