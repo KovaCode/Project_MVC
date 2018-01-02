@@ -1,4 +1,4 @@
-﻿using Service.Interfaces;
+﻿using Service.Common;
 
 namespace Service.Models
 {

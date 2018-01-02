@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Service.Interfaces.Models
+namespace Service.Common.Models
 {
     public interface IVehicleModel
     {

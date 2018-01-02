@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using PagedList;
-using Service.Interfaces;
+using Service.Common;
 using Service.Models.Entity;
 using AutoMapper;
-using Service.Interfaces.Services;
-using Service.Interfaces.Models;
+using Service.Common.Services;
+using Service.Common.Models;
 
 namespace Service.Services
 {

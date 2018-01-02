@@ -1,4 +1,4 @@
-﻿using Service.Interfaces;
+﻿using Service.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -7,8 +7,8 @@ using PagedList;
 using AutoMapper;
 using Service.Services;
 using Service.Models.Entity;
-using Service.Interfaces.Services;
-using Service.Interfaces.Models;
+using Service.Common.Models;
+using Service.Common.Services;
 
 namespace Service.Servicess
 {

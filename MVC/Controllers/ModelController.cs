@@ -7,8 +7,8 @@ using MVC.Models;
 using System.Collections.Generic;
 using AutoMapper;
 using Service.Services;
-using Service.Interfaces.Services;
-using Service.Interfaces.Models;
+using Service.Common.Services;
+using Service.Common.Models;
 
 namespace MVC_Project.Controllers
 {

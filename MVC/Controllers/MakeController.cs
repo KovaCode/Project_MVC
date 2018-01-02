@@ -5,23 +5,17 @@ using Service.Models;
 using MVC.Models;
 using PagedList;
 using AutoMapper;
-using Service.Servicess;
 using System.Linq;
-using Service.Interfaces.Services;
-using Service.Interfaces.Models;
+using Service.Common.Services;
+using Service.Common.Models;
 
 namespace MVC.Controllers
 {
     public class MakeController : Controller
-    {
-        private IVehicleMakeService service;
+    {      
+        private readonly IVehicleMakeService service;
 
-        public MakeController()
-        {
-            service = new VehicleMakeService();
-        }
-
-        public MakeController(VehicleMakeService vehicleMakeService)
+        public MakeController(IVehicleMakeService vehicleMakeService)
         {
             service = vehicleMakeService;
         }

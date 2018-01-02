@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using PagedList;
-using Service.Interfaces.Models;
+using Service.Common.Models;
 
-namespace Service.Interfaces
+namespace Service.Common
 {
     public interface IVehicle<T> : IDisposable where T : class
     {

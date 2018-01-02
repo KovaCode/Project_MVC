@@ -1,9 +1,9 @@
 ﻿using PagedList;
-using Service.Interfaces.Models;
+using Service.Common.Models;
 using System;
 using System.Collections.Generic;
 
-namespace Service.Interfaces.Services
+namespace Service.Common.Services
 {
     public interface IVehicleMakeService : IVehicle<IVehicleMake>
     {
