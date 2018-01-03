@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Model.Common;
 
@@ -8,23 +10,28 @@ namespace Repository.Commons
 {
     public interface IRepository<T> where T : IEntity
     {
-        T GetById(Guid id);
 
-        //T Create(T entity);
-        Task<int> CreateAsynchAsync(T entity);
+        IUnitOfWork UnitOfWork { get; }
 
-        //T Read(Guid? id);
-        Task<T> ReadAsynch(Guid? id);
-
-        //void Update(T entity);
-        Task<int> UpdateAsynch(T entity);
-
-        //void Delete(T entity);
-        Task<int> DeleteAsynch(T entity);
-
-        //IEnumerable<T> GetTable { get; }
-        Task<IEnumerable<T>> GetTableAsynch { get; }
-
-
+        T GetById(object id);
+        void Insert(T entity);
+        void Update(T entity);
+        void Delete(T entity);
+        IEnumerable<T> Table { get; }
     }
+
+    //IUnitOfWork UnitOfWork { get; }
+
+    //IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class;
+    //IEnumerable<TEntity> Get<TEntity,TOrderBy>(Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex,  int pageSize, SortOrder sortOrder = SortOrder.Ascending) where TEntity : class;
+    //IEnumerable<TEntity> Get<TEntity,TOrderBy>(Expression<Func<TEntity, bool>> criteria,Expression<Func<TEntity, TOrderBy>> orderBy, int pageIndex, int pageSize, SortOrder sortOrder = SortOrder.Ascending) where TEntity : class;
+    //IEnumerable<TEntity> Find<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
+    //TEntity FindOne<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
+    //int Count<TEntity>() where TEntity : class;
+
+
+    //void AddAsync<TEntity>(TEntity entity) where TEntity : class;
+    //void Update<TEntity>(TEntity entity) where TEntity : class;
+    //void Delete<TEntity>(TEntity entity) where TEntity : class;
+    //void Delete<TEntity>(Expression<Func<TEntity, bool>> criteria) where TEntity : class;
 }

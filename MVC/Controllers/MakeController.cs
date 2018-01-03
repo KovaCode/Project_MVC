@@ -8,6 +8,8 @@ using AutoMapper;
 using System.Linq;
 using Service.Common.Services;
 using Service.Common.Models;
+using Repository.Commons;
+using Service.Services;
 
 namespace MVC.Controllers
 {

@@ -5,21 +5,30 @@ using System.Data.Entity;
 using System.Linq;
 using PagedList;
 using AutoMapper;
-using Service.Services;
 using Service.Models.Entity;
 using Service.Common.Models;
 using Service.Common.Services;
+using Repository.Commons;
+using Model;
+
 
 namespace Service.Servicess
 {
     public class VehicleMakeService : IVehicleMakeService
     {
-        private VehicleDBContext db = new VehicleDBContext();
+        IRepository<Make> repositoryMake;
 
+        public VehicleMakeService(IRepository<Make> repository)
+        {
+            repositoryMake = repository;           
+        }
+        
+        
         public IEnumerable<IVehicleMake> GetMakes()
         {
-            IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
-            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
+            //IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderBy(s => s.Name);
+            IEnumerable<Make> makeItemsEntity = repositoryMake.GetAll<Make>();
+            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<Make>, IEnumerable<IVehicleMake>>(makeItemsEntity);
             return make;
         }
 

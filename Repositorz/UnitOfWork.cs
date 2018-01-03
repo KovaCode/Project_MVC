@@ -10,11 +10,15 @@ namespace Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        protected VehicleDBContext DbContext { get; private set; }
+        protected IYourContext DbContext { get; private set; }
 
-        public UnitOfWork(VehicleDBContext dbContext)
+        public UnitOfWork(IYourContext dbContext)
         {
-            DbContext = dbContext ?? throw new ArgumentNullException("DbContext");
+            if (dbContext == null)
+            {
+                throw new ArgumentNullException("DbContext");
+            }
+            DbContext = dbContext;
         }
 
         public virtual Task<int> AddAsync<T>(T entity) where T : class
@@ -86,7 +90,7 @@ namespace Repository
             var entity = DbContext.Set<T>().Find(id);
             if (entity == null)
             {
-                return Task.FromResult(0);
+                return Task.FromResult(1);
             }
             return DeleteAsync<T>(entity);
         }

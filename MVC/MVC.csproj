@@ -134,6 +134,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -172,6 +175,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BootsrapHtml.cs" />
     <Compile Include="Controllers\AutomapperConfiguration.cs" />
@@ -250,6 +254,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{a59bb1ff-8f9f-4b30-a686-d65ef3fe1f52}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model.Common\Model.Common.csproj">
+      <Project>{1F7DA79C-A9DA-4988-90EF-F4C0BB2DCD07}</Project>
+      <Name>Model.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Repository.Commons\Repository.Commons.csproj">
       <Project>{7cffd4a1-d814-4722-95dd-b376c314f46b}</Project>
