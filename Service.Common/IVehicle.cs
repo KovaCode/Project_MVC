@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Model.Common;
 using PagedList;
-using Service.Common.Models;
+
 
 namespace Service.Common
 {
     public interface IVehicle<T> : IDisposable where T : class
     {
-        void Create(T obj);
-        T Read(Guid? id);
-        void Update(T obj);
-        void Delete(Guid? id);       
+        Task CreateAsync(T obj);
+        Task<T> ReadAsync(Guid? id);
+        Task UpdateAsync(T obj);
+        Task DeleteAsync(Guid? id);       
         StaticPagedList<T> GetVehicleDataPaged(ISystemDataModel systemDataModel);
         IEnumerable<IVehicleMake> GetMakes();
 

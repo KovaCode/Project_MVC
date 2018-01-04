@@ -53,7 +53,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleMake make = service.Read(id);
+            IVehicleMake make = service.ReadAsync(id);
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
 
             if (makeView == null)
@@ -80,7 +80,7 @@ namespace MVC.Controllers
 
             if (ModelState.IsValid)
             {
-                service.Create(make);
+                service.CreateAsync(make);
                 return RedirectToAction("Index");
             }
             else
@@ -99,7 +99,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleMake make = service.Read(id);
+            IVehicleMake make = service.ReadAsync(id);
             if (make == null)
             {
                 return HttpNotFound();
@@ -119,7 +119,7 @@ namespace MVC.Controllers
 
             if (ModelState.IsValid)
             {
-                service.Update(make);
+                service.UpdateAsync(make);
                 return RedirectToAction("Index");
             }
 
@@ -134,7 +134,7 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleMake make = service.Read(id);
+            IVehicleMake make = service.ReadAsync(id);
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             if (makeView == null)
             {
@@ -149,8 +149,8 @@ namespace MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid? id)
         {
-            IVehicleMake maker = service.Read(id);
-            service.Delete(id);
+            IVehicleMake maker = service.ReadAsync(id);
+            service.DeleteAsync(id);
             return RedirectToAction("Index");
         }
 

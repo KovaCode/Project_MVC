@@ -1,4 +1,6 @@
-﻿using Repository.Commons;
+﻿using DAL;
+using Model;
+using Repository.Commons;
 using Service.Services;
 using System;
 using System.Data.Entity;
@@ -10,15 +12,11 @@ namespace Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        protected IYourContext DbContext { get; private set; }
+        protected VehicleDBContext DbContext { get; private set; }
 
-        public UnitOfWork(IYourContext dbContext)
+        public UnitOfWork(VehicleDBContext dbContext)
         {
-            if (dbContext == null)
-            {
-                throw new ArgumentNullException("DbContext");
-            }
-            DbContext = dbContext;
+            DbContext = dbContext ?? throw new ArgumentNullException("DbContext");
         }
 
         public virtual Task<int> AddAsync<T>(T entity) where T : class

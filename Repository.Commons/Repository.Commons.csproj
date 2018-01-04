@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="IDBContext.cs" />
     <Compile Include="IRepositoryModel.cs" />
-    <Compile Include="IRepositoryMake.cs" />
+    <Compile Include="IMakeRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

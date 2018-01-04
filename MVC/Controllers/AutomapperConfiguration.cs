@@ -3,7 +3,7 @@ using MVC.Models;
 using PagedList;
 using System.Collections.Generic;
 using Service.Common.Models;
-using Service.Models.Entity;
+using DAL.Entity;
 
 namespace MVC.Controllers
 {

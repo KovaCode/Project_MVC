@@ -3,7 +3,7 @@ using System;
 
 namespace Model
 {
-    public class Make : IMake
+    public class VehicleMake : IVehicleMake
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

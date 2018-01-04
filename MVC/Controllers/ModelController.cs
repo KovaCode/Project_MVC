@@ -56,7 +56,7 @@ namespace MVC_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            IVehicleModel model = service.Read(id);
+            IVehicleModel model = service.ReadAsync(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
             
 
@@ -88,7 +88,7 @@ namespace MVC_Project.Controllers
             IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
             if (ModelState.IsValid)
             {
-                service.Create(model);
+                service.CreateAsync(model);
                 return RedirectToAction("Index");
             }
             modelView = Mapper.Map<VehicleModelView>(model);
@@ -104,7 +104,7 @@ namespace MVC_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            VehicleModelView modelView = Mapper.Map<VehicleModelView>(service.Read(id));
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(service.ReadAsync(id));
             if (modelView == null)
             {
                 return HttpNotFound();
@@ -124,7 +124,7 @@ namespace MVC_Project.Controllers
 
             if (ModelState.IsValid)
             {
-                service.Update(model);
+                service.UpdateAsync(model);
 
                 return RedirectToAction("Index");
             }
@@ -139,7 +139,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleModel model = service.Read(id);
+            IVehicleModel model = service.ReadAsync(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -154,8 +154,8 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid? id)
         {
-            IVehicleModel model = service.Read(id);
-            service.Delete(id);
+            IVehicleModel model = service.ReadAsync(id);
+            service.DeleteAsync(id);
             return RedirectToAction("Index");
         }
     }

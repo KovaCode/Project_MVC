@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace Service.Models.Entity
+namespace DAL.Entity
 {
     public class VehicleMakeEntity
     {

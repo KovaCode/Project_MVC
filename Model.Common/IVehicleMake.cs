@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model.Common
 {
-    public interface IModel : IEntity
+    public interface IVehicleMake : IEntity
     {
-
     }
 }

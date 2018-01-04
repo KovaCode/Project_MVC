@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common
+namespace Model.Common
 {
-    public class Class1
+    public interface IVehicleModel : IEntity
     {
+        Guid VehicleMakeId { get; set; }
     }
 }

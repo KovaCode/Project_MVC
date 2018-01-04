@@ -96,10 +96,7 @@
   <ItemGroup>
     <Compile Include="Services\VehicleMakeService.cs" />
     <Compile Include="Services\VehicleModelService.cs" />
-    <Compile Include="Services\VehicleDBContext.cs" />
     <Compile Include="Models\SystemDataModel.cs" />
-    <Compile Include="Models\Entity\VehicleMakeEntity.cs" />
-    <Compile Include="Models\Entity\VehicleModelEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +107,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{a59bb1ff-8f9f-4b30-a686-d65ef3fe1f52}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{9a02d40f-dde5-45ba-ae2f-12c047d103cb}</Project>
+      <Name>DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model.Common\Model.Common.csproj">
       <Project>{1f7da79c-a9da-4988-90ef-f4c0bb2dcd07}</Project>

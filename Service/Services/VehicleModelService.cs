@@ -4,20 +4,32 @@ using System.Data.Entity;
 using System.Linq;
 using PagedList;
 using Service.Common;
-using Service.Models.Entity;
 using AutoMapper;
 using Service.Common.Services;
-using Service.Common.Models;
+using DAL;
+using DAL.Entity;
+using Model.Common;
+using Repository.Commons;
+using Model;
 
 namespace Service.Services
 {
     public class VehicleModelService : IVehicleModelService
     {
-        private VehicleDBContext db = new VehicleDBContext();
+        IModelRepository repository;
+        
+        public VehicleModelService(IModelRepository repository)
+        {
+                this.repository = repository;
+        }
+
 
         public IEnumerable<IVehicleMake> GetMakes()
         {
-            IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderByDescending(s => s.Name);
+            //IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderByDescending(s => s.Name);
+            IEnumerable<VehicleMake> makeItemsEntity = repository.GetAll();
+
+
             IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
             return make;
         }
@@ -60,26 +72,26 @@ namespace Service.Services
             return staticPagedList;
         }
 
-        public void Create(IVehicleModel model)
+        public void CreateAsync(IVehicleModel model)
         {
             VehicleModelEntity modelEntity = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
             this.db.Models.Add(modelEntity);
             this.Save();
         }
 
-        public IVehicleModel Read(Guid? id)
+        public IVehicleModel ReadAsync(Guid? id)
         {
             return Mapper.Map<VehicleModelEntity, IVehicleModel>(db.Models.Find(id));
         }
 
-        public void Update(IVehicleModel model)
+        public void UpdateAsync(IVehicleModel model)
         {
             VehicleModelEntity modelEntity = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
             this.db.Entry(modelEntity).State = EntityState.Modified;
             this.Save();
         }
 
-        public void Delete(Guid? id)
+        public void DeleteAsync(Guid? id)
         {
             this.db.Models.Remove(db.Models.Find(id));
             this.Save();
