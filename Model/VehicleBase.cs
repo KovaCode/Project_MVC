@@ -3,7 +3,7 @@ using System;
 
 namespace Model
 {
-    public class BaseEntity : IEntity
+    public class VehicleBase : IVehicleBase
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

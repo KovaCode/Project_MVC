@@ -83,16 +83,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenericRepository.cs" />
-    <Compile Include="ModelRepository.cs" />
-    <Compile Include="MakeRepository.cs" />
+    <Compile Include="Patterns\GenericRepository.cs" />
+    <Compile Include="Models\VehicleModelRepository.cs" />
+    <Compile Include="Models\VehicleMakeRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UnitOfWork.cs" />
+    <Compile Include="Patterns\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">
@@ -111,9 +111,9 @@
       <Project>{7CFFD4A1-D814-4722-95DD-B376C314F46B}</Project>
       <Name>Repository.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Service\Service.csproj">
-      <Project>{d888bf90-52da-4119-9576-7dd80a9e3520}</Project>
-      <Name>Service</Name>
+    <ProjectReference Include="..\Service.Common\Service.Common.csproj">
+      <Project>{168d3938-d375-4e05-ad50-7a160371526d}</Project>
+      <Name>Service.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

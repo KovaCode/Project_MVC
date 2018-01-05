@@ -47,9 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IVehicleMake.cs" />
-    <Compile Include="IVehicleModel.cs" />
-    <Compile Include="IEntity.cs" />
+    <Compile Include="IVehicleMakeModel.cs" />
+    <Compile Include="IVehicleModelModel.cs" />
+    <Compile Include="IVehicleBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

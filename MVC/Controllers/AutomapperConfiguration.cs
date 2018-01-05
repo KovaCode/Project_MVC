@@ -19,16 +19,16 @@ namespace MVC.Controllers
             Mapper.Initialize(cfg =>
             {
                 // MAKE - mappings //               
-                cfg.CreateMap<VehicleMakeEntity, IVehicleMake>().ReverseMap();
-                cfg.CreateMap<VehicleMakeView, IVehicleMake>().ReverseMap();
+                cfg.CreateMap<VehicleMakeEntity, IVehicleMakeModel>().ReverseMap();
+                cfg.CreateMap<VehicleMakeView, IVehicleMakeModel>().ReverseMap();
 
                 // MODEL - mappings /
-                cfg.CreateMap<VehicleModelEntity, IVehicleModel>().ReverseMap();
-                cfg.CreateMap<VehicleModelView, IVehicleModel>().ReverseMap();
+                cfg.CreateMap<VehicleModelEntity, IVehicleModelModel>().ReverseMap();
+                cfg.CreateMap<VehicleModelView, IVehicleModelModel>().ReverseMap();
                 
        
-                cfg.CreateMap(typeof(StaticPagedList<IVehicleMake>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMake, VehicleMakeView>));
-                cfg.CreateMap(typeof(StaticPagedList<IVehicleModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<IVehicleModel, VehicleModelView>));
+                cfg.CreateMap(typeof(StaticPagedList<IVehicleMakeModel>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMakeModel, VehicleMakeView>));
+                cfg.CreateMap(typeof(StaticPagedList<IVehicleModelModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<IVehicleModelModel, VehicleModelView>));
             }
             );
         }

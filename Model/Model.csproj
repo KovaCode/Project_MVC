@@ -81,9 +81,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseEntity.cs" />
-    <Compile Include="VehicleModel.cs" />
-    <Compile Include="VehicleMake.cs" />
+    <Compile Include="VehicleBase.cs" />
+    <Compile Include="VehicleModelModel.cs" />
+    <Compile Include="VehicleMakeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

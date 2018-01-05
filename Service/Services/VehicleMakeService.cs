@@ -6,30 +6,31 @@ using System.Linq;
 using PagedList;
 using AutoMapper;
 using Service.Common.Services;
-using Repository.Commons;
 using System.Threading.Tasks;
+using Repository.Commons;
 using Model.Common;
 using Model;
+using Repository.Commons.Models;
 
 namespace Service.Services
 {
     public class VehicleMakeService : IVehicleMakeService
     {
-        IMakeRepository repository;
+        private IVehicleMakeRepository repository;
 
-        public VehicleMakeService(IMakeRepository _repository)
+        public VehicleMakeService(IVehicleMakeRepository _repository)
         {
             this.repository = _repository;           
         }
         
-        public IEnumerable<IVehicleMake> GetMakes()
+        public IEnumerable<IVehicleMakeModel> GetMakes()
         {
-            IEnumerable<VehicleMake> makeItemsEntity = repository.GetAll();
-            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(makeItemsEntity);
+            IEnumerable<IVehicleMakeModel> makeItemsEntity = repository.GetAll();
+            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
             return make;
         }
 
-        public StaticPagedList<IVehicleMake> GetVehicleDataPaged(ISystemDataModel systemDataModel)
+        public StaticPagedList<IVehicleMakeModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -41,7 +42,7 @@ namespace Service.Services
             }
 
             //IQueryable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
-            IQueryable<VehicleMake> makeItems = repository.GetAllQueryable();
+            IQueryable<VehicleMakeModel> makeItems = repository.GetAllQueryable();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -59,71 +60,37 @@ namespace Service.Services
 
             systemDataModel.TotalCount = makeItems.Count();
 
-            IEnumerable<IVehicleMake> data = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(makeItems);
+            IEnumerable<IVehicleMakeModel> data = Mapper.Map<IEnumerable<VehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItems);
 
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            StaticPagedList<IVehicleMake> staticPagedList = new StaticPagedList<IVehicleMake>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
             return staticPagedList;
         }
 
-        public async Task CreateAsync(IVehicleMake make)
+        public async Task CreateAsync(IVehicleMakeModel make)
         {
-            VehicleMake makeEntity = Mapper.Map<IVehicleMake, VehicleMake>(make);
+            VehicleMakeModel makeEntity = Mapper.Map<IVehicleMakeModel, VehicleMakeModel>(make);
             await repository.CreateAsync(makeEntity);
-
-            //Save();
         }
 
-        public async Task<IVehicleMake> ReadAsync(Guid? id)
+        public async Task<IVehicleMakeModel> ReadAsync(Guid? id)
         {
             //return Mapper.Map<VehicleMakeEntity, IVehicleMake>(db.Makers.Find(id));
-
-            VehicleMake entity = await repository.GetByIdAsync(id);
-            return Mapper.Map<VehicleMake, IVehicleMake>(entity);
+            VehicleMakeModel entity = await repository.GetByIdAsync(id);
+            return Mapper.Map<VehicleMakeModel, IVehicleMakeModel>(entity);
         }
 
-        public async Task UpdateAsync(IVehicleMake make)
+        public async Task UpdateAsync(IVehicleMakeModel make)
         {
-            VehicleMake makeEntity = Mapper.Map<IVehicleMake, VehicleMake>(make);
-            //db.Entry(makeEntity).State = EntityState.Modified;
-
+            VehicleMakeModel makeEntity = Mapper.Map<IVehicleMakeModel, VehicleMakeModel>(make);
             await repository.UpdateAsync(makeEntity);
-
-            //Save();
         }
 
         public async Task DeleteAsync(Guid? id)
         {
-            //Make entity = repository.GetByIdAsync(id)
             await repository.DeleteAsync(id);
-            //db.Makers.Remove(db.Makers.Find(id));
-            //Save();
-
         }
-
-        #region disposable
-
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

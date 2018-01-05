@@ -48,11 +48,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IDBContext.cs" />
-    <Compile Include="IRepositoryModel.cs" />
-    <Compile Include="IMakeRepository.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="Models\IVehicleModelRepository.cs" />
+    <Compile Include="Models\IVehicleMakeRepository.cs" />
+    <Compile Include="Patterns\IRepository.cs" />
+    <Compile Include="Patterns\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model.Common\Model.Common.csproj">
@@ -60,13 +64,9 @@
       <Name>Model.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{B9C82489-C087-43B7-A622-EC04CDFEFBC8}</Project>
+      <Project>{b9c82489-c087-43b7-a622-ec04cdfefbc8}</Project>
       <Name>Model</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

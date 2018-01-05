@@ -12,28 +12,29 @@ using Model.Common;
 using Repository.Commons;
 using Model;
 using System.Threading.Tasks;
+using Repository.Commons.Models;
 
 namespace Service.Services
 {
     public class VehicleModelService : IVehicleModelService
     {
-        IModelRepository repository;
+        IVehicleModelRepository repository;
         
-        public VehicleModelService(IModelRepository repository)
+        public VehicleModelService(IVehicleModelRepository repository)
         {
                 this.repository = repository;
         }
 
 
-        public IEnumerable<IVehicleMake> GetMakes()
+        public IEnumerable<IVehicleMakeModel> GetMakes()
         {
-            IEnumerable<VehicleMake> makeItemsEntity = repository.GetAllMakes();
-            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(makeItemsEntity);
+            IEnumerable<VehicleMakeModel> makeItemsEntity = repository.GetAllMakes();
+            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<VehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
             return make;
         }
 
 
-        public StaticPagedList<IVehicleModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
+        public StaticPagedList<IVehicleModelModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -46,7 +47,7 @@ namespace Service.Services
 
             //IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
 
-            IQueryable<VehicleModel> modelItems = repository.GetAllQueryable();
+            IQueryable<VehicleModelModel> modelItems = repository.GetAllQueryable();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -64,97 +65,42 @@ namespace Service.Services
 
             systemDataModel.TotalCount = modelItems.Count();
 
-            IEnumerable<IVehicleModel> data = Mapper.Map<IEnumerable<VehicleModel>, IEnumerable<IVehicleModel>>(modelItems);
+            IEnumerable<IVehicleModelModel> data = Mapper.Map<IEnumerable<VehicleModelModel>, IEnumerable<IVehicleModelModel>>(modelItems);
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            StaticPagedList<IVehicleModel> staticPagedList = new StaticPagedList<IVehicleModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+            StaticPagedList<IVehicleModelModel> staticPagedList = new StaticPagedList<IVehicleModelModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
             return staticPagedList;
         }
 
-        public void CreateAsync(IVehicleModel model)
+        public async Task CreateAsync(IVehicleModelModel model)
         {
-            VehicleModel modelEntity = Mapper.Map<IVehicleModel, VehicleModel>(model);
-            //this.db.Models.Add(modelEntity);
-            repository.CreateAsync(modelEntity);
-
-            //this.Save();
+            VehicleModelModel modelEntity = Mapper.Map<IVehicleModelModel, VehicleModelModel>(model);
+            await repository.CreateAsync(modelEntity);
         }
 
-        public async Task<IVehicleModel> ReadAsync(Guid? id)
+        public async Task<IVehicleModelModel> ReadAsync(Guid? id)
         {
             //return Mapper.Map<VehicleModel, IVehicleModel>(db.Models.Find(id));
 
-            VehicleModel vehicleModel = await repository.GetByIdAsync(id);
-            return Mapper.Map<VehicleModel, IVehicleModel>(vehicleModel);
+            VehicleModelModel vehicleModel = await repository.GetByIdAsync(id);
+            return Mapper.Map<VehicleModelModel, IVehicleModelModel>(vehicleModel);
 
         }
 
-        public async Task UpdateAsync(IVehicleModel model)
+        public async Task UpdateAsync(IVehicleModelModel model)
         {
-            VehicleModel vehicleModel = Mapper.Map<IVehicleModel, VehicleModel>(model);
+            VehicleModelModel vehicleModel = Mapper.Map<IVehicleModelModel, VehicleModelModel>(model);
 
             await repository.UpdateAsync(vehicleModel);
 
-            //this.db.Entry(modelEntity).State = EntityState.Modified;
-            //this.Save();
         }
 
         public async Task DeleteAsync(Guid? id)
         {
             await repository.DeleteAsync(id);
-            //this.db.Models.Remove(db.Models.Find(id));
-            //this.Save();
         }
 
-        //public void Save()
-        //{
-        //    db.SaveChanges();
-        //}
-
-    
-
-
-        private bool disposed = false;
-
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    //db.Dispose();
-                }
-            }
-            this.disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        Task IVehicle<IVehicleModel>.CreateAsync(IVehicleModel obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IVehicleModel> IVehicle<IVehicleModel>.ReadAsync(Guid? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IVehicle<IVehicleModel>.UpdateAsync(IVehicleModel obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IVehicle<IVehicleModel>.DeleteAsync(Guid? id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
 

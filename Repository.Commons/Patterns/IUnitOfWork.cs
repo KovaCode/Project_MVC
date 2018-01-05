@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Repository.Commons
+namespace Repository.Commons.Patterns
 {
         public interface IUnitOfWork : IDisposable
         {

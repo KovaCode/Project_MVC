@@ -1,16 +1,14 @@
 ﻿using DAL;
-using Model;
-using Repository.Commons;
-using Service.Services;
+using Repository.Commons.Patterns;
 using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Threading.Tasks;
 using System.Transactions;
 
-namespace Repository
+namespace Repository.Patterns
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         protected VehicleDBContext DbContext { get; private set; }
 

@@ -42,8 +42,8 @@ namespace MVC_Project.Controllers
             systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
-            StaticPagedList<IVehicleModel> modelItems = service.GetVehicleDataPaged(systemDataModel);
-            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModel>, StaticPagedList<VehicleModelView>>(modelItems);
+            StaticPagedList<IVehicleModelModel> modelItems = service.GetVehicleDataPaged(systemDataModel);
+            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModelModel>, StaticPagedList<VehicleModelView>>(modelItems);
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
             return View(modelViewPaged);
@@ -57,7 +57,7 @@ namespace MVC_Project.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            IVehicleModel model = await service.ReadAsync(id);
+            IVehicleModelModel model = await service.ReadAsync(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
             
 
@@ -73,7 +73,7 @@ namespace MVC_Project.Controllers
         {
             VehicleModelView vehicleModelView = new VehicleModelView
             {
-                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeView>>(service.GetMakes())
+                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<VehicleMakeView>>(service.GetMakes())
             };
             return View(vehicleModelView);
         }
@@ -86,7 +86,7 @@ namespace MVC_Project.Controllers
         public async Task<ActionResult> CreateAsync([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
         {
 
-            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
+            IVehicleModelModel model = Mapper.Map<IVehicleModelModel>(modelView);
             if (ModelState.IsValid)
             {
                 await service.CreateAsync(model);
@@ -121,7 +121,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
         {
-            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
+            IVehicleModelModel model = Mapper.Map<IVehicleModelModel>(modelView);
 
             if (ModelState.IsValid)
             {
@@ -140,7 +140,7 @@ namespace MVC_Project.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleModel model = await service.ReadAsync(id);
+            IVehicleModelModel model = await service.ReadAsync(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -155,7 +155,7 @@ namespace MVC_Project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmedAsync(Guid? id)
         {
-            IVehicleModel model = await service.ReadAsync(id);
+            IVehicleModelModel model = await service.ReadAsync(id);
             await service.DeleteAsync(id);
             return RedirectToAction("Index");
         }

@@ -1,19 +1,18 @@
 ﻿using DAL;
 using Model.Common;
-using Repository.Commons;
+using Repository.Commons.Patterns;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository
+namespace Repository.Patterns
 {
-    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IEntity
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IVehicleBase
     {
-        private readonly VehicleDBContext vehicleDBContext;
         protected UnitOfWork unitOfWork;
+        private readonly VehicleDBContext vehicleDBContext;
 
         public GenericRepository(VehicleDBContext dbContext)
         {
@@ -30,7 +29,6 @@ namespace Repository
         {
             return vehicleDBContext.Set<TEntity>().AsNoTracking();
         }
-
 
         public async Task<TEntity> GetByIdAsync(Guid? id)
         {

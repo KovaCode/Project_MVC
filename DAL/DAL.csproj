@@ -90,23 +90,5 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Model.Common\Model.Common.csproj">
-      <Project>{1f7da79c-a9da-4988-90ef-f4c0bb2dcd07}</Project>
-      <Name>Model.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{b9c82489-c087-43b7-a622-ec04cdfefbc8}</Project>
-      <Name>Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Repository.Commons\Repository.Commons.csproj">
-      <Project>{7CFFD4A1-D814-4722-95DD-B376C314F46B}</Project>
-      <Name>Repository.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Service.Common\Service.Common.csproj">
-      <Project>{168d3938-d375-4e05-ad50-7a160371526d}</Project>
-      <Name>Service.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

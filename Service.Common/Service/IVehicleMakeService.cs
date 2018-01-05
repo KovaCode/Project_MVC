@@ -2,7 +2,7 @@
 
 namespace Service.Common.Services
 {
-    public interface IVehicleMakeService : IVehicle<IVehicleMake>
+    public interface IVehicleMakeService : IVehicleService<IVehicleMakeModel>
     {
     }
 }
