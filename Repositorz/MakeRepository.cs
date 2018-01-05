@@ -5,7 +5,7 @@ using Repository.Commons;
 
 namespace Repository
 {
-    public class MakeRepository : GenericRepository<Make>, IMakeRepository
+    public class MakeRepository : GenericRepository<VehicleMake>, IMakeRepository
     {
         public MakeRepository(VehicleDBContext dbContext)
             : base(dbContext)

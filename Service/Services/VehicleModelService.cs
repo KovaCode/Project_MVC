@@ -11,6 +11,7 @@ using DAL.Entity;
 using Model.Common;
 using Repository.Commons;
 using Model;
+using System.Threading.Tasks;
 
 namespace Service.Services
 {
@@ -26,11 +27,8 @@ namespace Service.Services
 
         public IEnumerable<IVehicleMake> GetMakes()
         {
-            //IEnumerable<VehicleMakeEntity> makeItemsEntity = db.Makers.ToList().OrderByDescending(s => s.Name);
-            IEnumerable<VehicleMake> makeItemsEntity = repository.GetAll();
-
-
-            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMakeEntity>, IEnumerable<IVehicleMake>>(makeItemsEntity);
+            IEnumerable<VehicleMake> makeItemsEntity = repository.GetAllMakes();
+            IEnumerable<IVehicleMake> make = Mapper.Map<IEnumerable<VehicleMake>, IEnumerable<IVehicleMake>>(makeItemsEntity);
             return make;
         }
 
@@ -46,7 +44,9 @@ namespace Service.Services
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
 
-            IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
+            //IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
+
+            IQueryable<VehicleModel> modelItems = repository.GetAllQueryable();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -64,7 +64,7 @@ namespace Service.Services
 
             systemDataModel.TotalCount = modelItems.Count();
 
-            IEnumerable<IVehicleModel> data = Mapper.Map<IEnumerable<VehicleModelEntity>, IEnumerable<IVehicleModel>>(modelItems);
+            IEnumerable<IVehicleModel> data = Mapper.Map<IEnumerable<VehicleModel>, IEnumerable<IVehicleModel>>(modelItems);
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
             StaticPagedList<IVehicleModel> staticPagedList = new StaticPagedList<IVehicleModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
@@ -74,33 +74,43 @@ namespace Service.Services
 
         public void CreateAsync(IVehicleModel model)
         {
-            VehicleModelEntity modelEntity = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
-            this.db.Models.Add(modelEntity);
-            this.Save();
+            VehicleModel modelEntity = Mapper.Map<IVehicleModel, VehicleModel>(model);
+            //this.db.Models.Add(modelEntity);
+            repository.CreateAsync(modelEntity);
+
+            //this.Save();
         }
 
-        public IVehicleModel ReadAsync(Guid? id)
+        public async Task<IVehicleModel> ReadAsync(Guid? id)
         {
-            return Mapper.Map<VehicleModelEntity, IVehicleModel>(db.Models.Find(id));
+            //return Mapper.Map<VehicleModel, IVehicleModel>(db.Models.Find(id));
+
+            VehicleModel vehicleModel = await repository.GetByIdAsync(id);
+            return Mapper.Map<VehicleModel, IVehicleModel>(vehicleModel);
+
         }
 
-        public void UpdateAsync(IVehicleModel model)
+        public async Task UpdateAsync(IVehicleModel model)
         {
-            VehicleModelEntity modelEntity = Mapper.Map<IVehicleModel, VehicleModelEntity>(model);
-            this.db.Entry(modelEntity).State = EntityState.Modified;
-            this.Save();
+            VehicleModel vehicleModel = Mapper.Map<IVehicleModel, VehicleModel>(model);
+
+            await repository.UpdateAsync(vehicleModel);
+
+            //this.db.Entry(modelEntity).State = EntityState.Modified;
+            //this.Save();
         }
 
-        public void DeleteAsync(Guid? id)
+        public async Task DeleteAsync(Guid? id)
         {
-            this.db.Models.Remove(db.Models.Find(id));
-            this.Save();
+            await repository.DeleteAsync(id);
+            //this.db.Models.Remove(db.Models.Find(id));
+            //this.Save();
         }
 
-        public void Save()
-        {
-            db.SaveChanges();
-        }
+        //public void Save()
+        //{
+        //    db.SaveChanges();
+        //}
 
     
 
@@ -114,7 +124,7 @@ namespace Service.Services
             {
                 if (disposing)
                 {
-                    db.Dispose();
+                    //db.Dispose();
                 }
             }
             this.disposed = true;
@@ -124,6 +134,26 @@ namespace Service.Services
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        Task IVehicle<IVehicleModel>.CreateAsync(IVehicleModel obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IVehicleModel> IVehicle<IVehicleModel>.ReadAsync(Guid? id)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IVehicle<IVehicleModel>.UpdateAsync(IVehicleModel obj)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IVehicle<IVehicleModel>.DeleteAsync(Guid? id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

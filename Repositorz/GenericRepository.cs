@@ -44,8 +44,7 @@ namespace Repository
 
         public async Task UpdateAsync(TEntity entity)
         {
-            var ent = await GetByIdAsync(id);
-            await unitOfWork.UpdateAsync(ent);
+            await unitOfWork.UpdateAsync(entity);
         }
 
         public async Task DeleteAsync(Guid? id)

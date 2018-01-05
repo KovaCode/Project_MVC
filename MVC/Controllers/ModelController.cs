@@ -8,7 +8,8 @@ using System.Collections.Generic;
 using AutoMapper;
 using Service.Services;
 using Service.Common.Services;
-using Service.Common.Models;
+using Model.Common;
+using System.Threading.Tasks;
 
 namespace MVC_Project.Controllers
 {
@@ -16,9 +17,9 @@ namespace MVC_Project.Controllers
     {
         private IVehicleModelService service;
 
-        public ModelController()
+        public ModelController(IVehicleModelService service)
         {
-            service = new VehicleModelService();
+            this.service = service;
         }
 
         public ModelController(VehicleModelService vehicleModelService)
@@ -49,14 +50,14 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Details/5
-        public ActionResult Details(Guid? id)
+        public async Task<ActionResult> DetailsAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            IVehicleModel model = service.ReadAsync(id);
+            IVehicleModel model = await service.ReadAsync(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
             
 
@@ -82,13 +83,13 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
+        public async Task<ActionResult> CreateAsync([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
         {
 
             IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
             if (ModelState.IsValid)
             {
-                service.CreateAsync(model);
+                await service.CreateAsync(model);
                 return RedirectToAction("Index");
             }
             modelView = Mapper.Map<VehicleModelView>(model);
@@ -118,13 +119,13 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
+        public async Task<ActionResult> EditAsync([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
         {
             IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
 
             if (ModelState.IsValid)
             {
-                service.UpdateAsync(model);
+                await service.UpdateAsync(model);
 
                 return RedirectToAction("Index");
             }
@@ -133,13 +134,13 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Delete/5
-        public ActionResult Delete(Guid? id)
+        public async Task<ActionResult> DeleteAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleModel model = service.ReadAsync(id);
+            IVehicleModel model = await service.ReadAsync(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -152,10 +153,10 @@ namespace MVC_Project.Controllers
         // POST: Models/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid? id)
+        public async Task<ActionResult> DeleteConfirmedAsync(Guid? id)
         {
-            IVehicleModel model = service.ReadAsync(id);
-            service.DeleteAsync(id);
+            IVehicleModel model = await service.ReadAsync(id);
+            await service.DeleteAsync(id);
             return RedirectToAction("Index");
         }
     }

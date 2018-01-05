@@ -2,8 +2,8 @@
 using MVC.Models;
 using PagedList;
 using System.Collections.Generic;
-using Service.Common.Models;
 using DAL.Entity;
+using Model.Common;
 
 namespace MVC.Controllers
 {

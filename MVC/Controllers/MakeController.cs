@@ -7,9 +7,8 @@ using PagedList;
 using AutoMapper;
 using System.Linq;
 using Service.Common.Services;
-using Service.Common.Models;
-using Repository.Commons;
-using Service.Services;
+using Model.Common;
+using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
@@ -21,7 +20,6 @@ namespace MVC.Controllers
         {
             service = vehicleMakeService;
         }
-
 
         // GET: /Make/
         public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
@@ -47,13 +45,13 @@ namespace MVC.Controllers
         }
         
         // GET: /Make/Details/5
-        public ActionResult Details(Guid? id)
+        public async Task<ActionResult> DetailsAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleMake make = service.ReadAsync(id);
+            IVehicleMake make = await service.ReadAsync(id);
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
 
             if (makeView == null)
@@ -74,13 +72,13 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
+        public async Task<ActionResult> CreateAsync([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
             IVehicleMake make = Mapper.Map<IVehicleMake>(makeView);
 
             if (ModelState.IsValid)
             {
-                service.CreateAsync(make);
+                await service.CreateAsync(make);
                 return RedirectToAction("Index");
             }
             else
@@ -93,13 +91,13 @@ namespace MVC.Controllers
         }
         
         // GET: /Make/Edit/5
-        public ActionResult Edit(Guid? id)
+        public async Task<ActionResult> EditAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleMake make = service.ReadAsync(id);
+            IVehicleMake make = await service.ReadAsync(id);
             if (make == null)
             {
                 return HttpNotFound();
@@ -113,13 +111,13 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
+        public async Task<ActionResult> EditAsync([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
             IVehicleMake make = Mapper.Map<IVehicleMake>(makeView);
 
             if (ModelState.IsValid)
             {
-                service.UpdateAsync(make);
+                await service.UpdateAsync(make);
                 return RedirectToAction("Index");
             }
 
@@ -128,13 +126,13 @@ namespace MVC.Controllers
         }
 
         // GET: /Make/Delete/5
-        public ActionResult Delete(Guid? id)
+        public async Task<ActionResult> DeleteAsync(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleMake make = service.ReadAsync(id);
+            IVehicleMake make = await service.ReadAsync(id);
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             if (makeView == null)
             {
@@ -147,10 +145,10 @@ namespace MVC.Controllers
         // POST: /Make/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid? id)
+        public async Task<ActionResult> DeleteConfirmedAsync(Guid? id)
         {
-            IVehicleMake maker = service.ReadAsync(id);
-            service.DeleteAsync(id);
+            IVehicleMake maker = await service.ReadAsync(id);
+            await service.DeleteAsync(id);
             return RedirectToAction("Index");
         }
 

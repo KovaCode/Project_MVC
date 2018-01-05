@@ -17,5 +17,7 @@ namespace Repository.Commons
         Task UpdateAsync(T entity);
         Task DeleteAsync(Guid? id);
         Task DeleteAsync(T entity);
+
+        
     }
 }
