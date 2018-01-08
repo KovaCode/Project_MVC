@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DAL;
 using Model;
-using Model.Common;
 using Repository.Commons.Models;
 using Repository.Patterns;
 

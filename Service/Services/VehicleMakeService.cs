@@ -7,7 +7,6 @@ using PagedList;
 using AutoMapper;
 using Service.Common.Services;
 using System.Threading.Tasks;
-using Repository.Commons;
 using Model.Common;
 using Model;
 using Repository.Commons.Models;
@@ -16,21 +15,21 @@ namespace Service.Services
 {
     public class VehicleMakeService : IVehicleMakeService
     {
-        private IVehicleMakeRepository repository;
+        private readonly IVehicleMakeRepository repository;
 
-        public VehicleMakeService(IVehicleMakeRepository _repository)
+        public VehicleMakeService(IVehicleMakeRepository repository)
         {
-            this.repository = _repository;           
+            this.repository = repository;           
         }
         
-        public IEnumerable<IVehicleMakeModel> GetMakes()
+        public IEnumerable<Model.Common.IVehicleMakeModel> GetMakes()
         {
-            IEnumerable<IVehicleMakeModel> makeItemsEntity = repository.GetAll();
-            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
+            IEnumerable<Model.Common.IVehicleMakeModel> makeItemsEntity = repository.GetAll();
+            IEnumerable<Model.Common.IVehicleMakeModel> make = Mapper.Map<IEnumerable<Model.Common.IVehicleMakeModel>, IEnumerable<Model.Common.IVehicleMakeModel>>(makeItemsEntity);
             return make;
         }
 
-        public StaticPagedList<IVehicleMakeModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
+        public StaticPagedList<Model.Common.IVehicleMakeModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -42,7 +41,7 @@ namespace Service.Services
             }
 
             //IQueryable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
-            IQueryable<VehicleMakeModel> makeItems = repository.GetAllQueryable();
+            IQueryable<Model.VehicleMakeModel> makeItems = repository.GetAllQueryable();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -60,11 +59,11 @@ namespace Service.Services
 
             systemDataModel.TotalCount = makeItems.Count();
 
-            IEnumerable<IVehicleMakeModel> data = Mapper.Map<IEnumerable<VehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItems);
+            IEnumerable<IVehicleMakeModel> data = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItems);
 
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+            StaticPagedList<Model.Common.IVehicleMakeModel> staticPagedList = new StaticPagedList<Model.Common.IVehicleMakeModel>((IEnumerable<Model.Common.IVehicleMakeModel>)data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
             return staticPagedList;
         }
@@ -78,8 +77,8 @@ namespace Service.Services
         public async Task<IVehicleMakeModel> ReadAsync(Guid? id)
         {
             //return Mapper.Map<VehicleMakeEntity, IVehicleMake>(db.Makers.Find(id));
-            VehicleMakeModel entity = await repository.GetByIdAsync(id);
-            return Mapper.Map<VehicleMakeModel, IVehicleMakeModel>(entity);
+            Model.VehicleMakeModel entity = await repository.GetByIdAsync(id);
+            return Mapper.Map<IVehicleMakeModel, IVehicleMakeModel>(entity);
         }
 
         public async Task UpdateAsync(IVehicleMakeModel make)

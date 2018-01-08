@@ -9,6 +9,11 @@ using System.Web;
 using Repository;
 using Service.Services;
 using Service.Common.Services;
+using Repository.Commons.Models;
+using Repository.Patterns;
+using Repository.Commons.Patterns;
+using Model.Common;
+using Model;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
@@ -47,12 +52,14 @@ namespace MVC.App_Start
         {
                 kernel.Bind<VehicleDBContext>().ToSelf().InRequestScope();
 
-                //kernel.Bind<Repository.Commons.IRepository>().To<EntityFrameworkRepository<VehicleDBContext>>().InRequestScope();
-            
+            //kernel.Bind<Repository.Commons.IRepository>().To<EntityFrameworkRepository<VehicleDBContext>>().InRequestScope();
+            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+
+            kernel.Bind<IVehicleMakeRepository>().To<VehicleMakeRepository>();
+            kernel.Bind<IVehicleModelRepository>().To<VehicleModelRepository>();
 
             kernel.Bind<IVehicleMakeService>().To<VehicleMakeService>();
-            kernel.Bind<IVehicleModelService>().To<IVehicleModelService>();
-            //kernel.Bind<IRepo>().ToMethod(ctx => new Repo("Ninject Rocks!"));
+            kernel.Bind<IVehicleModelService>().To<VehicleModelService>();           
         }
     }
 }

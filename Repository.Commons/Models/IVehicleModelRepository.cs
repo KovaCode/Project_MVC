@@ -7,6 +7,6 @@ namespace Repository.Commons.Models
 {
     public interface IVehicleModelRepository : IGenericRepository<VehicleModelModel>
     {
-        IEnumerable<VehicleMakeModel> GetAllMakes();
+        IEnumerable<Model.VehicleMakeModel> GetAllMakes();
     }
 }

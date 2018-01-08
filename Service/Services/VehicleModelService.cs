@@ -26,10 +26,10 @@ namespace Service.Services
         }
 
 
-        public IEnumerable<IVehicleMakeModel> GetMakes()
+        public IEnumerable<Model.Common.IVehicleMakeModel> GetMakes()
         {
-            IEnumerable<VehicleMakeModel> makeItemsEntity = repository.GetAllMakes();
-            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<VehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
+            IEnumerable<Model.VehicleMakeModel> makeItemsEntity = repository.GetAllMakes();
+            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
             return make;
         }
 

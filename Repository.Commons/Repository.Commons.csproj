@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Repository.Commons</RootNamespace>
     <AssemblyName>Repository.Commons</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,7 +51,7 @@
     <Compile Include="IDBContext.cs" />
     <Compile Include="Models\IVehicleModelRepository.cs" />
     <Compile Include="Models\IVehicleMakeRepository.cs" />
-    <Compile Include="Patterns\IRepository.cs" />
+    <Compile Include="Patterns\IGenericRepository.cs" />
     <Compile Include="Patterns\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
