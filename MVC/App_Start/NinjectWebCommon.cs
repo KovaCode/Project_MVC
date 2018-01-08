@@ -42,7 +42,6 @@ namespace MVC.App_Start
             var kernel = new StandardKernel();
             kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-
             RegisterServices(kernel);
             return kernel;
         }
@@ -50,14 +49,10 @@ namespace MVC.App_Start
 
         private static void RegisterServices(IKernel kernel)
         {
-                kernel.Bind<VehicleDBContext>().ToSelf().InRequestScope();
-
-            //kernel.Bind<Repository.Commons.IRepository>().To<EntityFrameworkRepository<VehicleDBContext>>().InRequestScope();
+            //kernel.Bind<VehicleDBContext>().ToSelf().InRequestScope();
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
-
             kernel.Bind<IVehicleMakeRepository>().To<VehicleMakeRepository>();
             kernel.Bind<IVehicleModelRepository>().To<VehicleModelRepository>();
-
             kernel.Bind<IVehicleMakeService>().To<VehicleMakeService>();
             kernel.Bind<IVehicleModelService>().To<VehicleModelService>();           
         }

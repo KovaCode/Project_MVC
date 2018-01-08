@@ -22,14 +22,14 @@ namespace Service.Services
             this.repository = repository;           
         }
         
-        public IEnumerable<Model.Common.IVehicleMakeModel> GetMakes()
+        public IEnumerable<IVehicleMakeModel> GetMakes()
         {
-            IEnumerable<Model.Common.IVehicleMakeModel> makeItemsEntity = repository.GetAll();
-            IEnumerable<Model.Common.IVehicleMakeModel> make = Mapper.Map<IEnumerable<Model.Common.IVehicleMakeModel>, IEnumerable<Model.Common.IVehicleMakeModel>>(makeItemsEntity);
+            IEnumerable<IVehicleMakeModel> makeItemsEntity = repository.GetAll();
+            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
             return make;
         }
 
-        public StaticPagedList<Model.Common.IVehicleMakeModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
+        public StaticPagedList<IVehicleMakeModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -41,7 +41,7 @@ namespace Service.Services
             }
 
             //IQueryable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
-            IQueryable<Model.VehicleMakeModel> makeItems = repository.GetAllQueryable();
+            IQueryable<VehicleMakeModel> makeItems = repository.GetAllQueryable();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -63,7 +63,7 @@ namespace Service.Services
 
             data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            StaticPagedList<Model.Common.IVehicleMakeModel> staticPagedList = new StaticPagedList<Model.Common.IVehicleMakeModel>((IEnumerable<Model.Common.IVehicleMakeModel>)data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>((IEnumerable<IVehicleMakeModel>)data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
             return staticPagedList;
         }
