@@ -6,14 +6,14 @@ using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 using System;
 using System.Web;
-using Repository;
-using Service.Services;
+using Ninject.Extensions.Interception.Infrastructure.Language;
+using System.Linq;
+using Service;
 using Service.Common.Services;
-using Repository.Commons.Models;
-using Repository.Patterns;
-using Repository.Commons.Patterns;
-using Model.Common;
-using Model;
+using Ninject.Web.WebApi;
+using System.Web.Http;
+
+    
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
@@ -39,22 +39,35 @@ namespace MVC.App_Start
 
         private static IKernel CreateKernel()
         {
-            var kernel = new StandardKernel();
-            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-            RegisterServices(kernel);
-            return kernel;
-        }
+            var settings = new NinjectSettings();
+            settings.LoadExtensions = true;
+            settings.ExtensionSearchPatterns = settings.ExtensionSearchPatterns.Union(new string[] { "Service*.dll", "Repository*.dll" }).ToArray();
+            var kernel = new StandardKernel(settings);
+            try
+            {
+                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
+                RegisterServices(kernel);
+
+                // Install Ninject-based IDependencyResolver into the Web API configuration to set Web API Resolver
+                //GlobalConfiguration.Configuration.DependencyResolver = new NinjectDependencyResolver(kernel);
+                return kernel;
+            }
+            catch
+            {
+                kernel.Dispose();
+                throw;
+            }
+        }
 
         private static void RegisterServices(IKernel kernel)
         {
-            //kernel.Bind<VehicleDBContext>().ToSelf().InRequestScope();
-            kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
-            kernel.Bind<IVehicleMakeRepository>().To<VehicleMakeRepository>();
-            kernel.Bind<IVehicleModelRepository>().To<VehicleModelRepository>();
-            kernel.Bind<IVehicleMakeService>().To<VehicleMakeService>();
-            kernel.Bind<IVehicleModelService>().To<VehicleModelService>();           
+            //kernel.Bind<Cart.Common.ICartInterceptor>().To<GreedyInterceptor>();
+            //Note: This isn't a good way to obtain the Cart Service implementation type. This is Ninject limitation.
+            //var makeService = kernel.Get<IVehicleMakeService>();
+            //kernel.Rebind<IMakeService>().To(makeService.GetType()).Intercept().With<GreedyInterceptor>();
         }
+
     }
 }

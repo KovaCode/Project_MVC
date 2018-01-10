@@ -41,7 +41,7 @@ namespace Service.Services
             }
 
             //IQueryable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
-            IQueryable<VehicleMakeModel> makeItems = repository.GetAllQueryable();
+            IQueryable<IVehicleMakeModel> makeItems = repository.GetAllQueryable();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -59,11 +59,11 @@ namespace Service.Services
 
             systemDataModel.TotalCount = makeItems.Count();
 
-            IEnumerable<IVehicleMakeModel> data = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItems);
+            //IEnumerable<IVehicleMakeModel> data = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItems);
 
-            data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
+            makeItems = makeItems.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>((IEnumerable<IVehicleMakeModel>)data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>(makeItems, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
             return staticPagedList;
         }
@@ -77,8 +77,8 @@ namespace Service.Services
         public async Task<IVehicleMakeModel> ReadAsync(Guid? id)
         {
             //return Mapper.Map<VehicleMakeEntity, IVehicleMake>(db.Makers.Find(id));
-            Model.VehicleMakeModel entity = await repository.GetByIdAsync(id);
-            return Mapper.Map<IVehicleMakeModel, IVehicleMakeModel>(entity);
+            IVehicleMakeModel entity = await repository.GetById(id);
+            return entity; /*Mapper.Map<IVehicleMakeModel, IVehicleMakeModel>(entity)*/;
         }
 
         public async Task UpdateAsync(IVehicleMakeModel make)

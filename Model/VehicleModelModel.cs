@@ -9,7 +9,7 @@ namespace Model
         public Guid VehicleMakeId { get; set; }
         public string Name { get; set; }
         public string Abrv { get; set; }
-        public virtual VehicleMakeModel Make { get; set; }
+        public virtual IVehicleMakeModel Make { get; set; }
     }
 
 }

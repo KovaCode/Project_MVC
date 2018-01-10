@@ -9,7 +9,7 @@ namespace Repository.Commons.Patterns
     {
         IQueryable<T> GetAllQueryable();
         IEnumerable<T> GetAll();
-        Task<T> GetByIdAsync(Guid? id);
+        Task<T> GetById(Guid? id);
 
         Task CreateAsync(T entity);
         Task UpdateAsync(T entity);

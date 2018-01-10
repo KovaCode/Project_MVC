@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 namespace Repository.Commons.Models
 {
-    public interface IVehicleModelRepository : IGenericRepository<VehicleModelModel>
+    public interface IVehicleModelRepository : IGenericRepository<IVehicleModelModel>
     {
-        IEnumerable<Model.VehicleMakeModel> GetAllMakes();
+        IEnumerable<IVehicleMakeModel> GetAllMakes();
     }
 }

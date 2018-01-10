@@ -26,9 +26,9 @@ namespace Service.Services
         }
 
 
-        public IEnumerable<Model.Common.IVehicleMakeModel> GetMakes()
+        public IEnumerable<IVehicleMakeModel> GetMakes()
         {
-            IEnumerable<Model.VehicleMakeModel> makeItemsEntity = repository.GetAllMakes();
+            IEnumerable<IVehicleMakeModel> makeItemsEntity = repository.GetAllMakes();
             IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
             return make;
         }
@@ -47,7 +47,7 @@ namespace Service.Services
 
             //IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
 
-            IQueryable<VehicleModelModel> modelItems = repository.GetAllQueryable();
+            IQueryable<IVehicleModelModel> modelItems = repository.GetAllQueryable();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -65,10 +65,10 @@ namespace Service.Services
 
             systemDataModel.TotalCount = modelItems.Count();
 
-            IEnumerable<IVehicleModelModel> data = Mapper.Map<IEnumerable<VehicleModelModel>, IEnumerable<IVehicleModelModel>>(modelItems);
-            data = data.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
+            //IEnumerable<IVehicleModelModel> data = Mapper.Map<IEnumerable<VehicleModelModel>, IEnumerable<IVehicleModelModel>>(modelItems);
+            modelItems = modelItems.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            StaticPagedList<IVehicleModelModel> staticPagedList = new StaticPagedList<IVehicleModelModel>(data, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+            StaticPagedList<IVehicleModelModel> staticPagedList = new StaticPagedList<IVehicleModelModel>(modelItems, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
             return staticPagedList;
         }
@@ -83,8 +83,10 @@ namespace Service.Services
         {
             //return Mapper.Map<VehicleModel, IVehicleModel>(db.Models.Find(id));
 
-            VehicleModelModel vehicleModel = await repository.GetByIdAsync(id);
-            return Mapper.Map<VehicleModelModel, IVehicleModelModel>(vehicleModel);
+            //VehicleModelModel vehicleModel = await repository.GetById(id);
+            //return Mapper.Map<VehicleModelModel, IVehicleModelModel>(vehicleModel);
+
+            return await repository.GetById(id);
 
         }
 

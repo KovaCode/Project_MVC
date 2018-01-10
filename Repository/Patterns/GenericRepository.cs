@@ -30,7 +30,7 @@ namespace Repository.Patterns
             return vehicleDBContext.Set<TEntity>().AsNoTracking();
         }
 
-        public async Task<TEntity> GetByIdAsync(Guid? id)
+        public async Task<TEntity> GetById(Guid? id)
         {
             return await vehicleDBContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
@@ -47,7 +47,7 @@ namespace Repository.Patterns
 
         public async Task DeleteAsync(Guid? id)
         {
-            var ent = await GetByIdAsync(id);
+            var ent = await GetById(id);
             await unitOfWork.DeleteAsync(ent);
         }
 
@@ -55,5 +55,6 @@ namespace Repository.Patterns
         {
             await unitOfWork.DeleteAsync(entity);
         }
+
     }
 }
