@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using DAL.Entity;
+using Model.Common;
 
 namespace DAL
 {

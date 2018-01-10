@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Model.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
 namespace DAL.Entity
 {
-    public class VehicleMakeEntity
+    public class VehicleMakeEntity : IVehicleBase
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

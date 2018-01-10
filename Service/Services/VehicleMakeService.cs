@@ -24,9 +24,7 @@ namespace Service.Services
         
         public IEnumerable<IVehicleMakeModel> GetMakes()
         {
-            IEnumerable<IVehicleMakeModel> makeItemsEntity = repository.GetAll();
-            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
-            return make;
+            return  Mapper.Map<IEnumerable<IVehicleMakeModel>>(repository.GetAll());
         }
 
         public StaticPagedList<IVehicleMakeModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
