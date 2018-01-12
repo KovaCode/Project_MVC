@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entity
 {
-    public class VehicleMakeEntity : IVehicleBase
+    public class VehicleMakeEntity : IVehicleMakeModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }

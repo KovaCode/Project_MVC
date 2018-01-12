@@ -80,6 +80,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{A59BB1FF-8F9F-4B30-A686-D65EF3FE1F52}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Model.Common\Model.Common.csproj">
       <Project>{1f7da79c-a9da-4988-90ef-f4c0bb2dcd07}</Project>
       <Name>Model.Common</Name>

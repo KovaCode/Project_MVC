@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using Service.Common;
 
 namespace Repository.Patterns
 {
@@ -20,41 +21,44 @@ namespace Repository.Patterns
             unitOfWork = new UnitOfWork(vehicleDBContext);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            return vehicleDBContext.Set<TEntity>().AsNoTracking().AsEnumerable();
+            return await Task.FromResult(vehicleDBContext.Set<TEntity>().AsEnumerable());
         }
 
-        public IQueryable<TEntity> GetAllQueryable()
+        public async Task<IQueryable<TEntity>> GetAllQueryableAsync()
         {
-            return vehicleDBContext.Set<TEntity>().AsNoTracking();
+            return await Task.FromResult(vehicleDBContext.Set<TEntity>().AsQueryable<TEntity>());
         }
 
-        public async Task<TEntity> GetById(Guid? id)
+        public async Task<TEntity> ReadAsync(Guid? id)
         {
-            return await vehicleDBContext.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
+            return await vehicleDBContext.Set<TEntity>().FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task CreateAsync(TEntity entity)
+        public async Task<int> CreateAsync(TEntity entity)
         {
             await unitOfWork.AddAsync(entity);
+            return await unitOfWork.CommitAsync();
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task<int> UpdateAsync(TEntity entity)
         {
             await unitOfWork.UpdateAsync(entity);
+            return await unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteAsync(Guid? id)
+        public async Task<int> DeleteAsync(Guid? id)
         {
-            var ent = await GetById(id);
+            var ent = await ReadAsync(id);
             await unitOfWork.DeleteAsync(ent);
+            return await unitOfWork.CommitAsync();
         }
 
-        public async Task DeleteAsync(TEntity entity)
+        public async Task<int> DeleteAsync(TEntity entity)
         {
             await unitOfWork.DeleteAsync(entity);
+            return await unitOfWork.CommitAsync();
         }
-
     }
 }

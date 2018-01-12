@@ -9,12 +9,12 @@ namespace Service.Common
 {
     public interface IVehicleService<T> where T : class
     {
-        Task CreateAsync(T obj);
+        Task<int> CreateAsync(T obj);
         Task<T> ReadAsync(Guid? id);
-        Task UpdateAsync(T obj);
-        Task DeleteAsync(Guid? id);       
-        StaticPagedList<T> GetVehicleDataPaged(ISystemDataModel systemDataModel);
-        IEnumerable<IVehicleMakeModel> GetMakes();
+        Task<int> UpdateAsync(T obj);
+        Task<int> DeleteAsync(Guid? id);       
+        Task<StaticPagedList<T>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel);
+        Task<IEnumerable<IVehicleMakeModel>> GetMakesAsync();
     }
 }
 

@@ -1,15 +1,15 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using Service.Models;
 using System;
 using PagedList;
 using MVC.Models;
 using System.Collections.Generic;
 using AutoMapper;
-using Service.Services;
 using Service.Common.Services;
 using Model.Common;
 using System.Threading.Tasks;
+using Common;
+using System.Collections;
 
 namespace MVC_Project.Controllers
 {
@@ -22,13 +22,13 @@ namespace MVC_Project.Controllers
             this.service = service;
         }
 
-        public ModelController(VehicleModelService vehicleModelService)
-        {
-            service = vehicleModelService;
-        }
+        //public ModelController(IVehicleModelService vehicleModelService)
+        //{
+        //    service = vehicleModelService;
+        //}
 
         // GET: Models
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
+        public async Task<ActionResult> IndexAsync(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             SystemDataModel systemDataModel = new SystemDataModel();
 
@@ -42,7 +42,7 @@ namespace MVC_Project.Controllers
             systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
-            StaticPagedList<IVehicleModelModel> modelItems = service.GetVehicleDataPaged(systemDataModel);
+            StaticPagedList<IVehicleModelModel> modelItems = await service.GetVehicleDataPagedAsync(systemDataModel);
             StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModelModel>, StaticPagedList<VehicleModelView>>(modelItems);
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
@@ -73,7 +73,7 @@ namespace MVC_Project.Controllers
         {
             VehicleModelView vehicleModelView = new VehicleModelView
             {
-                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<VehicleMakeView>>(service.GetMakes())
+                MakeEnumerable = Mapper.Map<IEnumerable<VehicleMakeView>>(service.GetMakesAsync())
             };
             return View(vehicleModelView);
         }
@@ -98,7 +98,7 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Edit/5
-        public ActionResult Edit(Guid? id)
+        public async Task<ActionResult> EditAsync(Guid? id)
         {
             if (id == null)
             {
@@ -110,7 +110,9 @@ namespace MVC_Project.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name");
+            //IEnumerable<VehicleMakeView> modelViewList = Mapper.Map<IEnumerable<VehicleModelView>(service.GetMakesAsync());
+
+            //ViewBag.MakerList = new SelectList(), "Id", "Name");
             return View(modelView);
         }
 

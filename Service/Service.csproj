@@ -88,7 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DIModule.cs" />
-    <Compile Include="Models\SystemDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\VehicleMakeService.cs" />
     <Compile Include="Services\VehicleModelService.cs" />
@@ -105,10 +104,6 @@
       <Project>{a59bb1ff-8f9f-4b30-a686-d65ef3fe1f52}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DAL\DAL.csproj">
-      <Project>{9a02d40f-dde5-45ba-ae2f-12c047d103cb}</Project>
-      <Name>DAL</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Model.Common\Model.Common.csproj">
       <Project>{1f7da79c-a9da-4988-90ef-f4c0bb2dcd07}</Project>
       <Name>Model.Common</Name>
@@ -120,10 +115,6 @@
     <ProjectReference Include="..\Repository.Commons\Repository.Commons.csproj">
       <Project>{7cffd4a1-d814-4722-95dd-b376c314f46b}</Project>
       <Name>Repository.Commons</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Repository\Repository.csproj">
-      <Project>{07368585-6519-4be5-bb0e-ef7d30ba701c}</Project>
-      <Name>Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\Service.Common\Service.Common.csproj">
       <Project>{168d3938-d375-4e05-ad50-7a160371526d}</Project>

@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Service.Common;
 
 namespace Repository
 {
@@ -23,47 +24,47 @@ namespace Repository
             repository = new GenericRepository<IVehicleModelModel>(context);
         }
 
-        public async Task CreateAsync(IVehicleModelModel entity)
+        public async Task<int> CreateAsync(IVehicleModelModel entity)
         {
-            await repository.CreateAsync(entity);
+           return await repository.CreateAsync(entity);
         }
 
-        public async Task DeleteAsync(Guid? id)
+        public Task<int> UpdateAsync(IVehicleModelModel entity)
         {
-            await repository.DeleteAsync(id);
+            throw new NotImplementedException();
         }
 
-        public async Task DeleteAsync(IVehicleModelModel entity)
+        public async Task<int> DeleteAsync(Guid? id)
         {
-            await repository.DeleteAsync(entity);
+            return await repository.DeleteAsync(id);
         }
 
-        public IEnumerable<IVehicleModelModel> GetAll()
+        public async Task<int> DeleteAsync(IVehicleModelModel entity)
         {
-            return repository.GetAll();
+            return await repository.DeleteAsync(entity);
+        }
+
+        public async Task<IEnumerable<IVehicleModelModel>> GetAll()
+        {
+            return await repository.GetAllQueryableAsync();
         }
 
         public IEnumerable<IVehicleMakeModel> GetAllMakes()
         {
-            return Mapper.Map<IEnumerable<IVehicleMakeModel>>(context.Makers.AsEnumerable());
+            throw new NotImplementedException();
         }
 
-        public IQueryable<IVehicleModelModel> GetAllQueryable()
+        public Task<IQueryable<IVehicleModelModel>> GetAllQueryableAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IVehicleModelModel> GetById(Guid? id)
+        public Task<IEnumerable<IVehicleModelModel>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(IVehicleModelModel entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerable<IVehicleMakeModel> IVehicleModelRepository.GetAllMakes()
+        public Task<IVehicleModelModel> ReadAsync(Guid? id)
         {
             throw new NotImplementedException();
         }

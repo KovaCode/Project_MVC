@@ -1,6 +1,6 @@
 ﻿using Service.Common;
 
-namespace Service.Models
+namespace Common
 {
     public class SystemDataModel : ISystemDataModel
     {

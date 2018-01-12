@@ -6,10 +6,7 @@ using PagedList;
 using Service.Common;
 using AutoMapper;
 using Service.Common.Services;
-using DAL;
-using DAL.Entity;
 using Model.Common;
-using Repository.Commons;
 using Model;
 using System.Threading.Tasks;
 using Repository.Commons.Models;
@@ -25,7 +22,6 @@ namespace Service.Services
                 this.repository = repository;
         }
 
-
         public IEnumerable<IVehicleMakeModel> GetMakes()
         {
             IEnumerable<IVehicleMakeModel> makeItemsEntity = repository.GetAllMakes();
@@ -33,8 +29,7 @@ namespace Service.Services
             return make;
         }
 
-
-        public StaticPagedList<IVehicleModelModel> GetVehicleDataPaged(ISystemDataModel systemDataModel)
+        public async Task<StaticPagedList<IVehicleModelModel>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -47,7 +42,7 @@ namespace Service.Services
 
             //IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
 
-            IQueryable<IVehicleModelModel> modelItems = repository.GetAllQueryable();
+            IQueryable<IVehicleModelModel> modelItems = await repository.GetAllQueryableAsync();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {
@@ -68,15 +63,13 @@ namespace Service.Services
             //IEnumerable<IVehicleModelModel> data = Mapper.Map<IEnumerable<VehicleModelModel>, IEnumerable<IVehicleModelModel>>(modelItems);
             modelItems = modelItems.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            StaticPagedList<IVehicleModelModel> staticPagedList = new StaticPagedList<IVehicleModelModel>(modelItems, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
-
-            return staticPagedList;
+            return await Task.FromResult(new StaticPagedList<IVehicleModelModel>(modelItems, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount));
         }
 
-        public async Task CreateAsync(IVehicleModelModel model)
+        public async Task<int> CreateAsync(IVehicleModelModel model)
         {
             VehicleModelModel modelEntity = Mapper.Map<IVehicleModelModel, VehicleModelModel>(model);
-            await repository.CreateAsync(modelEntity);
+            return await repository.CreateAsync(modelEntity);
         }
 
         public async Task<IVehicleModelModel> ReadAsync(Guid? id)
@@ -86,23 +79,27 @@ namespace Service.Services
             //VehicleModelModel vehicleModel = await repository.GetById(id);
             //return Mapper.Map<VehicleModelModel, IVehicleModelModel>(vehicleModel);
 
-            return await repository.GetById(id);
+            return await repository.ReadAsync(id);
 
         }
 
-        public async Task UpdateAsync(IVehicleModelModel model)
+        public async Task<int> UpdateAsync(IVehicleModelModel model)
         {
             VehicleModelModel vehicleModel = Mapper.Map<IVehicleModelModel, VehicleModelModel>(model);
 
-            await repository.UpdateAsync(vehicleModel);
+            return await repository.UpdateAsync(vehicleModel);
 
         }
 
-        public async Task DeleteAsync(Guid? id)
+        public async Task<int> DeleteAsync(Guid? id)
         {
-            await repository.DeleteAsync(id);
+            return await repository.DeleteAsync(id);
         }
 
+        public Task<IEnumerable<IVehicleMakeModel>> GetMakesAsync()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

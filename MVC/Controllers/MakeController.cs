@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Net;
-using Service.Models;
 using MVC.Models;
 using PagedList;
 using AutoMapper;
@@ -9,6 +8,7 @@ using System.Linq;
 using Service.Common.Services;
 using Model.Common;
 using System.Threading.Tasks;
+using Common;
 
 namespace MVC.Controllers
 {
@@ -22,8 +22,11 @@ namespace MVC.Controllers
         }
 
         // GET: /Make/
-        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
+        //[Route("Index")]
+        public async Task<ViewResult> Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
+            AsyncManager.OutstandingOperations.Increment();
+
             SystemDataModel systemDataModel = new SystemDataModel();
 
             ViewBag.ResultsPerPage = resultsPerPage;
@@ -37,28 +40,29 @@ namespace MVC.Controllers
             systemDataModel.Page = (page ?? 1);
 
 
-            StaticPagedList<IVehicleMakeModel> makeItems = service.GetVehicleDataPaged(systemDataModel);
+            StaticPagedList<IVehicleMakeModel> makeItems = await await Task.FromResult(service.GetVehicleDataPagedAsync(systemDataModel));
             StaticPagedList<VehicleMakeView> makeViewItems = Mapper.Map<StaticPagedList<IVehicleMakeModel>, StaticPagedList<VehicleMakeView>>(makeItems);
                 
            ViewBag.CurrentFilter = systemDataModel.SearchValue;
             return View(makeViewItems);
         }
-        
-        // GET: /Make/Details/5
-        public async Task<ActionResult> DetailsAsync(Guid? id)
+
+        // GET: /Make/Details/5]
+        [Route("Details")]
+        public async Task<ActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleMakeModel make = await service.ReadAsync(id);
+            var make = await Task.FromResult(service.ReadAsync(id));
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
-
+            
             if (makeView == null)
             {
                 return HttpNotFound();
             }
-            return View(makeView);
+            return await Task.FromResult(View(makeView));
         }
 
         // GET: /Make/Create
@@ -72,6 +76,7 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Create")]
         public async Task<ActionResult> CreateAsync([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
             IVehicleMakeModel make = Mapper.Map<IVehicleMakeModel>(makeView);
@@ -89,9 +94,10 @@ namespace MVC.Controllers
 
             }
         }
-        
+
+
         // GET: /Make/Edit/5
-        public async Task<ActionResult> EditAsync(Guid? id)
+        public async Task<ActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -111,6 +117,7 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("Edit")]
         public async Task<ActionResult> EditAsync([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
             IVehicleMakeModel make = Mapper.Map<IVehicleMakeModel>(makeView);
@@ -126,7 +133,8 @@ namespace MVC.Controllers
         }
 
         // GET: /Make/Delete/5
-        public async Task<ActionResult> DeleteAsync(Guid? id)
+        [Route("Delete")]
+        public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -145,6 +153,7 @@ namespace MVC.Controllers
         // POST: /Make/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Route("Delete")]
         public async Task<ActionResult> DeleteConfirmedAsync(Guid? id)
         {
             IVehicleMakeModel maker = await service.ReadAsync(id);

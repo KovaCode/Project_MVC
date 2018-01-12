@@ -128,6 +128,10 @@
     <Compile Include="Patterns\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{A59BB1FF-8F9F-4B30-A686-D65EF3FE1F52}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.csproj">
       <Project>{9a02d40f-dde5-45ba-ae2f-12c047d103cb}</Project>
       <Name>DAL</Name>
