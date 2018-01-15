@@ -40,7 +40,7 @@ namespace MVC.Controllers
             systemDataModel.Page = (page ?? 1);
 
 
-            StaticPagedList<IVehicleMakeModel> makeItems = await await Task.FromResult(service.GetVehicleDataPagedAsync(systemDataModel));
+            StaticPagedList<IVehicleMakeModel> makeItems = await service.GetVehicleDataPagedAsync(systemDataModel);
             StaticPagedList<VehicleMakeView> makeViewItems = Mapper.Map<StaticPagedList<IVehicleMakeModel>, StaticPagedList<VehicleMakeView>>(makeItems);
                 
            ViewBag.CurrentFilter = systemDataModel.SearchValue;
@@ -55,14 +55,14 @@ namespace MVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var make = await Task.FromResult(service.ReadAsync(id));
+            IVehicleMakeModel make = await service.ReadAsync(id);
             VehicleMakeView makeView = Mapper.Map<VehicleMakeView>(make);
             
             if (makeView == null)
             {
                 return HttpNotFound();
             }
-            return await Task.FromResult(View(makeView));
+            return View(makeView);
         }
 
         // GET: /Make/Create
@@ -76,8 +76,7 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Create")]
-        public async Task<ActionResult> CreateAsync([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
             IVehicleMakeModel make = Mapper.Map<IVehicleMakeModel>(makeView);
 
@@ -117,8 +116,7 @@ namespace MVC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Route("Edit")]
-        public async Task<ActionResult> EditAsync([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Abrv")] VehicleMakeView makeView)
         {
             IVehicleMakeModel make = Mapper.Map<IVehicleMakeModel>(makeView);
 
@@ -133,7 +131,6 @@ namespace MVC.Controllers
         }
 
         // GET: /Make/Delete/5
-        [Route("Delete")]
         public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -153,7 +150,6 @@ namespace MVC.Controllers
         // POST: /Make/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Route("Delete")]
         public async Task<ActionResult> DeleteConfirmedAsync(Guid? id)
         {
             IVehicleMakeModel maker = await service.ReadAsync(id);

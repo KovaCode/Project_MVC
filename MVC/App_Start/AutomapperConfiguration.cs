@@ -20,14 +20,14 @@ namespace MVC.Controllers
             Mapper.Initialize(cfg =>
             {
                 // MAKE - mappings //               
+
                 cfg.CreateMap<IVehicleMakeModel, VehicleMakeEntity>().ReverseMap();
                 cfg.CreateMap<IVehicleMakeModel, VehicleMakeView>().ReverseMap();
-                //cfg.CreateMap<Task<VehicleMakeEntity>, Task<IVehicleMakeModel>>().ReverseMap();
-                //cfg.CreateMap<Task<VehicleMakeView>, Task<IVehicleMakeModel>>().ReverseMap();
-                
+
                 // MODEL - mappings /
-                cfg.CreateMap<VehicleModelEntity, IVehicleModelModel>().ReverseMap();
-                cfg.CreateMap<VehicleModelView, IVehicleModelModel>().ReverseMap();
+
+                cfg.CreateMap<IVehicleModelModel, VehicleModelEntity>().ReverseMap();
+                cfg.CreateMap<IVehicleModelModel, VehicleModelView>().ReverseMap();
 
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleMakeModel>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMakeModel, VehicleMakeView>));
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleModelModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<IVehicleModelModel, VehicleModelView>));

@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Service.Common;
+using AutoMapper;
 
 namespace Repository.Patterns
 {
@@ -21,14 +22,38 @@ namespace Repository.Patterns
             unitOfWork = new UnitOfWork(vehicleDBContext);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISystemDataModel systemDataModel)
         {
-            return await Task.FromResult(vehicleDBContext.Set<TEntity>().AsEnumerable());
+            IQueryable<TEntity> items = await GetAllQueryableAsync();
+
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+            {
+                items = items.Where(s => s.Name.Contains(systemDataModel.SearchValue));
+            }
+
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+            {
+                items = items.OrderByDescending(s => s.Name);
+            }
+            else
+            {
+                items = items.OrderBy(s => s.Name);
+            }
+
+            IEnumerable<TEntity> enumItems = Mapper.Map<IEnumerable<TEntity>>(items.AsEnumerable());
+
+            return enumItems;
+        }
+
+        public async Task<IEnumerable <TEntity>> GetAllAsync()
+        {
+            return await vehicleDBContext.Set<TEntity>().ToListAsync();
         }
 
         public async Task<IQueryable<TEntity>> GetAllQueryableAsync()
         {
-            return await Task.FromResult(vehicleDBContext.Set<TEntity>().AsQueryable<TEntity>());
+            IEnumerable<TEntity> items = await GetAllAsync();
+            return items.AsQueryable();
         }
 
         public async Task<TEntity> ReadAsync(Guid? id)
@@ -60,5 +85,7 @@ namespace Repository.Patterns
             await unitOfWork.DeleteAsync(entity);
             return await unitOfWork.CommitAsync();
         }
+
+
     }
 }

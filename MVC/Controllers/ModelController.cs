@@ -22,13 +22,8 @@ namespace MVC_Project.Controllers
             this.service = service;
         }
 
-        //public ModelController(IVehicleModelService vehicleModelService)
-        //{
-        //    service = vehicleModelService;
-        //}
-
         // GET: Models
-        public async Task<ActionResult> IndexAsync(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
+        public async Task<ActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             SystemDataModel systemDataModel = new SystemDataModel();
 
@@ -42,15 +37,15 @@ namespace MVC_Project.Controllers
             systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
-            StaticPagedList<IVehicleModelModel> modelItems = await service.GetVehicleDataPagedAsync(systemDataModel);
-            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModelModel>, StaticPagedList<VehicleModelView>>(modelItems);
+            StaticPagedList<IVehicleModelModel> items = await service.GetVehicleDataPagedAsync(systemDataModel);
+            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModelModel>, StaticPagedList<VehicleModelView>>(items);
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
             return View(modelViewPaged);
         }
 
         // GET: Models/Details/5
-        public async Task<ActionResult> DetailsAsync(Guid? id)
+        public async Task<ActionResult> Details(Guid? id)
         {
             if (id == null)
             {
@@ -59,7 +54,6 @@ namespace MVC_Project.Controllers
 
             IVehicleModelModel model = await service.ReadAsync(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
-            
 
             if (modelView == null)
             {
@@ -73,7 +67,7 @@ namespace MVC_Project.Controllers
         {
             VehicleModelView vehicleModelView = new VehicleModelView
             {
-                MakeEnumerable = Mapper.Map<IEnumerable<VehicleMakeView>>(service.GetMakesAsync())
+                MakeEnumerable = Mapper.Map<IEnumerable<VehicleMakeView>>(service.GetAllMakeAsync())
             };
             return View(vehicleModelView);
         }
@@ -83,7 +77,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateAsync([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
+        public async Task<ActionResult> Create([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
         {
 
             IVehicleModelModel model = Mapper.Map<IVehicleModelModel>(modelView);
@@ -98,14 +92,14 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Edit/5
-        public async Task<ActionResult> EditAsync(Guid? id)
+        public async Task<ActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            VehicleModelView modelView = Mapper.Map<VehicleModelView>(service.ReadAsync(id));
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(await service.ReadAsync(id));
             if (modelView == null)
             {
                 return HttpNotFound();
@@ -121,7 +115,7 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
         {
             IVehicleModelModel model = Mapper.Map<IVehicleModelModel>(modelView);
 
@@ -136,7 +130,7 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Delete/5
-        public async Task<ActionResult> DeleteAsync(Guid? id)
+        public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -155,7 +149,7 @@ namespace MVC_Project.Controllers
         // POST: Models/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmedAsync(Guid? id)
+        public async Task<ActionResult> DeleteConfirmed(Guid? id)
         {
             IVehicleModelModel model = await service.ReadAsync(id);
             await service.DeleteAsync(id);

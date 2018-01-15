@@ -2,11 +2,12 @@
 using Model.Common;
 using Repository.Commons.Patterns;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Repository.Commons.Models
 {
     public interface IVehicleModelRepository : IGenericRepository<IVehicleModelModel>
     {
-        IEnumerable<IVehicleMakeModel> GetAllMakes();
+        Task<IEnumerable<IVehicleMakeModel>> GetAllMakesAsync();
     }
 }

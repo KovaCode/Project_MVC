@@ -22,11 +22,9 @@ namespace Service.Services
                 this.repository = repository;
         }
 
-        public IEnumerable<IVehicleMakeModel> GetMakes()
+        public async Task<IEnumerable<IVehicleMakeModel>> GetAllMakeAsync()
         {
-            IEnumerable<IVehicleMakeModel> makeItemsEntity = repository.GetAllMakes();
-            IEnumerable<IVehicleMakeModel> make = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItemsEntity);
-            return make;
+            return await repository.GetAllMakesAsync();
         }
 
         public async Task<StaticPagedList<IVehicleModelModel>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel)
@@ -39,56 +37,28 @@ namespace Service.Services
             {
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
+            IEnumerable<IVehicleModelModel> items = await repository.GetAllAsync(systemDataModel);
 
-            //IQueryable<VehicleModelEntity> modelItems = from s in this.db.Models select s;
+            systemDataModel.TotalCount = items.Count();
 
-            IQueryable<IVehicleModelModel> modelItems = await repository.GetAllQueryableAsync();
+            items = items.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
-            {
-                modelItems = modelItems.Where(s => s.Name.Contains(systemDataModel.SearchValue) || s.Make.Name.Contains(systemDataModel.SearchValue));
-            }
-
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
-            {
-                modelItems = modelItems.OrderByDescending(s => s.Name);
-            }
-            else
-            {
-                modelItems = modelItems.OrderBy(s => s.Name);
-            }
-
-            systemDataModel.TotalCount = modelItems.Count();
-
-            //IEnumerable<IVehicleModelModel> data = Mapper.Map<IEnumerable<VehicleModelModel>, IEnumerable<IVehicleModelModel>>(modelItems);
-            modelItems = modelItems.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
-
-            return await Task.FromResult(new StaticPagedList<IVehicleModelModel>(modelItems, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount));
+            return new StaticPagedList<IVehicleModelModel>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
         }
 
-        public async Task<int> CreateAsync(IVehicleModelModel model)
+        public async Task<int> CreateAsync(IVehicleModelModel item)
         {
-            VehicleModelModel modelEntity = Mapper.Map<IVehicleModelModel, VehicleModelModel>(model);
-            return await repository.CreateAsync(modelEntity);
+            return await repository.CreateAsync(item);
         }
 
         public async Task<IVehicleModelModel> ReadAsync(Guid? id)
         {
-            //return Mapper.Map<VehicleModel, IVehicleModel>(db.Models.Find(id));
-
-            //VehicleModelModel vehicleModel = await repository.GetById(id);
-            //return Mapper.Map<VehicleModelModel, IVehicleModelModel>(vehicleModel);
-
             return await repository.ReadAsync(id);
-
         }
 
-        public async Task<int> UpdateAsync(IVehicleModelModel model)
+        public async Task<int> UpdateAsync(IVehicleModelModel item)
         {
-            VehicleModelModel vehicleModel = Mapper.Map<IVehicleModelModel, VehicleModelModel>(model);
-
-            return await repository.UpdateAsync(vehicleModel);
-
+            return await repository.UpdateAsync(item);
         }
 
         public async Task<int> DeleteAsync(Guid? id)
@@ -96,10 +66,7 @@ namespace Service.Services
             return await repository.DeleteAsync(id);
         }
 
-        public Task<IEnumerable<IVehicleMakeModel>> GetMakesAsync()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }
 

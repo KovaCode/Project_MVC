@@ -21,11 +21,6 @@ namespace Service.Services
         {
             this.repository = repository;           
         }
-        
-        public async Task<IEnumerable<IVehicleMakeModel>> GetMakesAsync()
-        {
-            return await Task.FromResult(Mapper.Map<IEnumerable<IVehicleMakeModel>>(repository.GetAllQueryableAsync()));
-        }
 
         public async Task<StaticPagedList<IVehicleMakeModel>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel)
         {
@@ -37,57 +32,36 @@ namespace Service.Services
             {
                 systemDataModel.SearchValue = systemDataModel.CurrentFilter;
             }
+            IEnumerable<IVehicleMakeModel> items = await repository.GetAllAsync(systemDataModel);
 
-            //IQueryable<VehicleMakeEntity> makeItems = from s in db.Makers select s;
-            IEnumerable<IVehicleMakeModel> makeItems = await repository.GetAllAsync(systemDataModel);
+            systemDataModel.TotalCount = items.Count();
 
-            //if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
-            //{
-            //    makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue));
-            //}
+            items = items.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-            //if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
-            //{
-            //    makeItems = makeItems.OrderByDescending(s => s.Name);
-            //}
-            //else
-            //{
-            //    makeItems = makeItems.OrderBy(s => s.Name);
-            //}
+            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
-            systemDataModel.TotalCount = makeItems.Count();
-
-            //IEnumerable<IVehicleMakeModel> data = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<IVehicleMakeModel>>(makeItems);
-
-            makeItems = makeItems.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
-
-            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>(makeItems, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
-
-            return await Task.FromResult(staticPagedList);
+            return staticPagedList;
         }
 
-        public async Task<int> CreateAsync(IVehicleMakeModel make)
+        public async Task<int> CreateAsync(IVehicleMakeModel item)
         {
-            VehicleMakeModel makeEntity = Mapper.Map<IVehicleMakeModel, VehicleMakeModel>(make);
-            return await repository.CreateAsync(makeEntity);
+            return await repository.CreateAsync(item);
         }
 
         public async Task<IVehicleMakeModel> ReadAsync(Guid? id)
         {
-            //return Mapper.Map<VehicleMakeEntity, IVehicleMake>(db.Makers.Find(id));
-            IVehicleMakeModel entity = await repository.ReadAsync(id);
-            return await Task.FromResult(entity); /*Mapper.Map<IVehicleMakeModel, IVehicleMakeModel>(entity)*/;
+            return await repository.ReadAsync(id);
         }
 
-        public async Task<int> UpdateAsync(IVehicleMakeModel make)
+        public async Task<int> UpdateAsync(IVehicleMakeModel item)
         {
-            VehicleMakeModel makeEntity = Mapper.Map<IVehicleMakeModel, VehicleMakeModel>(make);
-            return await repository.UpdateAsync(makeEntity);
+            return await repository.UpdateAsync(item);
         }
 
         public async Task<int> DeleteAsync(Guid? id)
         {
            return await repository.DeleteAsync(id);
         }
+
     }
 }

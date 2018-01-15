@@ -14,7 +14,6 @@ namespace Service.Common
         Task<int> UpdateAsync(T obj);
         Task<int> DeleteAsync(Guid? id);       
         Task<StaticPagedList<T>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel);
-        Task<IEnumerable<IVehicleMakeModel>> GetMakesAsync();
     }
 }
 
