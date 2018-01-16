@@ -91,7 +91,7 @@ namespace Repository
 
                 items = items.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
 
-                StaticPagedList<VehicleModelEntity> list = new StaticPagedList<VehicleModelEntity>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount)
+                StaticPagedList<VehicleModelEntity> list = new StaticPagedList<VehicleModelEntity>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
 
                 return Mapper.Map<StaticPagedList<IVehicleModelModel>>(list);
             }
