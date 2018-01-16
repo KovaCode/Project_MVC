@@ -4,7 +4,6 @@ using PagedList;
 using System.Collections.Generic;
 using Model.Common;
 using DAL.Entity;
-using System.Threading.Tasks;
 
 namespace MVC.Controllers
 {
@@ -27,12 +26,18 @@ namespace MVC.Controllers
 
                 // MODEL - mappings /
 
-                cfg.CreateMap<IVehicleModelModel, VehicleModelEntity>().ReverseMap();
+                cfg.CreateMap<Model.Common.IVehicleModelModel, VehicleModelEntity>().ReverseMap();
                 cfg.CreateMap<VehicleModelEntity, VehicleModelView>().ReverseMap();
                 cfg.CreateMap<IVehicleModelModel, VehicleModelView>().ReverseMap();
 
+
+                cfg.CreateMap(typeof(StaticPagedList<VehicleMakeEntity>), typeof(StaticPagedList<IVehicleMakeModel>)).ConvertUsing(typeof(PagedListConverter<VehicleMakeEntity, IVehicleMakeModel>));
+                cfg.CreateMap(typeof(StaticPagedList<VehicleModelEntity>), typeof(StaticPagedList<IVehicleModelModel>)).ConvertUsing(typeof(PagedListConverter<VehicleModelEntity, IVehicleModelModel>));
+
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleMakeModel>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMakeModel, VehicleMakeView>));
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleModelModel>), typeof(StaticPagedList<VehicleModelView>)).ConvertUsing(typeof(PagedListConverter<IVehicleModelModel, VehicleModelView>));
+            
+
             }
             );
         }

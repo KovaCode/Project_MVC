@@ -11,6 +11,7 @@ using Model;
 using DAL.Entity;
 using AutoMapper;
 using Service.Common;
+using PagedList;
 
 namespace Repository
 {
@@ -30,24 +31,14 @@ namespace Repository
    
         public async Task<IEnumerable<IVehicleMakeModel>> GetAllAsync(ISystemDataModel systemDataModel)
         {
-            IQueryable<VehicleMakeEntity> makeItems = await repository.GetAllQueryableAsync();
-
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
-            {
-                makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue));
-            }
-
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
-            {
-                makeItems = makeItems.OrderByDescending(s => s.Name);
-            }
-            else
-            {
-                makeItems = makeItems.OrderBy(s => s.Name);
-            }
-            return await Task.FromResult(Mapper.Map<IEnumerable<IVehicleMakeModel>>(makeItems.AsEnumerable()));
+            return Mapper.Map<IEnumerable<IVehicleMakeModel>>(await repository.GetAllAsync(systemDataModel));    
         }
-        
+
+        public async Task<StaticPagedList<IVehicleMakeModel>> GetAllPagedAsync(ISystemDataModel systemDataModel)
+        {
+            return Mapper.Map<StaticPagedList<IVehicleMakeModel>>(await repository.GetAllPagedAsync(systemDataModel));
+        }
+
         public async Task<IQueryable<IVehicleMakeModel>> GetAllQueryableAsync()
         {
             return Mapper.Map<IQueryable<IVehicleMakeModel>>(await repository.GetAllQueryableAsync());
@@ -79,6 +70,6 @@ namespace Repository
             return await repository.DeleteAsync(Mapper.Map<VehicleMakeEntity>(entity));
         }
 
-
+   
     }
 }

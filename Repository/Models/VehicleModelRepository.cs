@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Service.Common;
 using DAL.Entity;
+using PagedList;
+using Common;
 
 namespace Repository
 {
@@ -57,6 +59,44 @@ namespace Repository
             return Mapper.Map<IQueryable<IVehicleModelModel>>(await repository.GetAllQueryableAsync());
         }
 
+        public async Task<StaticPagedList<IVehicleModelModel>> GetAllPagedAsync(ISystemDataModel systemDataModel)
+        {
+            {
+                if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+                {
+                    systemDataModel.Page = 1;
+                }
+                else
+                {
+                    systemDataModel.SearchValue = systemDataModel.CurrentFilter;
+                }
+
+                IQueryable<VehicleModelEntity> items = await repository.GetAllQueryableAsync();
+
+                if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+                {
+                    items = items.Where(s => s.Name.Contains(systemDataModel.SearchValue, StringComparison.OrdinalIgnoreCase) || s.Make.Name.Contains(systemDataModel.SearchValue, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+                {
+                    items = items.OrderByDescending(s => s.Name);
+                }
+                else
+                {
+                    items = items.OrderBy(s => s.Name);
+                }
+
+                systemDataModel.TotalCount = items.Count();
+
+                items = items.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
+
+                StaticPagedList<VehicleModelEntity> list = new StaticPagedList<VehicleModelEntity>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount)
+
+                return Mapper.Map<StaticPagedList<IVehicleModelModel>>(list);
+            }
+        }
+
         public async Task<int> CreateAsync(IVehicleModelModel entity)
         {
             return await repository.CreateAsync(Mapper.Map<VehicleModelEntity>(entity));
@@ -88,5 +128,6 @@ namespace Repository
             return Mapper.Map<IEnumerable<IVehicleMakeModel>>(await repositoryMake.GetAllAsync());
         }
 
+ 
     }
 }

@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Service.Common;
 using AutoMapper;
+using PagedList;
+using Common;
 
 namespace Repository.Patterns
 {
@@ -20,6 +22,41 @@ namespace Repository.Patterns
         {
             vehicleDBContext = dbContext;
             unitOfWork = new UnitOfWork(vehicleDBContext);
+        }
+
+        public async Task<StaticPagedList<TEntity>> GetAllPagedAsync(ISystemDataModel systemDataModel)
+        {
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+            {
+                systemDataModel.Page = 1;
+            }
+            else
+            {
+                systemDataModel.SearchValue = systemDataModel.CurrentFilter;
+            }
+
+            IQueryable<TEntity> items = await GetAllQueryableAsync();
+
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+            {
+                items = items.Where(s => s.Name.Contains(systemDataModel.SearchValue, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+            {
+                items = items.OrderByDescending(s => s.Name);
+            }
+            else
+            {
+                items = items.OrderBy(s => s.Name);
+            }
+            
+            systemDataModel.TotalCount = items.Count();
+
+            items = items.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
+
+            return new StaticPagedList<TEntity>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+           
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync(ISystemDataModel systemDataModel)
@@ -85,7 +122,6 @@ namespace Repository.Patterns
             await unitOfWork.DeleteAsync(entity);
             return await unitOfWork.CommitAsync();
         }
-
 
     }
 }

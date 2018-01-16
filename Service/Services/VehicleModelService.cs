@@ -29,21 +29,9 @@ namespace Service.Services
 
         public async Task<StaticPagedList<IVehicleModelModel>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel)
         {
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
-            {
-                systemDataModel.Page = 1;
-            }
-            else
-            {
-                systemDataModel.SearchValue = systemDataModel.CurrentFilter;
-            }
-            IEnumerable<IVehicleModelModel> items = await repository.GetAllAsync(systemDataModel);
-
+            StaticPagedList<IVehicleModelModel> items = await repository.GetAllPagedAsync(systemDataModel);
             systemDataModel.TotalCount = items.Count();
-
-            items = items.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
-
-            return new StaticPagedList<IVehicleModelModel>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
+            return items;
         }
 
         public async Task<int> CreateAsync(IVehicleModelModel item)

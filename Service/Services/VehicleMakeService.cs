@@ -13,7 +13,7 @@ using Repository.Commons.Models;
 
 namespace Service.Services
 {
-    public class VehicleMakeService : IVehicleMakeService
+    public class VehicleMakeService/*<TEntity>*/ : IVehicleMakeService //where TEntity : IVehicleModelModel
     {
         private readonly IVehicleMakeRepository repository;
 
@@ -24,23 +24,9 @@ namespace Service.Services
 
         public async Task<StaticPagedList<IVehicleMakeModel>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel)
         {
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
-            {
-                systemDataModel.Page = 1;
-            }
-            else
-            {
-                systemDataModel.SearchValue = systemDataModel.CurrentFilter;
-            }
-            IEnumerable<IVehicleMakeModel> items = await repository.GetAllAsync(systemDataModel);
-
+            StaticPagedList<IVehicleMakeModel> items = await repository.GetAllPagedAsync(systemDataModel);
             systemDataModel.TotalCount = items.Count();
-
-            items = items.Skip((systemDataModel.Page - 1) * systemDataModel.ResultsPerPage).Take(systemDataModel.ResultsPerPage);
-
-            StaticPagedList<IVehicleMakeModel> staticPagedList = new StaticPagedList<IVehicleMakeModel>(items, systemDataModel.Page, systemDataModel.ResultsPerPage, systemDataModel.TotalCount);
-
-            return staticPagedList;
+            return items;
         }
 
         public async Task<int> CreateAsync(IVehicleMakeModel item)

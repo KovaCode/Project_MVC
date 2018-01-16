@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PagedList;
 
 namespace Repository.Commons.Patterns
 {
@@ -12,7 +13,7 @@ namespace Repository.Commons.Patterns
         Task<IQueryable<T>> GetAllQueryableAsync();
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllAsync(ISystemDataModel systemDataModel);
-
+        Task<StaticPagedList<T>> GetAllPagedAsync(ISystemDataModel systemDataModel);
         Task<int> CreateAsync(T entity);
         Task<T> ReadAsync(Guid? id);
         Task<int> UpdateAsync(T entity);
