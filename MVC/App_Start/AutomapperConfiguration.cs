@@ -22,11 +22,13 @@ namespace MVC.Controllers
                 // MAKE - mappings //               
 
                 cfg.CreateMap<IVehicleMakeModel, VehicleMakeEntity>().ReverseMap();
+                cfg.CreateMap<VehicleMakeEntity, VehicleMakeView>().ReverseMap();
                 cfg.CreateMap<IVehicleMakeModel, VehicleMakeView>().ReverseMap();
 
                 // MODEL - mappings /
 
                 cfg.CreateMap<IVehicleModelModel, VehicleModelEntity>().ReverseMap();
+                cfg.CreateMap<VehicleModelEntity, VehicleModelView>().ReverseMap();
                 cfg.CreateMap<IVehicleModelModel, VehicleModelView>().ReverseMap();
 
                 cfg.CreateMap(typeof(StaticPagedList<IVehicleMakeModel>), typeof(StaticPagedList<VehicleMakeView>)).ConvertUsing(typeof(PagedListConverter<IVehicleMakeModel, VehicleMakeView>));

@@ -63,11 +63,11 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             VehicleModelView vehicleModelView = new VehicleModelView
             {
-                MakeEnumerable = Mapper.Map<IEnumerable<VehicleMakeView>>(service.GetAllMakeAsync())
+                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<VehicleMakeView>>(await service.GetAllMakeAsync())
             };
             return View(vehicleModelView);
         }

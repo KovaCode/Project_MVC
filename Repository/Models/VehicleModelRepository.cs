@@ -34,7 +34,7 @@ namespace Repository
 
         public async Task<IEnumerable<IVehicleModelModel>> GetAllAsync(ISystemDataModel systemDataModel)
         {
-            IQueryable<IVehicleModelModel> makeItems = await repository.GetAllQueryableAsync();
+            IQueryable<VehicleModelEntity> makeItems = await repository.GetAllQueryableAsync();
 
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
             {

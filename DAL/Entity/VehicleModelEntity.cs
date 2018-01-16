@@ -1,11 +1,13 @@
-﻿using Model.Common;
+﻿using Model;
+using Model.Common;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Entity
 {
-    public class VehicleModelEntity : IVehicleModelModel
+    public class VehicleModelEntity : IVehicleBase
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
@@ -14,7 +16,6 @@ namespace DAL.Entity
         [Required]
         public string Name { get; set; }
         public string Abrv { get; set; }
-        //public virtual VehicleMakeEntity Make { get; set; }
-        IVehicleMakeModel IVehicleModelModel.Make { get; set; }
+        public virtual VehicleMakeEntity Make { get; set; }
     }
 }
