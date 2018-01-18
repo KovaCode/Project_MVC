@@ -24,6 +24,35 @@ namespace Repository.Patterns
             unitOfWork = new UnitOfWork(vehicleDBContext);
         }
 
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            IEnumerable<TEntity> listItems =  await vehicleDBContext.Set<TEntity>().ToListAsync();
+            return listItems;
+        }
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISystemDataModel systemDataModel)
+        {
+            IQueryable<TEntity> items = await GetAllQueryableAsync();
+
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
+            {
+                items = items.Where(s => s.Name.Contains(systemDataModel.SearchValue));
+            }
+
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+            {
+                items = items.OrderByDescending(s => s.Name);
+            }
+            else
+            {
+                items = items.OrderBy(s => s.Name);
+            }
+
+            IEnumerable<TEntity> enumItems = Mapper.Map<IEnumerable<TEntity>>(items.AsEnumerable());
+
+            return enumItems;
+        }
+
         public async Task<StaticPagedList<TEntity>> GetAllPagedAsync(ISystemDataModel systemDataModel)
         {
             if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
@@ -59,34 +88,6 @@ namespace Repository.Patterns
            
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(ISystemDataModel systemDataModel)
-        {
-            IQueryable<TEntity> items = await GetAllQueryableAsync();
-
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SearchValue))
-            {
-                items = items.Where(s => s.Name.Contains(systemDataModel.SearchValue));
-            }
-
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
-            {
-                items = items.OrderByDescending(s => s.Name);
-            }
-            else
-            {
-                items = items.OrderBy(s => s.Name);
-            }
-
-            IEnumerable<TEntity> enumItems = Mapper.Map<IEnumerable<TEntity>>(items.AsEnumerable());
-
-            return enumItems;
-        }
-
-        public async Task<IEnumerable <TEntity>> GetAllAsync()
-        {
-            return await vehicleDBContext.Set<TEntity>().ToListAsync();
-        }
-
         public async Task<IQueryable<TEntity>> GetAllQueryableAsync()
         {
             IEnumerable<TEntity> items = await GetAllAsync();
@@ -104,9 +105,11 @@ namespace Repository.Patterns
             return await unitOfWork.CommitAsync();
         }
 
-        public async Task<int> UpdateAsync(TEntity entity)
+        public async Task<int> UpdateAsync(TEntity entityUpdate)
         {
-            await unitOfWork.UpdateAsync(entity);
+            //TEntity entity = await ReadAsync(id);
+
+            await unitOfWork.UpdateAsync(entityUpdate);
             return await unitOfWork.CommitAsync();
         }
 

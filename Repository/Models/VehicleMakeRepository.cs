@@ -57,6 +57,7 @@ namespace Repository
 
         public async Task<int> UpdateAsync(IVehicleMakeModel entity)
         {
+            ///*IVehicleMakeModel*/ item = await repository.ReadAsync(id);
             return await repository.UpdateAsync(Mapper.Map<VehicleMakeEntity>(entity));
         }
 

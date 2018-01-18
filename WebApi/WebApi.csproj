@@ -142,7 +142,6 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MakeController.cs" />
-    <Compile Include="DIModule.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -167,12 +166,16 @@
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\DAL\DAL.csproj">
-      <Project>{9A02D40F-DDE5-45BA-AE2F-12C047D103CB}</Project>
+      <Project>{9a02d40f-dde5-45ba-ae2f-12c047d103cb}</Project>
       <Name>DAL</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model.Common\Model.Common.csproj">
       <Project>{1f7da79c-a9da-4988-90ef-f4c0bb2dcd07}</Project>
       <Name>Model.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{B9C82489-C087-43B7-A622-EC04CDFEFBC8}</Project>
+      <Name>Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Repository.Commons\Repository.Commons.csproj">
       <Project>{7CFFD4A1-D814-4722-95DD-B376C314F46B}</Project>

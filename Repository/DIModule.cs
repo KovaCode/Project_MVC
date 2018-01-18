@@ -1,11 +1,5 @@
 ﻿using DAL;
-using DAL.Entity;
-using Model;
-using Model.Common;
 using Repository.Commons.Models;
-using System.Collections.Generic;
-using AutoMapper;
-using PagedList;
 using Repository.Commons.Patterns;
 using Repository.Patterns;
 

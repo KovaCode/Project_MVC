@@ -1,17 +1,12 @@
-﻿using Model.Common;
-using Newtonsoft.Json;
+﻿using Model;
+using Model.Common;
 using Service.Common.Services;
-using Service.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Results;
-using System.Web.Mvc;
 
 namespace WebApi.Controllers
 {
@@ -27,32 +22,40 @@ namespace WebApi.Controllers
         }
 
         // GET api/<controller>
-        public async Task<HttpResponseMessage> Get()
+        [HttpGet]
+        public async Task<HttpResponseMessage> ReadAll()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, await service.GetVehicleDataAsync());
-
+            IEnumerable<IVehicleMakeModel> allItems = await service.GetVehicleDataAsync();
+            return Request.CreateResponse(HttpStatusCode.OK, allItems);
         }
 
         // GET api/<controller>/5
-        public async Task<HttpResponseMessage> Get(Guid id)
+        [HttpGet]
+        public async Task<HttpResponseMessage> Read(Guid id)
         {            
             return Request.CreateResponse(HttpStatusCode.OK, await service.ReadAsync(id));
-
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        [HttpPost]
+        public async Task Create([FromBody]VehicleMakeModel model)
         {
+            await service.CreateAsync(model);
         }
 
         // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        [HttpPut]
+        public async Task Update([FromBody]VehicleMakeModel model)
         {
+            await service.UpdateAsync(model);
         }
 
         // DELETE api/<controller>/5
-        public void Delete(int id)
+        [HttpDelete]
+        public async Task Delete(Guid id)
         {
+            await service.DeleteAsync(id);
+
         }
     }
 }
