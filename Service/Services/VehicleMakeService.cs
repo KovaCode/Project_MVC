@@ -29,6 +29,19 @@ namespace Service.Services
             return items;
         }
 
+        public async Task<IEnumerable<IVehicleMakeModel>> GetVehicleDataAsync()
+        {
+            IEnumerable<IVehicleMakeModel> items = await repository.GetAllAsync();
+            return items;
+        }
+
+        public async Task<IEnumerable<IVehicleMakeModel>> GetVehicleDataAsync(ISystemDataModel systemDataModel)
+        {
+            IEnumerable<IVehicleMakeModel> items = await repository.GetAllPagedAsync(systemDataModel);
+            return items;
+        }
+
+
         public async Task<int> CreateAsync(IVehicleMakeModel item)
         {
             return await repository.CreateAsync(item);

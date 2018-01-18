@@ -12,7 +12,9 @@ namespace Service.Common
         Task<int> CreateAsync(T obj);
         Task<T> ReadAsync(Guid? id);
         Task<int> UpdateAsync(T obj);
-        Task<int> DeleteAsync(Guid? id);       
+        Task<int> DeleteAsync(Guid? id);
+        Task<IEnumerable<T>> GetVehicleDataAsync();
+        Task<IEnumerable<T>> GetVehicleDataAsync(ISystemDataModel systemDataModel);
         Task<StaticPagedList<T>> GetVehicleDataPagedAsync(ISystemDataModel systemDataModel);
     }
 }
