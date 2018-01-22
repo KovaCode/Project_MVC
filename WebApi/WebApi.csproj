@@ -146,6 +146,7 @@
     <Compile Include="App_Start\AutomapperConfiguration.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ModelController.cs" />
     <Compile Include="Controllers\MakeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
