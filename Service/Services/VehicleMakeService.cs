@@ -13,7 +13,7 @@ using Repository.Commons.Models;
 
 namespace Service.Services
 {
-    public class VehicleMakeService/*<TEntity>*/ : IVehicleMakeService //where TEntity : IVehicleModelModel
+    public class VehicleMakeService : IVehicleMakeService
     {
         private readonly IVehicleMakeRepository repository;
 
@@ -40,7 +40,6 @@ namespace Service.Services
             IEnumerable<IVehicleMakeModel> items = await repository.GetAllPagedAsync(systemDataModel);
             return items;
         }
-
 
         public async Task<int> CreateAsync(IVehicleMakeModel item)
         {

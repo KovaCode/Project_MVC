@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using AutoMapper;
+using Model;
 using Model.Common;
 using Service.Common.Services;
 using System;
@@ -7,12 +8,12 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
     public class ModelController : ApiController
     {
-
         private readonly IVehicleModelService service;
 
         public ModelController(IVehicleModelService service)
@@ -24,7 +25,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> ReadAll()
         {
-            IEnumerable<IVehicleModelModel> allItems = await service.GetVehicleDataAsync();
+            IEnumerable<ModelRestModel> allItems = Mapper.Map<IEnumerable<ModelRestModel>>(await service.GetVehicleDataAsync());
             return Request.CreateResponse(HttpStatusCode.OK, allItems);
         }
 
@@ -37,16 +38,16 @@ namespace WebApi.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public async Task Create([FromBody]VehicleModelModel model)
+        public async Task Create([FromBody]ModelRestModel model)
         {
-            await service.CreateAsync(model);
+            await service.CreateAsync(Mapper.Map<VehicleModelModel>(model));
         }
 
         // PUT api/<controller>/5
         [HttpPut]
-        public async Task Update([FromBody]VehicleModelModel model)
+        public async Task Update([FromBody]ModelRestModel model)
         {
-            await service.UpdateAsync(model);
+            await service.UpdateAsync(Mapper.Map<VehicleModelModel>(model));
         }
 
         // DELETE api/<controller>/5
