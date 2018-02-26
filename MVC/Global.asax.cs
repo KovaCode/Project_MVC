@@ -1,11 +1,7 @@
-﻿using AutoMapper;
-using MVC;
-using MVC.Models;
-using Service.Models;
+﻿using MVC;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using PagedList;
 using MVC.Controllers;
 
 namespace MVC_Project
@@ -21,6 +17,7 @@ namespace MVC_Project
             AutoMapperConfiguration.Configure();
         }
     }
+
 
 
 }

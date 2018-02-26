@@ -1,14 +1,15 @@
 ﻿using System.Net;
 using System.Web.Mvc;
-using Service.Models;
 using System;
 using PagedList;
 using MVC.Models;
 using System.Collections.Generic;
 using AutoMapper;
-using Service.Services;
-using Service.Interfaces.Services;
-using Service.Interfaces.Models;
+using Service.Common.Services;
+using Model.Common;
+using System.Threading.Tasks;
+using Common;
+using System.Collections;
 
 namespace MVC_Project.Controllers
 {
@@ -16,18 +17,13 @@ namespace MVC_Project.Controllers
     {
         private IVehicleModelService service;
 
-        public ModelController()
+        public ModelController(IVehicleModelService service)
         {
-            service = new VehicleModelService();
-        }
-
-        public ModelController(VehicleModelService vehicleModelService)
-        {
-            service = vehicleModelService;
+            this.service = service;
         }
 
         // GET: Models
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
+        public async Task<ActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             SystemDataModel systemDataModel = new SystemDataModel();
 
@@ -41,24 +37,23 @@ namespace MVC_Project.Controllers
             systemDataModel.ResultsPerPage = (resultsPerPage ?? 5);
             systemDataModel.Page = (page ?? 1);
 
-            StaticPagedList<IVehicleModel> modelItems = service.GetVehicleDataPaged(systemDataModel);
-            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModel>, StaticPagedList<VehicleModelView>>(modelItems);
+            StaticPagedList<IVehicleModelModel> items = await service.GetVehicleDataPagedAsync(systemDataModel);
+            StaticPagedList<VehicleModelView> modelViewPaged = Mapper.Map<StaticPagedList<IVehicleModelModel>, StaticPagedList<VehicleModelView>>(items);
             ViewBag.CurrentFilter = systemDataModel.SearchValue;
 
             return View(modelViewPaged);
         }
 
         // GET: Models/Details/5
-        public ActionResult Details(Guid? id)
+        public async Task<ActionResult> Details(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            IVehicleModel model = service.Read(id);
+            IVehicleModelModel model = await service.ReadAsync(id);
             VehicleModelView modelView = Mapper.Map<VehicleModelView>(model);
-            
 
             if (modelView == null)
             {
@@ -68,11 +63,11 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             VehicleModelView vehicleModelView = new VehicleModelView
             {
-                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMake>, IEnumerable<VehicleMakeView>>(service.GetMakes())
+                MakeEnumerable = Mapper.Map<IEnumerable<IVehicleMakeModel>, IEnumerable<VehicleMakeView>>(await service.GetAllMakeAsync())
             };
             return View(vehicleModelView);
         }
@@ -82,13 +77,13 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
+        public async Task<ActionResult> Create([Bind(Include = "Id, Make ,VehicleMakeId, Make.Id, MakeID,Name,Abrv")] VehicleModelView modelView)
         {
 
-            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
+            IVehicleModelModel model = Mapper.Map<IVehicleModelModel>(modelView);
             if (ModelState.IsValid)
             {
-                service.Create(model);
+                await service.CreateAsync(model);
                 return RedirectToAction("Index");
             }
             modelView = Mapper.Map<VehicleModelView>(model);
@@ -97,19 +92,21 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Edit/5
-        public ActionResult Edit(Guid? id)
+        public async Task<ActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            VehicleModelView modelView = Mapper.Map<VehicleModelView>(service.Read(id));
+            VehicleModelView modelView = Mapper.Map<VehicleModelView>(await service.ReadAsync(id));
             if (modelView == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MakerList = new SelectList(service.GetMakes(), "Id", "Name");
+            //IEnumerable<VehicleMakeView> modelViewList = Mapper.Map<IEnumerable<VehicleModelView>(service.GetMakesAsync());
+
+            //ViewBag.MakerList = new SelectList(), "Id", "Name");
             return View(modelView);
         }
 
@@ -118,13 +115,13 @@ namespace MVC_Project.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,VehicleMakeId,Name,Abrv")] VehicleModelView modelView)
         {
-            IVehicleModel model = Mapper.Map<IVehicleModel>(modelView);
+            IVehicleModelModel model = Mapper.Map<IVehicleModelModel>(modelView);
 
             if (ModelState.IsValid)
             {
-                service.Update(model);
+                await service.UpdateAsync(model);
 
                 return RedirectToAction("Index");
             }
@@ -133,13 +130,13 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models/Delete/5
-        public ActionResult Delete(Guid? id)
+        public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IVehicleModel model = service.Read(id);
+            IVehicleModelModel model = await service.ReadAsync(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -152,10 +149,10 @@ namespace MVC_Project.Controllers
         // POST: Models/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid? id)
+        public async Task<ActionResult> DeleteConfirmed(Guid? id)
         {
-            IVehicleModel model = service.Read(id);
-            service.Delete(id);
+            IVehicleModelModel model = await service.ReadAsync(id);
+            await service.DeleteAsync(id);
             return RedirectToAction("Index");
         }
     }
