@@ -62,6 +62,7 @@ namespace WebApi.Controllers
 
         // POST api/<controller>
         [HttpPost]
+        [Route("")]
         public async Task Create([FromBody]MakeRestModel model)
         {
             await service.CreateAsync(Mapper.Map<VehicleMakeModel>(model));
@@ -69,6 +70,7 @@ namespace WebApi.Controllers
 
         // PUT api/<controller>/5
         [HttpPut]
+        [Route("")]
         public async Task Update([FromBody]MakeRestModel model)
         {
             await service.UpdateAsync(Mapper.Map<VehicleMakeModel>(model));
@@ -76,6 +78,7 @@ namespace WebApi.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete]
+        [Route("{id:Guid}")]
         public async Task Delete(Guid id)
         {
             await service.DeleteAsync(id);
