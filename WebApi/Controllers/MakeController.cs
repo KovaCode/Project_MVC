@@ -11,10 +11,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using WebApi.Models;
+using System.Web.Http.Cors;
 
 namespace WebApi.Controllers
 {
     [RoutePrefix("api/make")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class MakeController : ApiController
     {
         private readonly IVehicleMakeService service;
@@ -27,7 +29,7 @@ namespace WebApi.Controllers
 
         // GET api/<controller>
         [HttpGet]
-        [Route("")]
+        [Route("get")]
         public async Task<HttpResponseMessage> Read()
         {
             IEnumerable<MakeRestModel> allItems = Mapper.Map<IEnumerable<MakeRestModel>>(await service.GetVehicleDataAsync());
@@ -35,7 +37,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("find")]
+        [Route("get/filter")]
         public async Task<HttpResponseMessage> Find([FromUri]SystemDataModel model)
         {
             IEnumerable<MakeRestModel> allItems = Mapper.Map<IEnumerable<MakeRestModel>>(await service.GetVehicleDataAsync(model));
@@ -54,7 +56,7 @@ namespace WebApi.Controllers
 
         // GET api/<controller>/5
         [HttpGet]
-        [Route("{id:Guid}")]
+        [Route("get/{id:Guid}")]
         public async Task<HttpResponseMessage> Read(Guid id)
         {            
             return Request.CreateResponse(HttpStatusCode.OK, Mapper.Map<MakeRestModel> (await service.ReadAsync(id)));
@@ -62,7 +64,7 @@ namespace WebApi.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        [Route("")]
+        [Route("create")]
         public async Task Create([FromBody]MakeRestModel model)
         {
             await service.CreateAsync(Mapper.Map<VehicleMakeModel>(model));
@@ -70,7 +72,7 @@ namespace WebApi.Controllers
 
         // PUT api/<controller>/5
         [HttpPut]
-        [Route("")]
+        [Route("update")]
         public async Task Update([FromBody]MakeRestModel model)
         {
             await service.UpdateAsync(Mapper.Map<VehicleMakeModel>(model));
@@ -78,7 +80,7 @@ namespace WebApi.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete]
-        [Route("{id:Guid}")]
+        [Route("delete/{id:Guid}")]
         public async Task Delete(Guid id)
         {
             await service.DeleteAsync(id);
