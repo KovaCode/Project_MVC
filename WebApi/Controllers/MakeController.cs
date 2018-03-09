@@ -29,7 +29,7 @@ namespace WebApi.Controllers
 
         // GET api/<controller>
         [HttpGet]
-        [Route("get")]
+        [Route("")]
         public async Task<HttpResponseMessage> Read()
         {
             IEnumerable<MakeRestModel> allItems = Mapper.Map<IEnumerable<MakeRestModel>>(await service.GetVehicleDataAsync());
@@ -37,7 +37,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("get/filter")]
+        [Route("get")]
         public async Task<HttpResponseMessage> Find([FromUri]SystemDataModel model)
         {
             IEnumerable<MakeRestModel> allItems = Mapper.Map<IEnumerable<MakeRestModel>>(await service.GetVehicleDataAsync(model));

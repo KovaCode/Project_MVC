@@ -10,14 +10,13 @@ namespace WebApi
 
             config.EnableCors();
 
-            // Web API configuration and services
-
+  
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-
-            config.Formatters.JsonFormatter.AddQueryStringMapping("$format", "json", "application/json");
             config.Formatters.XmlFormatter.AddQueryStringMapping("$format", "xml", "application/xml");
+            config.Formatters.JsonFormatter.AddQueryStringMapping("$format", "json", "application/json");
+            
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
