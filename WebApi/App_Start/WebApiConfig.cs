@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Formatting;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace WebApi
 {
@@ -8,9 +9,9 @@ namespace WebApi
         public static void Register(HttpConfiguration config)
         {
 
-            config.EnableCors();
+            var cors = new EnableCorsAttribute("*", "*", "*");
+            config.EnableCors(cors);
 
-  
             // Web API routes
             config.MapHttpAttributeRoutes();
 
@@ -20,7 +21,7 @@ namespace WebApi
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
                 //defaults: new { controller = "Make", action = "ReadAll", id = RouteParameter.Optional }
             );

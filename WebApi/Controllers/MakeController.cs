@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Common;
 using Model;
-using Model.Common;
-using Service.Common;
 using Service.Common.Services;
 using System;
 using System.Collections.Generic;
@@ -15,7 +13,7 @@ using System.Web.Http.Cors;
 
 namespace WebApi.Controllers
 {
-    [RoutePrefix("api/make")]
+    [RoutePrefix("make")]
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class MakeController : ApiController
     {
@@ -29,12 +27,13 @@ namespace WebApi.Controllers
 
         // GET api/<controller>
         [HttpGet]
-        [Route("")]
+        [Route("all")]
         public async Task<HttpResponseMessage> Read()
         {
             IEnumerable<MakeRestModel> allItems = Mapper.Map<IEnumerable<MakeRestModel>>(await service.GetVehicleDataAsync());
             return Request.CreateResponse(HttpStatusCode.OK, allItems);
         }
+
 
         [HttpGet]
         [Route("get")]

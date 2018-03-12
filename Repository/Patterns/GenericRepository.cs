@@ -39,7 +39,7 @@ namespace Repository.Patterns
                 items = items.Where(s => s.Name.Contains(systemDataModel.SearchValue));
             }
 
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder) && systemDataModel.SortOrder == "desc")
             {
                 items = items.OrderByDescending(s => s.Name);
             }
