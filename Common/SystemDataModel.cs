@@ -4,7 +4,7 @@ namespace Common
 {
     public class SystemDataModel : ISystemDataModel
     {
-        public string SortOrder { get; set; }
+        public bool SortOrder { get; set; }
         public string CurrentFilter { get; set; }
         public string SearchValue { get; set; }
         public int Page { get; set; } = 1;

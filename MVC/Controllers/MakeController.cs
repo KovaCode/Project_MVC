@@ -23,7 +23,7 @@ namespace MVC.Controllers
 
         // GET: /Make/
         //[Route("Index")]
-        public async Task<ViewResult> Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
+        public async Task<ViewResult> Index(bool sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             AsyncManager.OutstandingOperations.Increment();
 
@@ -31,7 +31,7 @@ namespace MVC.Controllers
 
             ViewBag.ResultsPerPage = resultsPerPage;
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrWhiteSpace(sortOrder) ? "name_desc" : "";
+            ViewBag.NameSortParm = !sortOrder;
 
             systemDataModel.SearchValue = searchString;
             systemDataModel.CurrentFilter = currentFilter;

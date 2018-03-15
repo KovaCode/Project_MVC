@@ -43,7 +43,7 @@ namespace Repository
                 makeItems = makeItems.Where(s => s.Name.Contains(systemDataModel.SearchValue));
             }
 
-            if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+            if (!systemDataModel.SortOrder)
             {
                 makeItems = makeItems.OrderByDescending(s => s.Name);
             }
@@ -78,7 +78,7 @@ namespace Repository
                     items = items.Where(s => s.Name.Contains(systemDataModel.SearchValue, StringComparison.OrdinalIgnoreCase) || s.Make.Name.Contains(systemDataModel.SearchValue, StringComparison.OrdinalIgnoreCase));
                 }
 
-                if (!String.IsNullOrWhiteSpace(systemDataModel.SortOrder))
+                if (!systemDataModel.SortOrder)
                 {
                     items = items.OrderByDescending(s => s.Name);
                 }

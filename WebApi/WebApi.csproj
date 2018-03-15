@@ -198,6 +198,7 @@
     </Compile>
     <Compile Include="Models\MakeRestModel.cs" />
     <Compile Include="Models\ModelRestModel.cs" />
+    <Compile Include="Models\PagedResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

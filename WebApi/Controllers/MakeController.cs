@@ -37,10 +37,10 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("get")]
-        public async Task<HttpResponseMessage> Find([FromUri]SystemDataModel model)
+        public async Task<HttpResponseMessage> Get([FromUri]SystemDataModel model)
         {
             IEnumerable<MakeRestModel> allItems = Mapper.Map<IEnumerable<MakeRestModel>>(await service.GetVehicleDataAsync(model));
-            return Request.CreateResponse(HttpStatusCode.OK, allItems);
+            return Request.CreateResponse(HttpStatusCode.OK, new PagedResult<MakeRestModel>(allItems, model.Page, model.ResultsPerPage, model.TotalCount));
         }
 
 

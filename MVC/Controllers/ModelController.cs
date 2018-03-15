@@ -23,13 +23,13 @@ namespace MVC_Project.Controllers
         }
 
         // GET: Models
-        public async Task<ActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
+        public async Task<ActionResult> Index(bool sortOrder, string currentFilter, string searchString, int? page, int? resultsPerPage)
         {
             SystemDataModel systemDataModel = new SystemDataModel();
 
             ViewBag.ResultsPerPage = resultsPerPage;
             ViewBag.CurrentSort = sortOrder;
-            ViewBag.NameSortParm = String.IsNullOrWhiteSpace(sortOrder) ? "name_desc" : "";
+            ViewBag.NameSortParm =  !sortOrder;
 
             systemDataModel.SearchValue = searchString;
             systemDataModel.CurrentFilter = currentFilter;
